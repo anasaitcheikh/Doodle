@@ -9,6 +9,11 @@ const express = require('express')
 const app = express()
 
 /**
+ * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
+*/
+const mongoose = require('mongoose');
+
+/**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
 */
 const port = 8080
