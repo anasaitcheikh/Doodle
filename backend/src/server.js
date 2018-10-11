@@ -4,6 +4,11 @@
 const express = require('express')
 
 /**
+ * @constant {objet} router - Correspond à l'appel du module router.
+*/
+const router = require('./router');
+
+/**
  * @constant {objet} app - Correspond à l'instanciation du module express.
 */
 const app = express()
@@ -19,16 +24,6 @@ const mongoose = require('mongoose');
 const port = 8080
 
 
-
-/**
- * @résumé La route representant la demande de l'acceuil du site.
- * @param {string} route - La route vers la ressource recherchée. 
- * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
-*/
-app.get('/', function (req, res) {
-		res.status(200).send("Hello world")
-	})
-
 /**
  * @résumé Appeler pour la création du serveur.
  * @param {string} port - Le port à utiliser pour la création du serveur
@@ -40,15 +35,5 @@ app.listen(process.env.PORT || port, (err) => {
         console.log(`server is listening on ${process.env.PORT || port}`)
     })
 
-/**
- * @résumé Receuille l'ensemble des demandes de ressources non disponible sur le serveur, 
- *         les traite et renvoie une page d'erreur à l'utilisateur pour l'informer de la non disponibilité de cette ressource.   
- * @param {string} route - La route vers la ressource recherchée.
- * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
-*/
-app.get('*', function (req, res) {
-    console.log('404')
-    //res.render(__base + '/app/app/public/404.html')
-    res.status(404).send()
-    res.end()
-})
+// délégation du routing au module router
+app.use('/', router)
