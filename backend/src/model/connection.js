@@ -35,7 +35,7 @@ var RenionSchema = new mongoose.Schema({
   maxParticipant : { type: Number, min: 1 },
   //comment : {},
   //admin : Schema.Types.ObjectId,
-  participant : Schema.Types.ObjectId,
+  //participant : Schema.Types.ObjectId,
 });
  
 
@@ -46,7 +46,7 @@ var RenionModel = mongoose.model('Renion', RenionSchema);
 // On crée une instance du Model
 // var renion = new RenionModel({ pseudo : 'Atinux' });
 // renion.contenu = 'Salut, super article sur Mongoose !';
-var renion = new RenionModel({ titre : 'renion test' });
+var renion = new RenionModel({ title : 'renion test' });
 renion.date = renion;
  
 

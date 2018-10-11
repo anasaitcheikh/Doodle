@@ -18,19 +18,17 @@ const mongoose = require('mongoose');
 */
 const port = 8080
 
+/**
+ * @constant {objet} router - Correspond à l'appel du module router.
+*/
+const api = require('./api');
+
+
 const bodyParser = require("body-parser"); 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-/**
- * @résumé La route representant la demande de l'acceuil du site.
- * @param {string} route - La route vers la ressource recherchée. 
- * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
-*/
-app.get('/', function (req, res) {
-		res.status(200).send("Hello world")
-	})
 
 /**
  * @résumé Appeler pour la création du serveur.
@@ -42,6 +40,16 @@ app.listen(process.env.PORT || port, (err) => {
         if (err) { return console.log('something bad happened', err) }
         console.log(`server is listening on ${process.env.PORT || port}`)
     })
+
+
+/**
+ * @résumé La route representant la demande de l'acceuil du site.
+ * @param {string} route - La route vers la ressource recherchée. 
+ * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
+*/
+app.get('/', function (req, res) {
+		res.status(200).send("Hello world")
+	})
 
 /**
  * @résumé Receuille l'ensemble des demandes de ressources non disponible sur le serveur, 
@@ -55,3 +63,7 @@ app.get('*', function (req, res) {
     res.status(404).send()
     res.end()
 })
+
+
+// délégation du routing au module api
+//app.use('/', api)
