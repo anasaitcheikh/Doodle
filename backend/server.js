@@ -18,7 +18,10 @@ const mongoose = require('mongoose');
 */
 const port = 8080
 
+const bodyParser = require("body-parser"); 
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 /**
  * @résumé La route representant la demande de l'acceuil du site.
