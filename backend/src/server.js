@@ -41,29 +41,5 @@ app.listen(process.env.PORT || port, (err) => {
         console.log(`server is listening on ${process.env.PORT || port}`)
     })
 
-
-/**
- * @résumé La route representant la demande de l'acceuil du site.
- * @param {string} route - La route vers la ressource recherchée. 
- * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
-*/
-app.get('/', function (req, res) {
-		res.status(200).send("Hello world")
-	})
-
-/**
- * @résumé Receuille l'ensemble des demandes de ressources non disponible sur le serveur, 
- *         les traite et renvoie une page d'erreur à l'utilisateur pour l'informer de la non disponibilité de cette ressource.   
- * @param {string} route - La route vers la ressource recherchée.
- * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
-*/
-app.get('*', function (req, res) {
-    console.log('404')
-    //res.render(__base + '/app/app/public/404.html')
-    res.status(404).send()
-    res.end()
-})
-
-
-// délégation du routing au module api
-//app.use('/', api)
+// délégation du routing au module router
+app.use('/api', router)
