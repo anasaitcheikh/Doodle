@@ -1,0 +1,79 @@
+
+.slide-img{
+  display: none;
+}
+
+body{
+  background-color: #40E0D0;
+}
+/*.slide-img-app{
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .list-img li {
+      display: inline;
+  }
+  
+  .list-img {
+    position: absolute;
+    width: 500px; 
+    height: 400px;
+    margin: 0;            
+    padding: 0;
+    animation-name: AutoSlide;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+  }
+  
+  
+      @keyframes AutoSlide {
+    0%, 15%, 100% {
+      left: 0px; /*1ère image*/
+   /* }
+    35%, 50% {
+      left: -150px; /*2ème image*/
+   /* }
+    70%, 85% {
+      left: -300px; /*3ème image*/
+  /*  }
+    95%, 100% {
+      left: -450px; /*4ème image*/
+ /*   }
+  }
+  
+  
+      @-moz-keyframes  AutoSlide {
+    0%, 15%, 100% {
+      left: 0px; /*1ère image*/
+  /*  }
+    35%, 50% {
+      left: -150px; /*2ème image*/
+   /* }
+    70%, 85% {
+      left: -300px; /*3ème image*/
+ /*   }
+    95%, 100% {
+        left: -450px; /*4ème image*/
+   /*   }
+  }
+  
+      @-webkit-keyframes AutoSlide {
+    0%, 15%, 100% {
+      left: 0px; /*1ère image*/
+    }
+    35%, 50% {
+      left: -150px; /*2ème image*/
+    }
+    70%, 85% {
+      left: -300px; /*3ème image*/
+    }
+    95%, 100% {
+        left: -450px; /*4ème image*/
+      }
+  }
+
+  
+  
+  
