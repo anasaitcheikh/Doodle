@@ -60,7 +60,7 @@ connection.mongoose.connect(connection.hostname, { useNewUrlParser: true }, func
   }
 })
 
-connection.RenionModel.find(null, function (err, comms) {
+connection.ReunionModel.find(null, function (err, comms) {
   if (err) { throw err; }
   // comms est un tableau de hash
   console.log(comms);

@@ -23,7 +23,7 @@ mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
   	throw err
   }else{
   	console.log("Connection to mongodb ok")
-    // db.collection("renions").find().toArray(function (error, results) {
+    // db.collection("reunions").find().toArray(function (error, results) {
     //     if (error) throw error;
 
     //     results.forEach(function(obj, i) {
@@ -34,7 +34,7 @@ mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
     //     });
     // });
     
-    // db.collection("renions").findOne({ _id: new MongoObjectID("5bc0d325980bc006a0ab91b0") }, function (error, results) {
+    // db.collection("reunions").findOne({ _id: new MongoObjectID("5bc0d325980bc006a0ab91b0") }, function (error, results) {
     //     if (error) throw error;
     //         console.log(results)
     // });
@@ -43,7 +43,7 @@ mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
 })
 
 
-const DateRenion = new mongoose.Schema({
+const DateReunion = new mongoose.Schema({
                     _id : { type : mongoose.Schema.Types.ObjectId },
                     date : { type: Date, default: Date.now },
                     hourStart : { type : String },
@@ -69,12 +69,12 @@ const Participant = new mongoose.Schema({
                     })
 
 
-// Création du schéma pour les renions
-const RenionSchema = new mongoose.Schema({
+// Création du schéma pour les reunions
+const ReunionSchema = new mongoose.Schema({
   title : { type : String },
   place : { type : String },
   note : { type : String },
-  date : [DateRenion],
+  date : [DateReunion],
   addComment : { type : Boolean },
   maxParticipant : { type: Number, min: 1 },
   comment : [Comment],
@@ -86,37 +86,37 @@ const RenionSchema = new mongoose.Schema({
  
 
 // Création du Model pour les commentaires
-var RenionModel = mongoose.model('renion', RenionSchema);
+var ReunionModel = mongoose.model('reunion', ReunionSchema);
  
 
 // On crée une instance du Model
-// var renion = new RenionModel({ pseudo : 'Atinux' });
-// renion.contenu = 'Salut, super article sur Mongoose !';
-var renion = new RenionModel();
-renion.title = 'renion test 2.0'
-renion.place = 'Skype'
-renion.note = 'rdv pour la révision'
-renion.addComment = true
-renion.maxParticipant = 5
-renion.date.push({  
+// var reunion = new ReunionModel({ pseudo : 'Atinux' });
+// reunion.contenu = 'Salut, super article sur Mongoose !';
+var reunion = new ReunionModel();
+reunion.title = 'reunion test 2.0'
+reunion.place = 'Skype'
+reunion.note = 'rdv pour la révision'
+reunion.addComment = true
+reunion.maxParticipant = 5
+reunion.date.push({  
                     date: new Date().now,
                     hourStart : "begin",
                     hourEnd : 'end'
                   })
-renion.comment.push({
+reunion.comment.push({
                       name : 'moub name',
                       email : 'moub email',
                       text : 'moub text',
                       create_at : new Date().now,
                       update_at : new Date().now
                     }) 
-renion.admin = { 
+reunion.admin = { 
                  name :'moub name admin',
                  email : 'moub email admin',
                  create_at : new Date().now,
                  update_at : new Date().now
                 }
-renion.participant.push({
+reunion.participant.push({
                           name : 'moub participant',
                           email : 'moub email',
                           create_at : new Date().now,
@@ -124,7 +124,7 @@ renion.participant.push({
                         })
 
 // On le sauvegarde dans MongoDB !
-// renion.save(function (err) {
+// reunion.save(function (err) {
 //   if (err) { throw err; }
 //   console.log('Commentaire ajouté avec succès !');
 //   // On se déconnecte de MongoDB maintenant
@@ -132,7 +132,7 @@ renion.participant.push({
 // });
 
 
-// RenionModel.find(null, function (err, comms) {
+// ReunionModel.find(null, function (err, comms) {
 //   if (err) { throw err; }
 //   // comms est un tableau de hash
 //   console.log(comms);
@@ -141,7 +141,7 @@ renion.participant.push({
 // });
 
 module.exports = {
-  RenionModel:RenionModel,
+  ReunionModel:ReunionModel,
   mongoose : mongoose,
   hostname : hostname
 } 
