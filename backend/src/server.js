@@ -11,7 +11,7 @@ const app = express()
 /**
  * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
 */
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 /**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
@@ -21,13 +21,13 @@ const port = 8080
 /**
  * @constant {objet} router - Correspond à l'appel du module router.
 */
-const api = require('./api');
+const api = require('./api')
 
 
-const bodyParser = require("body-parser"); 
+const bodyParser = require("body-parser")
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 /**
@@ -41,5 +41,29 @@ app.listen(process.env.PORT || port, (err) => {
         console.log(`server is listening on ${process.env.PORT || port}`)
     })
 
+
 // délégation du routing au module router
-app.use('/api', router)
+//app.use('/api', router)
+
+
+
+
+
+const  connection = require('./model/connection')
+connection.mongoose.connect(connection.hostname, { useNewUrlParser: true }, function(err) {
+  if (err) { 
+  	console.log(err)
+  	throw err
+  }else{
+  	console.log("Connection to mongodb ok")
+
+  }
+})
+
+connection.RenionModel.find(null, function (err, comms) {
+  if (err) { throw err; }
+  // comms est un tableau de hash
+  console.log(comms);
+  // On se déconnecte de MongoDB maintenant
+  mongoose.connection.close();
+});

@@ -1,4 +1,3 @@
-
 /**
  * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
 */
@@ -9,6 +8,12 @@ const mongoose = require('mongoose');
 */
 const hostname = 'mongodb://localhost/middleware'; 
 
+/**
+ * @constant {objet} MongoObjectID  - Correspond au type ObjectID de mongo.
+*/
+var MongoObjectID = require("mongodb").ObjectID; 
+
+
 
 // On se connecte à la base de données
 // N'oubliez pas de lancer ~/mongodb/bin/mongod dans un terminal !
@@ -18,6 +23,22 @@ mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
   	throw err
   }else{
   	console.log("Connection to mongodb ok")
+    // db.collection("renions").find().toArray(function (error, results) {
+    //     if (error) throw error;
+
+    //     results.forEach(function(obj, i) {
+    //         console.log(
+    //             "ID : "  + obj._id.toString() + "\n" +
+    //             "Titre : " + obj.title + "\n"          
+    //         );
+    //     });
+    // });
+    
+    // db.collection("renions").findOne({ _id: new MongoObjectID("5bc0d325980bc006a0ab91b0") }, function (error, results) {
+    //     if (error) throw error;
+    //         console.log(results)
+    // });
+
   }
 })
 
@@ -65,7 +86,7 @@ const RenionSchema = new mongoose.Schema({
  
 
 // Création du Model pour les commentaires
-var RenionModel = mongoose.model('Renion', RenionSchema);
+var RenionModel = mongoose.model('renion', RenionSchema);
  
 
 // On crée une instance du Model
@@ -102,11 +123,25 @@ renion.participant.push({
                           update_at : new Date().now
                         })
 
-
 // On le sauvegarde dans MongoDB !
-renion.save(function (err) {
-  if (err) { throw err; }
-  console.log('Commentaire ajouté avec succès !');
-  // On se déconnecte de MongoDB maintenant
-  mongoose.connection.close();
-});
+// renion.save(function (err) {
+//   if (err) { throw err; }
+//   console.log('Commentaire ajouté avec succès !');
+//   // On se déconnecte de MongoDB maintenant
+//   mongoose.connection.close();
+// });
+
+
+// RenionModel.find(null, function (err, comms) {
+//   if (err) { throw err; }
+//   // comms est un tableau de hash
+//   console.log(comms);
+//   // On se déconnecte de MongoDB maintenant
+//   mongoose.connection.close();
+// });
+
+module.exports = {
+  RenionModel:RenionModel,
+  mongoose : mongoose,
+  hostname : hostname
+} 
