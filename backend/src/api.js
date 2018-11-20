@@ -1,77 +1,74 @@
 const express = require('express')
-const router = express.Router()
+const api = express.Router()
 
-// middleware that is specific to this router
-router.use(function timeLog(req, res, next) {
+// middleware that is specific to this api
+api.use(function timeLog(req, res, next) {
     console.log('Time: ', Date.now());
     next();
 });
 
-//events
-router.get('/events', function(req, res) {
-    res.status('404').send("Not found")
-    res.end()
+// check data for POST, PUT
+api.post('*', function(req, res){
+    try{
+        JSON.parse(req.body)
+        res.end("OK")
+    }
+    catch(e){
+        res.end("KO")
+    }
 });
 
-router.get('/events/:event_id', function(req, res) {
-    res.status('404').send("Not found")
-    res.end()
+//reunions
+api.get('/reunions', function(req, res) {
 });
 
-router.post('events', function(req, res) {
-    res.status('404').send("Not found")
-    res.end()
+api.get('/reunions/:reunion_id', function(req, res) {
 });
 
-router.put('/events/:event_id', function(req, res) {
-    res.status('404').send("Not found")
-    res.end()
+api.post('/reunions', function(req, res) {
 });
 
-router.delete('/events/:id', function(req, res) {
-    res.status('404').send("Not found")
-    res.end()
+api.put('/reunions/:reunion_id', function(req, res) {
+});
+
+api.delete('/reunions/:reunion_id', function(req, res) {
 });
 
 //participants
-router.get('/events/:event_id/participants', (req, res) => {
-
+api.get('/reunions/:reunion_id/participants', (req, res) => {
 })
 
-router.get('/events/:event_id/participants/:id_participant', (req, res) => {
-
+api.get('/reunions/:reunion_id/participants/:participant_id', (req, res) => {
 })
 
-router.post('/events/:event_id/participants', (req, res) => {
-    
+api.post('/reunions/:reunion_id/participants', (req, res) => {
 })
 
-router.put('/events/:event_id/participants/:id_participant', (req, res) => {
-
+api.put('/reunions/:reunion_id/participants/:participant_id', (req, res) => {
 })
 
-router.delete('/events/:event_id/participants/:id_participant', (req, res) => {
+api.delete('/reunions/:reunion_id/participants/:id_participant', (req, res) => {
     
 })
 
 //comments
-router.get('/events/:event_id/comments', (req, res) => {
+api.get('/reunions/:reunion_id/comments', (req, res) => {
 
 })
 
-router.get('/events/:event_id/comments/:id_comment', (req, res) => {
+api.get('/reunions/:reunion_id/comments/:id_comment', (req, res) => {
 
 })
 
-router.post('/events/:event_id/comment', (req, res) => {
+api.post('/reunions/:reunion_id/comment', (req, res) => {
     
 })
 
-router.put('/events/:event_id/comments/:id_comment', (req, res) => {
+api.put('/reunions/:reunion_id/comments/:id_comment', (req, res) => {
 
 })
 
-router.delete('/events/:event_id/comments/:id_comment', (req, res) => {
+api.delete('/reunions/:reunion_id/comments/:id_comment', (req, res) => {
     
 })
 
@@ -82,10 +79,9 @@ router.delete('/events/:event_id/comments/:id_comment', (req, res) => {
  * @param {string} route - La route vers la ressource recherchée.
  * @param {function} callback - La fonction appelée à la fin du traitement, elle prends en paramètre l'objet requêtte et l'objet reponse.
 */
-router.get('*', function(req, res) {
-    res.status('404').send("Not found")
+api.get('*', function(req, res) {
+    res.status('404').send("Page Not found")
     res.end()
 });
 
-  
-module.exports = router;
+module.exports = api;
