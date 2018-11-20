@@ -19,7 +19,7 @@ const mongoose = require('mongoose');
 const port = 8080
 
 /**
- * @constant {objet} router - Correspond à l'appel du module router.
+ * @constant {objet} api - Correspond à l'appel du module api.
 */
 const api = require('./api');
 
@@ -41,5 +41,5 @@ app.listen(process.env.PORT || port, (err) => {
         console.log(`server is listening on ${process.env.PORT || port}`)
     })
 
-// délégation du routing au module router
-app.use('/api', router)
+// délégation du routing de l'api au module api
+app.use('/api', api)
