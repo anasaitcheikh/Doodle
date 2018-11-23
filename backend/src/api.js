@@ -50,8 +50,8 @@ api.put('*', function(req, res, next){
 
 //reunions
 api.get('/reunions', function(req, res) {
-    reunions = db.findAll(
-        (reunions) => {
+    console.log("route")
+    db.findAll((reunions) => {
             console.log(`reunions: ${reunions}`)
             res.status('200')
                .json(
@@ -66,7 +66,7 @@ api.get('/reunions', function(req, res) {
 
 api.get('/reunions/:reunion_id', function(req, res) {
     reunionId = req.params.reunion_id
-    reunion = db.find(reunionId, 
+    db.find(reunionId, 
         (reunion) => {
             console.log(`reunion: ${reunion}`)
             if(reunion){

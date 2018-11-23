@@ -39,6 +39,7 @@ function disconnect(){
 
 //récuperation tous les éléments de la bd
 function findAll(callback){
+  connect()
   ReunionModel.find(null, function (err, results) {
     if (err) { throw err }
     // results est un tableau de hash
@@ -51,6 +52,7 @@ function findAll(callback){
 
 //récuperer un élément de la bd grace a sont id
 function find(id, callback){
+  connect()
   ReunionModel.findOne({ _id: new MongoObjectID(id) }, function (error, result) {
       if (error) throw error
       //console.log(result)
