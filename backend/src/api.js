@@ -1,7 +1,9 @@
 const express = require('express')
 const api = express.Router()
 
+const {isJson, requestErrorMsg, responseStatus} = require('./utils/helper')
 const  db = require('./model/database')
+
 
 /**
  * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
@@ -13,37 +15,109 @@ const mongoose = require('mongoose')
 */
 var MongoObjectID = require("mongodb").ObjectID 
 
+
+
 // middleware that is specific to this api
 api.use(function timeLog(req, res, next) {
     console.log('Time: ', Date.now());
     next();
 });
 
-// check data for POST, PUT
-api.post('*', function(req, res){
-    try{
-        JSON.parse(req.body)
-        res.end("OK")
+var jsonParse = (req, res, next) => {
+
+    if(isJson(req.body)){
+        next()
     }
-    catch(e){
-        res.end("KO")
+    else{
+        console.log(req.body)
+        res.status('403').json(
+            {
+            status: responseStatus.fail,
+            message: requestErrorMsg.jsonMalformed,
+            data: null
+        })
     }
+}
+
+// check json data for POST, PUT
+api.post('*', function(req, res, next){
+    jsonParse(req, res, next)
+});
+
+api.put('*', function(req, res, next){
+    jsonParse(req, res, next)
 });
 
 //reunions
 api.get('/reunions', function(req, res) {
+    reunions = db.findAll(
+        (reunions) => {
+            console.log(`reunions: ${reunions}`)
+            res.status('200')
+               .json(
+                {
+                    status: responseStatus.success,
+                    data: reunions
+                }
+            )
+        }
+    )
 });
 
 api.get('/reunions/:reunion_id', function(req, res) {
+    reunionId = req.params.reunion_id
+    reunion = db.find(reunionId, 
+        (reunion) => {
+            console.log(`reunion: ${reunion}`)
+            if(reunion){
+                res.status('200')
+                   .json(
+                    {
+                        status: responseStatus.success,
+                        data: reunion
+                    }
+                )
+            }
+            else{
+                res.status('404')
+                   .json(
+                    {
+                        status: responseStatus.fail,
+                        message: requestErrorMsg.reunionNotFound,
+                        data: reunion
+                    }
+                )
+            }
+        }
+    )
 });
 
 api.post('/reunions', function(req, res) {
+    reunion = req.body
+    //check les propriétés
+    connection.addReunion(reunion)
+    res.status('200')
 });
 
 api.put('/reunions/:reunion_id', function(req, res) {
+    reunionId = req.params.reunion_id
+    oldReunion = connection.getReunion(reunionId)
+    newReunion = req.body
+
+    status = connection.updateReunion(reunionId, newReunion)
+    res.status('200')
 });
 
 api.delete('/reunions/:reunion_id', function(req, res) {
+    reunionId = req.params.reunion_id
+    status = connection.removeReunion(reunionId)
+
+    if(status){
+        res.status('200').end(success)
+    }
+    else{ 
+        res.status('404').end(error)
+    }
 });
 
 //participants
