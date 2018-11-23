@@ -8,10 +8,7 @@ const express = require('express')
 */
 const app = express()
 
-/**
- * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
-*/
-const mongoose = require('mongoose')
+
 
 /**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
@@ -22,7 +19,6 @@ const port = 8080
  * @constant {objet} api - Correspond à l'appel du module api.
 */
 const api = require('./api')
-
 
 const bodyParser = require("body-parser")
 
@@ -42,6 +38,7 @@ app.listen(process.env.PORT || port, (err) => {
     })
 
 
+
 // délégation du routing de l'api au module api
 app.use('/api', api)
 
@@ -49,21 +46,24 @@ app.use('/api', api)
 
 
 
-const  connection = require('./model/connection')
-connection.mongoose.connect(connection.hostname, { useNewUrlParser: true }, function(err) {
-  if (err) { 
-  	console.log(err)
-  	throw err
-  }else{
-  	console.log("Connection to mongodb ok")
 
-  }
-})
+// connection.mongoose.connect(connection.hostname, { useNewUrlParser: true }, function(err) {
+//   if (err) { 
+//   	console.log(err)
+//   	throw err
+//   }else{
+//   	console.log("Connection to mongodb ok")
 
-connection.ReunionModel.find(null, function (err, comms) {
-  if (err) { throw err; }
-  // comms est un tableau de hash
-  console.log(comms);
-  // On se déconnecte de MongoDB maintenant
-  mongoose.connection.close();
-});
+//   }
+// })
+
+// connection.ReunionModel.find(null, function (err, data) {
+//   if (err) { throw err; }
+//   // data est un tableau de hash
+//   if (data.length==0) {
+//     console.log("element not found")
+//   }
+//   console.log(data);
+//   // On se déconnecte de MongoDB maintenant
+//   mongoose.connection.close();
+// });
