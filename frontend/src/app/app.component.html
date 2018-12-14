@@ -32,10 +32,16 @@
 <div style="background-color: #D8E4F2">
     <div class="form-event">
       <br><br><br>
-    <form action="" class="form-inline" style="margin-left: 500px;" >
-      <input type="text" class="form-control mr-sm-2" placeholder="Event title...">
-      <button class="btn btn-success my-2 my-sm-0" type="submit" >Create event</button>  
-    </form>
+    <div class="form-group"  >
+      <div class="form-row">
+         <div class="col">
+           <input type="text" class="form-control mr-sm-2" placeholder="Event title..." [(ngModel)]="EventTitle.title" style="margin-left: 500px; width: 200px;">
+         </div>
+         <div class="col">
+           <button class="btn btn-success my-2 my-sm-0"  (click)="addEvent()">Create event</button> 
+       </div> 
+    </div>
+    </div>
    </div>
    <div class="slide-img-app" style="margin-top: 50px; margin-left: 420px" >
     <!--ul class="list-img"!-->
@@ -45,8 +51,7 @@
         <img class="slide-img" src="../assets/icon/reunion.png" alt="plan together" style="width: 500px; height: 400px"!-->
     <!--/ul!-->
   </div>
-</div>
-</body>
+</div></body>
 
 </html>
 
