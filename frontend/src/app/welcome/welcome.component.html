@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<div style="background-color: #D8E4F2">
+    <div class="form-event">
+      <br><br><br>
+    <div class="form-group"  >
+      <div class="form-row">
+         <div class="col">
+           <input type="text" class="form-control mr-sm-2" placeholder="Event title..." [(ngModel)]="EventTitle.title" style="margin-left: 500px; width: 200px;">
+         </div>
+         <div class="col">
+           <button class="btn btn-success my-2 my-sm-0"  (click)="addEvent()">Create event</button> 
+       </div> 
+    </div>
+    </div>
+   </div>
+   <div class="slide-img-app" style="margin-top: 50px; margin-left: 420px" >
+    <!--ul class="list-img"!-->
+        <img class="slide-img" src="../assets/icon/plan_together.png" alt="plan together" style="width: 500px; height: 400px">
+        <!--img class="slide-img" src="../assets/icon/hand_mark.png" alt="plan together" style="width: 500px; height: 400px">
+        <img class="slide-img" src="../assets/icon/planning.png" alt="plan together" style="width: 500px; height: 400px">
+        <img class="slide-img" src="../assets/icon/reunion.png" alt="plan together" style="width: 500px; height: 400px"!-->
+    <!--/ul!-->
+  </div>
+</div>
+</body>
+
+</html>
