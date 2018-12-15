@@ -2,8 +2,8 @@ const express = require('express')
 const api = express.Router()
 
 const {isJson, requestErrorMsg, responseStatus} = require('./utils/helper')
-const  db = require('./model/database')
-
+//const  db = require('./model/database')
+const  dao = require('./model/dao')
 
 /**
  * @constant {objet} mongoose - Correspond à l'appel du module mongoose.
@@ -50,8 +50,7 @@ api.put('*', function(req, res, next){
 
 //reunions
 api.get('/reunions', function(req, res) {
-    console.log("route")
-    db.findAll((reunions) => {
+    dao.findAllReunion((reunions) => {
             console.log(`reunions: ${reunions}`)
             res.status('200')
                .json(
@@ -66,7 +65,7 @@ api.get('/reunions', function(req, res) {
 
 api.get('/reunions/:reunion_id', function(req, res) {
     reunionId = req.params.reunion_id
-    db.find(reunionId, 
+    dao.findReunion(reunionId, 
         (reunion) => {
             console.log(`reunion: ${reunion}`)
             if(reunion){
@@ -122,28 +121,27 @@ api.delete('/reunions/:reunion_id', function(req, res) {
 
 //participants
 api.get('/reunions/:reunion_id/participants', (req, res) => {
-    db.connect()
-    db.ReunionModel.findOne({"_id": new MongoObjectID(req.params.reunion_id)}, {participant:1, _id:0}, (err, data) => {
-      if (err) { console.log(err) }
-      if (!data) {
-        console.log("element not found")
-      }
-      console.log(data)
-      db.disconnect()
-      res.status(200).json({ route : `get  /reunions/${req.params.reunion_id}/participants `,
-                             data : data})
+    dao.findAllParticipant(req.params.reunion_id, (participants) => {
+            console.log(`participants: ${participants}`)
+            res.status('200')
+            .json(
+                {
+                    status: responseStatus.success,
+                    data: participants
+                }
+            )
     })
 })
 
 api.get('/reunions/:reunion_id/participants/:participant_id', (req, res) => {
-    // db.connect()
-    // db.ReunionModel.findOne({"_id": new MongoObjectID(req.params.participant_id)}, {_id:0}, (err, data) => {
+    // dao.connect()
+    // dao.ReunionModel.findOne({"_id": new MongoObjectID(req.params.participant_id)}, {_id:0}, (err, data) => {
     //   if (err) { console.log(err) }
     //   if (data.length==0) {
     //     console.log("element not found")
     //   }
     //   console.log(data)
-    //   db.disconnect()
+    //   dao.disconnect()
     //   res.status(200).json({ route : `get  /reunions/${req.params.reunion_id}/participants/${req.params.participant_id} `,
     //                          data : data})
     // })
@@ -185,6 +183,7 @@ api.delete('/reunions/:reunion_id/comments/:id_comment', (req, res) => {
   res.status(200).json({ data : 'delete /reunions/:reunion_id/comments/:id_comment'})  
 })
 
+//user
 
 /**
  * @résumé Receuille l'ensemble des demandes de ressources non disponible sur le serveur, 

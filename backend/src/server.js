@@ -13,7 +13,7 @@ const app = express()
 /**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
 */
-const port = 8080
+const port = 8090
 
 /**
  * @constant {objet} api - Correspond à l'appel du module api.

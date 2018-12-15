@@ -13,68 +13,6 @@ const hostname = 'mongodb://localhost/middleware'
 */
 var MongoObjectID = require("mongodb").ObjectID 
 
-//connexion à la db
-function connect(){
-  mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
-    if (err) { 
-     console.log(err)
-     throw err
-    }else{
-     console.log("Connection to mongodb ok")
-    }
-  })
-}
-
-//deconnexion à la db
-//verifier si la deconnection se fais bien
-function disconnect(){
-  try{
-    mongoose.connection.close()
-    console.log("Disconnect to mongodb ok")
-  }catch(error) {
-    console.log("Disconnect to mongodb Error")
-    console.log(error)
-  }  
-}
-
-//récuperation tous les éléments de la bd
-function findAll(callback){
-  connect()
-  ReunionModel.find(null, function (err, results) {
-    if (err) { throw err }
-    // results est un tableau de hash
-    //console.log(results)
-    // On se déconnecte de MongoDB maintenant
-    disconnect()
-    callback(results)
-  })
-}
-
-//récuperer un élément de la bd grace a sont id
-function find(id, callback){
-  connect()
-  ReunionModel.findOne({ _id: new MongoObjectID(id) }, function (error, result) {
-      if (error) throw error
-      //console.log(result)
-      disconnect()
-      callback(result)
-  })
-}
-
-//mettre a jour un élément de la bd  nb: le update ne marche pas
-function update(){
-  ReunionModel.update(
-     {"_id" : new MongoObjectID("5bf5c049fea9830a203e1efb")},
-     {$set : {"title" : "reunion test update 2.0"}}
-  )
-}
-
-//supprimer un élément de la bd grace a sont id
-// function delete(id){
-
-// }
-
-
 const DateReunion = new mongoose.Schema({
                     date : { type: Date, default: Date.now },
                     hourStart : { type : String },
@@ -166,13 +104,18 @@ reunion.participant.push({
 module.exports = {
   ReunionModel:ReunionModel,
   mongoose : mongoose,
-  hostname : hostname,
-  connect : connect, 
-  disconnect : disconnect,
-  findAll : findAll,
-  find : find,
-  update : update
-} 
+  hostname : hostname
+}                         
+// module.exports = {
+//   ReunionModel:ReunionModel,
+//   mongoose : mongoose,
+//   hostname : hostname,
+//   connect : connect, 
+//   disconnect : disconnect,
+//   findAll : findAll,
+//   find : find,
+//   update : update
+// } 
 
 // On se connecte à la base de données
 // N'oubliez pas de lancer ~/mongodb/bin/mongod dans un terminal !
@@ -218,3 +161,64 @@ module.exports = {
 //   // On se déconnecte de MongoDB maintenant
 //   mongoose.connection.close()
 // })
+
+// //connexion à la db
+// function connect(){
+//   mongoose.connect(hostname, { useNewUrlParser: true }, function(err) {
+//     if (err) { 
+//      console.log(err)
+//      throw err
+//     }else{
+//      console.log("Connection to mongodb ok")
+//     }
+//   })
+// }
+
+// //deconnexion à la db
+// //verifier si la deconnection se fais bien
+// function disconnect(){
+//   try{
+//     mongoose.connection.close()
+//     console.log("Disconnect to mongodb ok")
+//   }catch(error) {
+//     console.log("Disconnect to mongodb Error")
+//     console.log(error)
+//   }  
+// }
+
+// //récuperation tous les éléments de la bd
+// function findAll(callback){
+//   connect()
+//   ReunionModel.find(null, function (err, results) {
+//     if (err) { console.log( err ) }
+//     // results est un tableau de hash
+//     //console.log(results)
+//     // On se déconnecte de MongoDB maintenant
+//     disconnect()
+//     callback(results)
+//   })
+// }
+
+// //récuperer un élément de la bd grace a sont id
+// function find(id, callback){
+//   connect()
+//   ReunionModel.findOne({ _id: new MongoObjectID(id) }, function (error, result) {
+//       if (error) console.log( error )
+//       //console.log(result)
+//       disconnect()
+//       callback(result)
+//   })
+// }
+
+// //mettre a jour un élément de la bd  nb: le update ne marche pas
+// function update(){
+//   ReunionModel.update(
+//      {"_id" : new MongoObjectID("5bf5c049fea9830a203e1efb")},
+//      {$set : {"title" : "reunion test update 2.0"}}
+//   )
+// }
+
+//supprimer un élément de la bd grace a sont id
+// function delete(id){
+
+// }
