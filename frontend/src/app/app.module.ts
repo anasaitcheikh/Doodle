@@ -9,12 +9,15 @@ import { LogInComponent } from './log-in/log-in.component';
 import { EventsComponent } from './events/events.component';
 import { EventsService } from './events.service';
 import { RouterModule, Routes } from '@angular/router';
+import { HttpModule } from '@angular/http';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { CreateEventComponent } from './create-event/create-event.component';
 
 const routes:Routes=[
    {path:'events', component:EventsComponent},
    {path:'login', component: LogInComponent},
    {path:'welcome', component: WelcomeComponent},
+   {path:'createEvent', component: CreateEventComponent},
    {path:'', redirectTo: '/welcome', pathMatch:'full'},
 
 ]
@@ -25,13 +28,15 @@ const routes:Routes=[
     SignInComponent,
     LogInComponent,
     EventsComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    CreateEventComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    HttpModule
   ],
   providers: [EventsService],
   bootstrap: [AppComponent]

@@ -1,0 +1,122 @@
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+				<title>New Doodle</title>
+
+			</head>
+			<body>
+
+
+				<form #f="ngForm" (ngSubmit)="onAddEvent(f.value)">
+					<h2>Nouveau Doodle</h2><br>
+					<h3>Pour quelle occasion ?</h3> <br>
+					<div class="row">  
+						<div class="col">
+							<label class="control-label col-sm-2" for="title"></label>
+							<div class="col-sm-10">
+								<input type="text" required="" class="form-control" id="titre" name="title" ngModel placeholder="titre">
+							</div>
+
+						</div>
+
+						<div class="col">
+							<label class="control-label col-sm-2" for="lieu"></label>
+							<div class="col-sm-10">
+								<input type="text" required="" class="form-control" id="lieu" name="place" ngModel placeholder="Lieu">
+							</div>
+
+						</div>
+
+					</div>
+
+
+					<div class="row">
+						<div class="col">
+							<label class="control-label col-sm-2" for="note">Note</label>
+							<div class="col-sm-10"> 
+								<input type="text" required="" class="form-control" id="note" name="note" ngModel placeholder="Note">
+							</div>
+
+						</div>
+
+						<div class="col">
+							<label class="control-label col-sm-2" for="date"></label>
+							<div class="col-sm-10"> 
+								<input type="text" required="" class="form-control" id="date" name="date" ngModel placeholder="Date">
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<label class="control-label col-sm-2" for="h_dep"></label>
+							<div class="col-sm-10"> 
+								<input type="text"  required="" class="form-control" id="h_dep" name="hourStart" ngModel placeholder="Heure de départ">
+							</div> 
+
+						</div>
+
+						<div class="col">
+							<label class="control-label col-sm-2" for="h_fin"></label>
+							<div class="col-sm-10"> 
+								<input type="text" required=""  class="form-control" id="h_fin" name="hourEnd" ngModel placeholder="Heure de fin">
+							</div>
+						</div>
+
+					</div>
+
+
+					<div class="row">
+
+
+						<div class="col">
+							<label class="control-label col-sm-2" for="nom"></label>
+							<div class="col-sm-10"> 
+								<input type="text" required="" class="form-control" id="nom" name="name" ngModel placeholder="nom">
+							</div>
+						</div>
+
+						<div class="col">
+
+							<label class="control-label col-sm-2" for="email"></label>
+							<div class="col-sm-10"> 
+								<input type="text" required="" class="form-control" id="email" name="email" ngModel placeholder="email">
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="col">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label><input type="checkbox" name="addComment" >Ajouter Commentaire</label>
+								</div>
+							</div>
+
+							<div class="col">
+								<label class="control-label col-sm-2" for="nbmax_part"></label>
+								<div class="col-sm-4"> 
+									<input type="number" required="" class="form-control" id="nbmax_part" name="maxParticipant" ngModel placeholder="Nombre Max De Participants"> 
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+
+					<div class="col-sm-4">
+						<button type="submit" [disabled]="!f.valid" class="btn btn-default">Créer</button>
+					</div>
+
+				</form>
+
+
+			</body>
+			</html>
