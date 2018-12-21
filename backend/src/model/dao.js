@@ -192,7 +192,9 @@ function updateParticipant(participant, callback){
 function deleteParticipant(idRenion, idParticipant, callback){
     connect()
     db.ReunionModel.findOneAndUpdate(
-                                    {"_id":  new MongoObjectID(idRenion)},
+                                    {"_id":  new MongoObjectID(idRenion),
+                                     "participant._id":  new MongoObjectID(idParticipant)
+                                    },
                                     { $pull: {"participant": { "_id": new MongoObjectID(idParticipant)}}},
                                     {new:true},  
                                     (err, results) => {
@@ -398,7 +400,7 @@ module.exports = {
 //     (participant)=>{ console.log('UpdateParticipant') ;console.log(participant)}
 // )
 
-//deleteParticipant('5c1accac39540f2f98a94099', '5c1accac39540f2f98a9409e', (participant)=>{ console.log('deleteParticipant') ;console.log(participant)})
+deleteParticipant('5c1acc97f4b824298854bb44', '5c1acc97f4b824298854bb49', (participant)=>{ console.log('deleteParticipant') ;console.log(participant)})
 
 // createParticipant(
 //     '5c1accac39540f2f98a94098', 
