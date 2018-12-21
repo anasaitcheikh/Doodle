@@ -95,12 +95,15 @@ api.post('/open/reunions', (req, res) => {
         res.status('400');
     }
 
+    let date=reqBodyData.reunion.date; //generaliser cela pour les autre date
+    date[0].date= new Date(date[0].date);
+
     let reunion = {};
     reunion.admin = reqBodyData.reunion.admin;
     reunion.title = reqBodyData.reunion.title;
     reunion.place = reqBodyData.reunion.place;
     reunion.note = reqBodyData.reunion.note;
-    reunion.date = reqBodyData.reunion.date;
+    reunion.date = date;
     const participants = reqBodyData.reunion.participants;
     reunion.participant = (participants === undefined) ? {} : participants;
     reunion.comment = {};
@@ -109,7 +112,8 @@ api.post('/open/reunions', (req, res) => {
     
 
     dao.createReunion(reunion, (reunionAdded) => {
-        if(reunionAdded === {}){
+        console.log("return reunion", reunionAdded)
+        if(reunionAdded === undefined){
             res.status('403').end();
         }
 
@@ -144,23 +148,13 @@ api.get('/open/reunions/:token', (req, res) => {
         const session = tokenHandler.verifyJWTToken(token, true);
 
         dao.findReunion(session.sessionData.idReunion, (reunion) => {
-            if(reunion === {}){
+            if(reunion === null){
                 res.status('404').end();
             }
             else{
-                const resData = {
-                    data: {
-                        reunion: {
-                            admin: reunion.admin,
-                            title: reunion.title,
-                            place: reunion.place,
-                            note: reunion.note,
-                            addComment: reunion.addComment,
-                            maxParticipant: reunion.maxParticipant 
-                        }
-                    }
-                }
-                res.json(resData);
+                reunion._id=null
+                reunion.__v=null
+                res.json(reunion);
             }
         })
     }
@@ -171,10 +165,12 @@ api.get('/open/reunions/:token', (req, res) => {
 
 api.put('/open/reunions', (req, res) => {
     try{
-        const session = tokenHandler.verifyJWTToken(token, true);
         const reqBodyData = req.body.data;
+        const session = tokenHandler.verifyJWTToken(reqBodyData.token, true);
+        
 
         let reunion = {};
+        reunion.id = session.sessionData.idReunion
         reunion.title = reqBodyData.reunion.title;
         reunion.place = reqBodyData.reunion.place;
         reunion.note = reqBodyData.reunion.note;
@@ -183,22 +179,25 @@ api.put('/open/reunions', (req, res) => {
         reunion.maxParticipant = reqBodyData.reunion.maxParticipant;
 
         reunion.idReunion = session.sessionData.idReunion;
-        const emailAdmin = session.sessionData.admin;
+        const emailAdmin = session.sessionData.admin.email;
 
-        if(emailAdmin != undefined){
+        //console.log("session", session.sessionData)
+        if(emailAdmin !== undefined){
             dao.updateReunion(reunion, (reunionUpdate) => {
-                if(reunionUpdate === {}){
-                    res.status('403').end();
+                if(reunionUpdate === null){
+                    res.status('404').end();
                 }
                 else{
                     res.status('200').end();
                 }
             })
         }
-        res.status('401').end();
+        else{
+            res.status('401').end();
+        }
     }
     catch(error){
-        res.status('401').end();
+        res.status('401').end("token ko");
     }
 })
 
@@ -208,7 +207,7 @@ api.delete('/open/reunions', (req, res) => {
         const session = tokenHandler.verifyJWTToken(token, true);
 
         const idReunion = session.sessionData.idReunion;
-        const emailAdmin = session.sessionData.admin;
+        const emailAdmin = session.sessionData.admin.email;
 
         if(emailAdmin !== undefined){
             dao.deleteReunion(idReunion, (reunionDelete) => {
@@ -220,7 +219,8 @@ api.delete('/open/reunions', (req, res) => {
                 }
             })
         }
-        res.status('401').end();
+        else{
+            res.status('401').end();}
     }
     catch(error){
         res.status('401').end();

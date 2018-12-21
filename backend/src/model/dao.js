@@ -71,7 +71,7 @@ function updateReunion(reunion, callback){
                                               "$.update_at": new Date().now }},
                                     {new:true},  
                                     (err, results) => {
-        if (err) { console.log(err) }
+        if (err) { console.log("errur->"); console.log(err) }
         if (!results) {
           console.log("element not found")
         }
