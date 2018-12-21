@@ -13,7 +13,7 @@ const app = express()
 /**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
 */
-const port = 8090
+const port = 8080
 
 /**
  * @constant {objet} api - Correspond à l'appel du module api.
@@ -22,8 +22,8 @@ const api = require('./api')
 
 const bodyParser = require("body-parser")
 
-//app.use(bodyParser.urlencoded({ extended: false }))
-//app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
 /**
