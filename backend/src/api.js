@@ -229,35 +229,45 @@ api.delete('/open/reunions', (req, res) => {
 
 api.post('/open/reunions/:id_reunion/participants', (req, res) => {
     try{
+        const reqBodyData = req.body.data;
         const token = reqBodyData.token;
         const session = tokenHandler.verifyJWTToken(token, true);
 
-        const reqBodyData = req.body.data;
+        
 
         if(session.sessionData.admin !== undefined){
             const idReunion = req.params.id_reunion;
 
             let participant = {};
-            participant.email = reqBodyData.email;
-            participant.name = reqBodyData.name;
-            dao.createParticipant(idReunion, participant, (participantAdded) => {
-                if(participantAdded === (undefined || null || [])){
-                    res.status('403').end()
+            participant.email = reqBodyData.participant.email;
+            participant.name = reqBodyData.participant.name;
+            dao.findParticipantWithEmail(idReunion, participant.email, (resFind) => {
+                console.log("resFind", resFind)
+                console.log("resFind", resFind.participant)
+                if(resFind.participant.length !== 0){
+                    res.status('403').end('This email is already taken')
                 }
                 else{
-                    const session = {
-                        sessionData: {
-                            participant: participant.email,
-                            idReunion: idReunion
+                    dao.createParticipant(idReunion, participant, (participantAdded) => {
+                        if(participantAdded === (undefined || null || [])){
+                            res.status('403').end('error')
                         }
-                    }
-                    const token = tokenHandler.createJWToken(session, true)
-                    const response = {
-                        data: {
-                            token: token
+                        else{
+                            const session = {
+                                sessionData: {
+                                    participant: participant.email,
+                                    idReunion: idReunion
+                                }
+                            }
+                            const token = tokenHandler.createJWToken(session, true)
+                            const response = {
+                                data: {
+                                    token: token
+                                }
+                            }
+                            res.json(response);
                         }
-                    }
-                    res.json(response);
+                    })
                 }
             });
         }
@@ -270,7 +280,8 @@ api.post('/open/reunions/:id_reunion/participants', (req, res) => {
     }
 })
 
-api.put('/open/reunions/:id_reunion/participant/:id_participant', (req, res) => {
+api.put('/open/reunions/:id_reunion/participants/:id_participant', (req, res) => {
+    console.log("frrffr")
     try{
         const reqBodyData = req.body.data;
         const token = reqBodyData.token;
@@ -285,23 +296,23 @@ api.put('/open/reunions/:id_reunion/participant/:id_participant', (req, res) => 
 
             if(session.sessionData.admin !== undefined){
                 dao.findParticipant(idReunion, idParticipant, (resFind) => {
-                    if(resFind === []){
+                    if(resFind.participant.length === 0){
                         res.status('404')
                     }
                     else{
                         dao.findParticipantWithEmail(idReunion, participant.email, (resFind) => {
-                            if(resFind !== []){
+                            if(resFind.participant.length !== 0){
                                 res.status('403').end("This email is already taken")
                             }
                             else{
                                 dao.updateParticipant(participant, (resUpdate) => {
-                                    if(resUpdate === []){
+                                    if(resUpdate === null){
                                         res.status('404')
                                     }
                                     else{
                                         const session = {
                                             sessionData: {
-                                                participant: participant[0].email,
+                                                participant: participant.email,
                                                 idReunion: idReunion
                                             }
                                         }
@@ -320,12 +331,12 @@ api.put('/open/reunions/:id_reunion/participant/:id_participant', (req, res) => 
             }
             else if(session.sessionData.participant !== undefined){
                 dao.findParticipantWithEmail(idReunion, participant.email, (resFind) => {
-                    if(resFind !== []){
+                    if(resFind.participant.length !== 0){
                         res.status('403').end("This email is already taken")
                     }
                     else{
                         dao.findParticipant(idReunion, participant.id, (resFind2) => {
-                            if(resFind2 === []) {
+                            if(resFind2.participant.length === 0) {
                                 res.status('404')
                             }
                             else{

@@ -152,6 +152,8 @@ function findParticipant(idReunion, idParticipant, callback){
 }
 
 function findParticipantWithEmail(idReunion, emailParticipant, callback){
+    console.log('idReunion', idReunion)
+    console.log('email', emailParticipant)
     connect()
     db.ReunionModel.findOne({"_id": new MongoObjectID(idReunion)},
                             {"_id":0, 
@@ -162,7 +164,7 @@ function findParticipantWithEmail(idReunion, emailParticipant, callback){
         if (!results) {
           console.log("element not found")
         }
-        //console.log(results)
+        console.log("element",results)
         disconnect()
         callback(results)
     })
@@ -385,13 +387,13 @@ module.exports = {
 
 //findParticipant('5c1acc97f4b824298854bb44','5c1acc97f4b824298854bb4a', (participant)=>{ console.log('findParticipant') ;console.log(participant)})
 
-//findParticipantWithEmail('5c1acc97f4b824298854bb44','moub email 0', (participant)=>{ console.log('findParticipantWithEmail') ;console.log(participant)})
+// findParticipantWithEmail('5c1cf5a186036a5a647c5f04','part1@part.com', (participant)=>{ console.log('findParticipantWithEmail') ;console.log(participant)})
 
 // updateParticipant(
 //     { 
 //         id:'5c1acc97f4b824298854bb4a',
-//         name:"moub participant 1.0.1 zzzxxx",
-//         email:"moub email 1.0.1 zzzxxx"
+//         name:"moub participant 1.0.1 zzzxxxdiehi",
+//         email:"moub email 1.0.1 zzzxxxfeoiufue"
 //     },
 //     (participant)=>{ console.log('UpdateParticipant') ;console.log(participant)}
 // )
@@ -399,10 +401,10 @@ module.exports = {
 //deleteParticipant('5c1accac39540f2f98a94099', '5c1accac39540f2f98a9409e', (participant)=>{ console.log('deleteParticipant') ;console.log(participant)})
 
 // createParticipant(
-//     '5c1accac39540f2f98a94099', 
+//     '5c1accac39540f2f98a94098', 
 //     {
-//         name : 'moub participant create',
-//         email : 'moub email create',
+//         name : 'moub participant create false',
+//         email : 'moub email create false',
 //         create_at : new Date().now,
 //         update_at : new Date().now
 //     },

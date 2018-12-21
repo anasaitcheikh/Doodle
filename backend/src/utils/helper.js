@@ -48,7 +48,7 @@ function sendMail(emailDest, subject, text){
     }) 
 }
 
-sendMail('ademou@gmail.com', 'ouverture de la reunion', 'nouvelle reunion ouverte')
+//sendMail('ademou@gmail.com', 'ouverture de la reunion', 'nouvelle reunion ouverte')
 
 
 module.exports = {
