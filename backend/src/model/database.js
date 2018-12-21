@@ -65,8 +65,8 @@ reunion.addComment = true
 reunion.maxParticipant = 5
 reunion.date.push({  
                     date: new Date().now,
-                    hourStart : "begin",
-                    hourEnd : 'end'
+                    hourStart : "8h00",
+                    hourEnd : '10h00'
                   })
 reunion.comment.push({
                       name : 'moub name 0',
@@ -104,8 +104,11 @@ reunion.participant.push({
 module.exports = {
   ReunionModel:ReunionModel,
   mongoose : mongoose,
-  hostname : hostname
-}                         
+  hostname : hostname,
+  reunion : new ReunionModel()
+}   
+
+
 // module.exports = {
 //   ReunionModel:ReunionModel,
 //   mongoose : mongoose,
