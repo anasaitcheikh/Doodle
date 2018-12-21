@@ -279,7 +279,8 @@ function updateComment(comment, callback){
 function deleteComment(idRenion, idComment, callback){
     connect()
     db.ReunionModel.findOneAndUpdate(
-                                    {"_id":  new MongoObjectID(idRenion)},
+                                    {"_id":  new MongoObjectID(idRenion),
+                                    "comment._id":  new MongoObjectID(idComment)},
                                     { $pull: {"comment": { "_id": new MongoObjectID(idComment)}}},
                                     {new:true},  
                                     (err, results) => {
