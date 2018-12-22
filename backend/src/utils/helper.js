@@ -1,11 +1,11 @@
 var nodemailer = require('nodemailer')
 
-isJSON = function(data){
-    try{
+isJSON = function (data) {
+    try {
         JSON.parse(data)
         return true
     }
-    catch(e){
+    catch (e) {
         return false
     }
 }
@@ -24,7 +24,7 @@ responseStatus = {
     succes: 'succes'
 }
 
-function sendMail(emailDest, subject, text){
+function sendMail(emailDest, subject, text) {
     const user = 'middleware.project.2018@gmail.com'
     var transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -41,24 +41,24 @@ function sendMail(emailDest, subject, text){
         subject: `${subject}`,
         text: `${text}`
     }
-    transporter.sendMail(mailOptions, function(error, info){
+    transporter.sendMail(mailOptions, function (error, info) {
         if (error) { console.log(error) }
         else { console.log('Email sent: ' + info.response) }
         transporter.close();
-    }) 
+    })
 }
 
 //sendMail('ademou@gmail.com', 'ouverture de la reunion', 'nouvelle reunion ouverte')
 
-function sendMailToParticipants(emailData){
+function sendMailToParticipants(emailData) {
     const suject = "Ajout à une nouvelle réunion"
     const admin = emailData.admin
-    for(let participant of emailData.participants){
+    for (let participant of emailData.participants) {
         const baseLink = "http://localhost:8080/api/open/reunions"
         const token = participant.token
         const text = `<html><h1>${admin.name} (${admin.email}) Vous a ajouté dans une nouvelle réunion</h1>
         <br>
-        <p>Vous pouvez cliquer sur ce lien <a href="${baseLink}/${token}">lien</a>/p>
+        <p>Vous pouvez cliquer sur ce lien <a href="${baseLink}/${token}">lien</a></p>
         <br>
         <br>
         <p>Cordialement.</p>
@@ -72,6 +72,6 @@ module.exports = {
     isJson: isJSON,
     requestErrorMsg: requestErrorMsg,
     responseStatus: responseStatus,
-    sendMail : sendMail,
+    sendMail: sendMail,
     sendMailToParticipants: sendMailToParticipants
 }

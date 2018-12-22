@@ -35,9 +35,9 @@ app.use(bodyParser.json())
  								dans le cas contraire elle affiche la création éffectif du serveur sur la console.
 */
 app.listen(process.env.PORT || port, (err) => {
-        if (err) { return console.log('something bad happened', err) }
-        console.log(`server is listening on ${process.env.PORT || port}`)
-    })
+    if (err) { return console.log('something bad happened', err) }
+    console.log(`server is listening on ${process.env.PORT || port}`)
+})
 
 
 
