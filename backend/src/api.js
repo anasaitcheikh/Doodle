@@ -153,9 +153,12 @@ api.get('/open/reunions/:token', (req, res) => {
                 res.status('404').end();
             }
             else{
-                reunion._id=null
-                reunion.__v=null
-                res.json(reunion);
+                reunion.__v = null;
+                res.json({
+                    data: {
+                        reunion: reunion
+                    }
+                });
             }
         })
     }
@@ -183,9 +186,9 @@ api.put('/open/reunions', (req, res) => {
         const emailAdmin = session.sessionData.admin.email;
 
         //console.log("session", session.sessionData)
-        if(emailAdmin !== undefined){
+        if(emailAdmin != undefined){
             dao.updateReunion(reunion, (reunionUpdate) => {
-                if(reunionUpdate === null){
+                if(reunionUpdate == null){
                     res.status('404').end();
                 }
                 else{
@@ -498,13 +501,12 @@ api.post('/open/reunions/:id_reunion/comments', (req, res) => {
         const session = tokenHandler.verifyJWTToken(token, true);
 
         const idReunion = req.params.id_reunion;
-
-        if(session.sessionData.participant !== undefined && idReunion == session.sessionData.idReunion){
-
+        console.log('test', idReunion, session.sessionData.idReunion)
+        if(idReunion == session.sessionData.idReunion){
             let comment = {};
             comment.name = session.sessionData.name
             comment.email = session.sessionData.participant;
-            comment.text = reqBodyData.text;
+            comment.text = reqBodyData.comment.text;
 
             dao.createComment(idReunion, comment, (resCreate) => {
                 if(resCreate === {}){
@@ -516,11 +518,11 @@ api.post('/open/reunions/:id_reunion/comments', (req, res) => {
             })
         }
         else{
-            res.status('401');
+            res.status('401').end();
         }
     }
     catch(error){
-        res.status('401');
+        res.status('401').end();
     }
 })
 
@@ -531,24 +533,40 @@ api.put('/open/reunions/:id_reunion/comments/:id_comment', (req, res) => {
         const session = tokenHandler.verifyJWTToken(token, true);
         const idReunion = req.params.id_reunion;
 
-        if(session.sessionData.participant !== undefined && idReunion == session.sessionData.idReunion){
+        if(idReunion == session.sessionData.idReunion){
             let comment = {};
-            comment.id = idReunion;
+            comment.id = req.params.id_comment;
             comment.name = session.sessionData.name;
-            comment.text = reqBodyData.text;
+            comment.text = reqBodyData.comment.text;
             comment.email = session.sessionData.participant;
-            
-            dao.updateComment(comment, () => {
-                
+
+            dao.findComment(idReunion, comment.id, (resFind) => {
+                if(resFind.comment.length == 0){
+                   res.status('404').end()
+                }
+                else{
+                    if(resFind.comment[0].email != comment.email){
+                        res.status('403').end()
+                    }
+                    else{
+                        dao.updateComment(comment, (resUpdate) => {
+                            if(resUpdate == {}){
+                                res.status('403').end()
+                            }
+                            else{
+                                res.status('200').end()
+                            }
+                        })
+                    }
+                }
             })
-            res.status('200');
         }
         else{
-            res.status('401');
+            res.status('401').end();
         }
     }
     catch(error){
-        res.status('401');
+        res.status('401').end();
     }
 })
 
@@ -557,19 +575,53 @@ api.delete('/open/reunions/:id_reunion/comments/:id_comment', (req, res) => {
         const token = req.body.data.token;
         const session = tokenHandler.verifyJWTToken(token, true);
 
-        if(session.sessionData.admin !== undefined  || session.sessionData.participant !== undefined){
-            const idReunion = req.params.id_reunion;
-            const idComment = req.params.id_comment;
+        const idReunion = req.params.id_reunion;
+        const idComment = req.params.id_comment;
 
-            //requête bd pour supprimer
-            res.status('200');
+        if(session.sessionData.idReunion = idReunion){
+            dao.findComment(idReunion, idComment, (resFind) => {
+                if(resFind.comment.length == 0){
+                    res.status('404').end()
+                }
+                else{
+                    if(session.sessionData.admin != undefined){
+                        console.log('resFind.comment[0]', resFind.comment[0].email, session.sessionData.participant.email )
+                        //if(session.sessionData.participant.idReunion == resFind.comment[0].email){
+                            dao.deleteComment(idReunion, idComment, (resDelete) => {
+                                if(resDelete == null){
+                                    res.status('304').end()
+                                }
+                                else{
+                                    res.status('200').end()
+                                }
+                            })
+                        /*}
+                        else{
+                            res.status('401').end('4')
+                        }*/
+                    }
+                    else if(session.sessionData.participant == resFind.comment[0].email){
+                        dao.deleteComment(idReunion, idComment, (resDelete) => {
+                            if(resDelete == null){
+                                res.status('304').end()
+                            }
+                            else{
+                                res.status('200').end()
+                            }
+                        })
+                    }
+                    else{
+                        res.status('401').end('3')
+                    }
+                }
+            })
         }
         else{
-            res.status('401');
+            res.status('401').end('2');
         }
     }
     catch(error){
-        res.status('401');
+        res.status('401').end('1');
     }
 })
 
