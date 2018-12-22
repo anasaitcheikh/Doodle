@@ -157,7 +157,7 @@ api.post('/open/reunions', (req, res) => {
 
                 sendMailToParticipants(emailData)
 
-                sendMail(admin.email, 'Votre réunion', `http://localhost:8080/api/open/reunions/${token}`)
+                sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:8080/api/open/reunions/${token}`)
 
                 console.log('emailData', emailData)
                 res.json({
