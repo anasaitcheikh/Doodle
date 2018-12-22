@@ -50,10 +50,28 @@ function sendMail(emailDest, subject, text){
 
 //sendMail('ademou@gmail.com', 'ouverture de la reunion', 'nouvelle reunion ouverte')
 
+function sendMailToParticipants(emailData){
+    const suject = "Ajout à une nouvelle réunion"
+    const admin = emailData.admin
+    for(let participant of emailData.participants){
+        const baseLink = "http://localhost:8080/api/open/reunions"
+        const token = participant.token
+        const text = `<html><h1>${admin.name} (${admin.email}) Vous a ajouté dans une nouvelle réunion</h1>
+        <br>
+        <p>Vous pouvez cliquer sur ce lien <a href="${baseLink}/${token}">lien</a>/p>
+        <br>
+        <br>
+        <p>Cordialement.</p>
+        </html>`
+        sendMail(participant.email, suject, text)
+    }
+}
+
 
 module.exports = {
     isJson: isJSON,
     requestErrorMsg: requestErrorMsg,
     responseStatus: responseStatus,
-    sendMail : sendMail
+    sendMail : sendMail,
+    sendMailToParticipants: sendMailToParticipants
 }
