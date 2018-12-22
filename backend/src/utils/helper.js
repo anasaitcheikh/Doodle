@@ -24,7 +24,7 @@ responseStatus = {
     succes: 'succes'
 }
 
-function sendMail(emailDest, subject, text){
+function sendMail(emailDest, subject, html){
     const user = 'middleware.project.2018@gmail.com'
     var transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -39,7 +39,7 @@ function sendMail(emailDest, subject, text){
         from: `${user}`,
         to: `${emailDest}`,
         subject: `${subject}`,
-        text: `${text}`
+        html: `${html}`
     }
     transporter.sendMail(mailOptions, function(error, info){
         if (error) { console.log(error) }
@@ -48,7 +48,7 @@ function sendMail(emailDest, subject, text){
     }) 
 }
 
-//sendMail('ademou@gmail.com', 'ouverture de la reunion', 'nouvelle reunion ouverte')
+sendMail('ademoub@gmail.com', 'ouverture de la reunion', '<html><h1>nouvelle reunion ouverte</h1></html>')
 
 function sendMailToParticipants(emailData){
     const suject = "Ajout à une nouvelle réunion"
