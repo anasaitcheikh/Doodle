@@ -1,7 +1,7 @@
 const express = require('express')
 const api = express.Router()
 
-const {isJson, requestErrorMsg, responseStatus, sendMailToParticipants} = require('./utils/helper')
+const {isJson, requestErrorMsg, responseStatus, sendMailToParticipants, sendMail} = require('./utils/helper')
 const  dao = require('./model/dao')
 
 const tokenHandler = require('./authentification/tokenHandler')
@@ -157,6 +157,8 @@ api.post('/open/reunions', (req, res) => {
 
                 sendMailToParticipants(emailData)
 
+                sendMail(admin.email, 'Votre réunion' , `http://localhost/api/open/reunions/${token}`)
+
                 console.log('emailData', emailData)
                 res.json({
                     data: {
@@ -306,7 +308,7 @@ api.post('/open/reunions/:id_reunion/participants', (req, res) => {
                                     ]
                                 }
 
-                                // send mail
+                                sendMailToParticipants(emailData)
 
                                 const response = {
                                     data: {
@@ -388,7 +390,7 @@ api.put('/open/reunions/:id_reunion/participants/:id_participant', (req, res) =>
                                                     ]
                                                 }
 
-                                                // send mail
+                                                sendMailToParticipants(emailData)
 
                                                 res.json({
                                                     data: {
@@ -432,7 +434,7 @@ api.put('/open/reunions/:id_reunion/participants/:id_participant', (req, res) =>
                                                 ]
                                             }
 
-                                            // sendMail
+                                            sendMailToParticipants(emailData)
 
                                             res.json({
                                                 data: {
@@ -487,7 +489,7 @@ api.put('/open/reunions/:id_reunion/participants/:id_participant', (req, res) =>
                                                 ]
                                             }
 
-                                            // sendMail
+                                            sendMailToParticipants(emailData)
 
                                             res.json({
                                                 data: {
@@ -529,7 +531,7 @@ api.put('/open/reunions/:id_reunion/participants/:id_participant', (req, res) =>
                                             ]
                                         }
 
-                                        // sendMail
+                                        sendMailToParticipants(emailData)
 
                                         res.json({
                                             data: {
