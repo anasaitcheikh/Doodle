@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
+import { HttpHeaders } from '@angular/common/http'; 
 
 @Injectable()
 export class EventsService {
@@ -39,6 +40,15 @@ export class EventsService {
      this.events.push(event);
      console.log("try call API");
     //post data on API
+    //httpHeaders = new HttpHeaders({
+    // 'Content-Type' : 'application/json',
+     //'Cache-Control': 'no-cache'
+     //});
+
+    // options = {
+     //headers: httpHeaders
+     //};
+
     const req = this.http.post('http://localhost:8080/api/open/reunions/', {
       event
     })
