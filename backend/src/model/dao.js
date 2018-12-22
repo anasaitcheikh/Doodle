@@ -395,13 +395,13 @@ module.exports = {
 // updateParticipant(
 //     { 
 //         id:'5c1acc97f4b824298854bb4a',
-//         name:"moub participant 1.0.1 zzzxxxdiehi",
-//         email:"moub email 1.0.1 zzzxxxfeoiufue"
+//         name:"moub participant 1.0.1",
+//         email:"moub email 1.0.1"
 //     },
 //     (participant)=>{ console.log('UpdateParticipant') ;console.log(participant)}
 // )
 
-deleteParticipant('5c1acc97f4b824298854bb44', '5c1acc97f4b824298854bb49', (participant)=>{ console.log('deleteParticipant') ;console.log(participant)})
+//deleteParticipant('5c1acc97f4b824298854bb44', '5c1acc97f4b824298854bb49', (participant)=>{ console.log('deleteParticipant') ;console.log(participant)})
 
 // createParticipant(
 //     '5c1accac39540f2f98a94098', 
