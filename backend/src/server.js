@@ -8,7 +8,9 @@ const express = require('express')
 */
 const app = express()
 
+const cors = require('cors')
 
+app.use(cors())
 
 /**
  * @constant {int} port - Correspond au port utiliser pour la création du serveur.
