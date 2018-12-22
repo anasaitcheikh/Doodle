@@ -135,11 +135,13 @@ api.post('/open/reunions', (req, res) => {
                 for (let part of reunionAdded.participant) {
                     try {
                         const participantSession = {
-                            name: part.name,
-                            admin: false,
-                            email: part.email,
-                            idReunion: reunionAdded._id,
-                            idParticipant: part._id
+                            sessionData: {
+                                name: part.name,
+                                admin: false,
+                                email: part.email,
+                                idReunion: reunionAdded._id,
+                                idParticipant: part._id
+                            }
                         }
                         const participantToken = tokenHandler.createJWToken(participantSession, true)
                         emailParticipants.push({
