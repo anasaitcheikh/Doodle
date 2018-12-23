@@ -16,15 +16,18 @@ openController.post('/reunions', (req, res) => {
         res.status('400')
     }
 
-    let date = reqBodyData.reunion.date //generaliser cela pour les autre date
-    date[0].date = new Date(date[0].date)
+    let date = reqBodyData.reunion.date 
+    let jsDate = []
+    for(let d of date){
+        jsDate.push(new Date(d.date))
+    }
 
     let reunion = {}
     reunion.admin = reqBodyData.reunion.admin
     reunion.title = reqBodyData.reunion.title
     reunion.place = reqBodyData.reunion.place
     reunion.note = reqBodyData.reunion.note
-    reunion.date = date
+    reunion.date = jsDate
     const participants = reqBodyData.reunion.participants
     reunion.participant = (participants == undefined) ? {} : participants
     reunion.comment = {}
