@@ -61,7 +61,29 @@ function findReunion(idReunion, callback){
         callback(result)
     })
 }
+
+//récuperer les reunions qui ont été crée par un utilisateur
+function findReunionCreateBy(emailUser, callback){
+    connect()
+    db.ReunionModel.find({ "admin.email": emailUser }, function (error, result) {
+        if (error) console.log( error )
+        //console.log(result)
+        disconnect()
+        callback(result)
+    })
+}
   
+//récuperer les reunions qui ou un utilisateur est present
+function findReunionForGuest(emailUser, callback){
+    connect()
+    db.ReunionModel.find({ "participant.email": emailUser }, function (error, result) {
+        if (error) console.log( error )
+        //console.log(result)
+        disconnect()
+        callback(result)
+    })
+}
+
 function updateReunion(reunion, callback){
     connect()
     db.ReunionModel.findOneAndUpdate(
@@ -95,8 +117,6 @@ function deleteReunion(idReunion, callback){
 }
 
 function createReunion(reunion, callback){
-    // var reunionModel = newReunionModel()
-    // reunionModel=reunion
     db.reunion.title = reunion.title
     db.reunion.place = reunion.place
     db.reunion.note = reunion.note
@@ -318,49 +338,97 @@ function createComment(idRenion, comment, callback){
  * @param {*} callback => une fonction passée depuis l'api
  */
 function createUser(user, callback){
-    callback()
+    db.user.name = user.name
+    db.user.email = user.email
+    db.user.password = user.password
+    connect()
+    db.user.save(function (err, result) {
+        if (err) { console.log(err) }
+        if (!result) {
+          console.log("element not create")
+        }
+        //console.log(results)
+        disconnect()
+        callback(result)
+    })
 }
 
 /**
  * 
- * @param {*} id => l'id du User
+ * @param {*} idUser => l'id du User
  * @param {*} callback => une fonction passée depuis l'api
  */
-function findUser(id, callback){
-    callback()
+function findUser(idUser, callback){
+    connect()
+    db.UserModel.findOne({ _id: new MongoObjectID(idUser) }, {"_id":0, "__v":0}, function (error, result) {
+        if (error) console.log( error )
+        //console.log(result)
+        disconnect()
+        callback(result)
+    })
 }
 
 /**
  * 
- * @param {*} idUser => l'id de l'admin de la reunion
  * @param {*} callback => une fonction passée depuis l'api
  */
-function findAllUser(idAdmin, callback){
-    callback()
+function findAllUser(callback){
+    connect()
+    db.UserModel.find(null, {"__v":0}, function (err, results) {
+      if (err) { console.log( err ) }
+      //console.log(results)
+      disconnect()
+      callback(results)
+    })
 }
 
 /**
  * 
- * @param {*} id => l'id du User
+ * @param {*} user => user pour la mise à jour
  * @param {*} callback => une fonction passée depuis l'api
  */
-function updateUser(id, callback){
-    callback()
+function updateUser(user, callback){
+    connect()
+    db.UserModel.findOneAndUpdate(
+                                    {"_id":  new MongoObjectID(user.id)},
+                                    {"$set": {"name": user.name, "email": user.email, "password": user.password,
+                                              "$.update_at": new Date().now }},
+                                    {new:true},  
+                                    (err, results) => {
+        if (err) { console.log("erreur->"); console.log(err) }
+        if (!results) {
+          console.log("element not found")
+        }
+        //console.log(results)
+        disconnect()
+        callback(results)
+    })
 }
 
 /**
  * 
- * @param {*} id => l'id du User
+ * @param {*} idUser => l'id du User
  * @param {*} callback => une fonction passée depuis l'api
  */
-function deleteUser(id, callback){
-    callback()
+function deleteUser(idUser, callback){
+    connect()
+    db.UserModel.findOneAndDelete(
+        {"_id":  new MongoObjectID(idUser)},
+        (err, results) => {
+            if (err) { console.log(err) }
+            if (!results) { console.log("element not found") }
+            //console.log(results)
+            disconnect()
+            callback(results)
+    })
 }
 
 
 module.exports = {
     findAllReunion : findAllReunion,
     findReunion : findReunion,
+    findReunionCreateBy : findReunionCreateBy,
+    findReunionForGuest : findReunionForGuest,
     updateReunion : updateReunion,
     createReunion : createReunion,
     deleteReunion : deleteReunion,
@@ -382,7 +450,8 @@ module.exports = {
     findUser : findUser,
     updateUser : updateUser,
     createUser : createUser,
-    deleteUser : deleteUser,
+    deleteUser : deleteUser
+    
 } 
 
 
@@ -449,6 +518,13 @@ module.exports = {
 
 //findReunion('5c1acc97f4b824298854bb44', (reunion)=>{ console.log('findReunion') ;console.log(reunion)})
 
+// renvoi un tableau vide [] si les reunions ne sont pas trouvé
+// renvoie un tableau d'objet reunion s'il en trouve
+//findReunionCreateBy('ade@moub.com', (reunions)=>{ console.log('findReunionCreateBy') ;console.log(reunions)})
+
+// renvoi un tableau vide [] si les reunions ne sont pas trouvé
+// renvoie un tableau d'objet reunion s'il en trouve
+//findReunionForGuest('ademoub@gmail.com', (reunions)=>{ console.log('findReunionForGuest') ;console.log(reunions)})
 
 // updateReunion(
 //     { 
@@ -532,3 +608,35 @@ module.exports = {
 // )
 
 
+// createUser(
+//     {
+//         name : 'moub participant user',
+//         email : 'moub email user',
+//         password : 'moub password user'
+//     },
+//     (user) => { console.log('createUser'); console.log(user) }
+// )
+
+// renvoi null si l'utilisateur n'est pas trouvé
+// renvoie un objet user sans le champ _id et le champ __v s'il le trouve
+//findUser('5c1fdd0dc46bd95234c2c610', (user)=>{ console.log('findUser') ;console.log(user)})
+
+// un tableau vide [] s'il n'y a aucun user
+// renvoie tableau d'objet user sans le champ __v s'il en trouve
+// findAllUser((users)=>{ console.log('findAllUser') ;console.log(users)})
+
+// renvoi null si l'utilisateur n'est pas trouvé
+// renvoie un objet user s'il le trouve
+// updateUser(
+//     { 
+//         id:"5c1fe3ab446a5c4c2ca0f5f5",
+//         name:"moub user name update",
+//         email:"moub user email update",
+//         password : "moub user password update"
+//     },
+//     (user)=>{ console.log('UpdateUser') ;console.log(user)}
+// )
+
+// renvoi null si l'utilisateur n'est pas trouvé
+// renvoie un objet user s'il le trouve
+//deleteUser('5c1fe3ab446a5c4c2ca0f5f5', (user)=>{ console.log('deleteUser') ;console.log(user)})

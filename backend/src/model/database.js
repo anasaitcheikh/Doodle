@@ -124,7 +124,9 @@ module.exports = {
   ReunionModel:ReunionModel,
   mongoose : mongoose,
   hostname : hostname,
-  reunion : new ReunionModel()
+  reunion : new ReunionModel(),
+  user : new UserModel (),
+  UserModel:UserModel,
 }   
 
 
