@@ -7,29 +7,34 @@ const dao = require('../model/dao')
 
 const tokenHandler = require('../authentification/tokenHandler')
 
+const md5 = require('js-md5');
+
 let session
+let reqBodyData
+let token
 
 closeController.use((req, res, next) => {
-    const reqBodyData = req.body.data
+    reqBodyData = req.body.data
 
-    if(reqBodyData == undefined){
+    if (reqBodyData == undefined) {
         res.status('400').end()
     }
-    else{
-        if(req.url == '/auth'){
+    else {
+        if (req.url == '/auth' || req.url == '/users') {
             next()
         }
-        else{
-            const token = reqBodyData.token
+        else {
+            token = reqBodyData.token
 
-            if(token == undefined){
+            if (token == undefined) {
                 res.status('400').end('Authentication Token not provided')
             }
-            else{
-                try{
+            else {
+                try {
                     session = tokenHandler.verifyJWTToken(token)
+                    res.json(session)
                 }
-                catch(error){
+                catch (error) {
                     res.status('400').end('Bad Authentication Token')
                 }
             }
@@ -37,45 +42,150 @@ closeController.use((req, res, next) => {
     }
 })
 
-// authentficiaton
+// authentificaton
 closeController.post('/auth', function (req, res, next) {
-    const email = req.body.data.email
-    const password = req.body.data.password
+    dao.findUserByEmail(reqBodyData.user.email, (resFind) => {
+        if (resFind == null) {
+            res.status('401').end('Wrong Email')
+        }
+        else {
+            if (resFind.password != md5(reqBodyData.user.password)) {
+                res.status('401').end('Wrong Password')
+            }
+            else {
+                try {
+                    session = {
+                        sessionData: {
+                            id: resFind._id,
+                            email: resFind.email,
+                            name: resFind.name
+                        }
+                    }
 
-    dao.findUser({ email, password }, (user) => {
-        let msg = {}
-        if (user != undefined) {
-            const session = {
-                sessionData: {
-                    user: 'hadji'
+                    token = tokenHandler.createJWToken(session)
+
+                    dao.findReunionCreateBy(res.email, (ownReunion) => {
+                        dao.findReunionForGuest(res.email, (guestedReunion) => {
+                            res.json({
+                                data: {
+                                    user: {
+                                        id: resFind._id,
+                                        email: resFind.email,
+                                        name: resFind.name
+                                    },
+                                    reunions: {
+                                        owner: ownReunion,
+                                        guest: guestedReunion
+                                    },
+                                    token: token
+                                }
+                            })
+                        })
+                    })
+                }
+                catch (error) {
+                    res.status('500').end()
                 }
             }
-            const token = tokenHandler.createJWToken(session)
-            msg.data = token
-            res.json(data)
-        } else {
-            res.status('404').end()
         }
     })
+})
+
+//create user
+closeController.post('/users', (req, res) => {
+    const user = {
+        name: reqBodyData.user.name,
+        email: reqBodyData.user.email,
+        password: md5(reqBodyData.user.password)
+    }
+
+    dao.findUserByEmail(user.email, (resFind) => {
+        if (resFind != null) {
+            res.status('400').end('Email is already taken')
+        }
+        else {
+            dao.createUser(user, (userAdded) => {
+                if (userAdded == null) {
+                    res.end('500')
+                }
+                else {
+                    sendMail(user.email, `Bienvenue ${user.name}`, 'Vous êtes maintenat parmi nous !')
+
+                    res.status('200').end()
+                }
+            })
+        }
+    })
+})
+
+closeController.put('/users', (req, res) => {
+    try {
+        session = tokenHandler.verifyJWTToken(reqBodyData.token)
+
+        const user = {
+            id: session.sessionData.id,
+            name: reqBodyData.user.name,
+            email: session.sessionData.email,
+            password: reqBodyData.user.password
+        }
+
+        dao.updateUser(user, (userUpdated) => {
+            console.log(userUpdated)
+            if (userUpdated == null) {
+                res.status('500').end()
+            }
+            else {
+                session = {
+                    sessionData: user
+                }
+
+                try {
+                    token = tokenHandler.createJWToken(session)
+
+                    res.json({
+                        data: {
+                            user: userUpdated,
+                            token: token
+                        }
+                    })
+                }
+                catch (error) {
+                    res.status('500').end()
+                }
+            }
+        })
+    }
+    catch (error) {
+        res.status('400').end()
+    }
+})
+
+closeController.delete('/users', (req, res) => {
+    try {
+        session = tokenHandler.verifyJWTToken(reqBodyData.token)
+        dao.deleteUser(session.sessionData.id)
+        res.status('200').end()
+    }
+    catch (error) {
+        res.status('400').end()
+    }
 })
 
 //reunion open
 
 closeController.post('/reunions', (req, res) => {
-    const reqBodyData = req.body.data
-    if (reqBodyData == undefined) {
-        res.status('400')
+    let date = reqBodyData.reunion.date
+    let jsDate = []
+    for (let d of date) {
+        jsDate.push(new Date(d.date))
     }
-
-    let date = reqBodyData.reunion.date //generaliser cela pour les autre date
-    date[0].date = new Date(date[0].date)
 
     let reunion = {}
     reunion.admin = reqBodyData.reunion.admin
     reunion.title = reqBodyData.reunion.title
     reunion.place = reqBodyData.reunion.place
     reunion.note = reqBodyData.reunion.note
-    reunion.date = date
+    reunion.date = jsDate
     const participants = reqBodyData.reunion.participants
     reunion.participant = (participants == undefined) ? {} : participants
     reunion.comment = {}
@@ -90,15 +200,6 @@ closeController.post('/reunions', (req, res) => {
         }
         else {
             const idReunion = reunionAdded._id
-
-            const session = {
-                sessionData: {
-                    name: reunion.admin.name,
-                    admin: true,
-                    email: reunion.admin.email,
-                    idReunion: idReunion
-                }
-            }
 
             try {
                 const token = tokenHandler.createJWToken(session, true)
