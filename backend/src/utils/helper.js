@@ -52,7 +52,7 @@ function sendMail(emailDest, subject, html){
     })
 }
 
-sendMail('ademoub@gmail.com', 'ouverture de la reunion', '<html><h1>nouvelle reunion ouverte</h1></html>')
+//sendMail('ademoub@gmail.com', 'ouverture de la reunion', '<html><h1>nouvelle reunion ouverte</h1></html>')
 
 function sendMailToParticipants(emailData) {
     const suject = "Ajout à une nouvelle réunion"
