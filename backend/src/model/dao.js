@@ -658,4 +658,4 @@ module.exports = {
 
 // renvoi null si l'utilisateur n'est pas trouvé
 // renvoie un objet user s'il le trouve
-findUserByEmail('ademoub@gmail.com', (user)=>{ console.log('findUserByEmail') ;console.log(user)})
+//findUserByEmail('ademoub@gmail.com', (user)=>{ console.log('findUserByEmail') ;console.log(user)})
