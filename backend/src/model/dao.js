@@ -426,7 +426,6 @@ function deleteUser(idUser, callback){
 function findUserByEmail(emailUser, callback){
     connect()
     db.UserModel.findOne({"email": emailUser},
-                        {"_id":0}, 
                         (err, results) => {
         if (err) { console.log(err) }
         if (!results) {
