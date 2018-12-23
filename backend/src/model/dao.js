@@ -423,6 +423,21 @@ function deleteUser(idUser, callback){
     })
 }
 
+function findUserByEmail(emailUser, callback){
+    connect()
+    db.UserModel.findOne({"email": emailUser},
+                        {"_id":0}, 
+                        (err, results) => {
+        if (err) { console.log(err) }
+        if (!results) {
+          console.log("element not found")
+        }
+        //console.log("element",results)
+        disconnect()
+        callback(results)
+    })
+}
+
 
 module.exports = {
     findAllReunion : findAllReunion,
@@ -450,7 +465,8 @@ module.exports = {
     findUser : findUser,
     updateUser : updateUser,
     createUser : createUser,
-    deleteUser : deleteUser
+    deleteUser : deleteUser,
+    findUserByEmail : findUserByEmail
     
 } 
 
@@ -640,3 +656,7 @@ module.exports = {
 // renvoi null si l'utilisateur n'est pas trouvé
 // renvoie un objet user s'il le trouve
 //deleteUser('5c1fe3ab446a5c4c2ca0f5f5', (user)=>{ console.log('deleteUser') ;console.log(user)})
+
+// renvoi null si l'utilisateur n'est pas trouvé
+// renvoie un objet user s'il le trouve
+findUserByEmail('ademoub@gmail.com', (user)=>{ console.log('findUserByEmail') ;console.log(user)})
