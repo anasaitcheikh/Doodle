@@ -39,33 +39,5 @@ app.listen(process.env.PORT || port, (err) => {
     console.log(`server is listening on ${process.env.PORT || port}`)
 })
 
-
-
 // délégation du routing de l'api au module api
 app.use('/api', api)
-
-
-
-
-
-
-// connection.mongoose.connect(connection.hostname, { useNewUrlParser: true }, function(err) {
-//   if (err) { 
-//   	console.log(err)
-//   	throw err
-//   }else{
-//   	console.log("Connection to mongodb ok")
-
-//   }
-// })
-
-// connection.ReunionModel.find(null, function (err, data) {
-//   if (err) { throw err; }
-//   // data est un tableau de hash
-//   if (data.length==0) {
-//     console.log("element not found")
-//   }
-//   console.log(data);
-//   // On se déconnecte de MongoDB maintenant
-//   mongoose.connection.close();
-// });
