@@ -189,6 +189,7 @@ api.get('/open/reunions/:token', (req, res) => {
                 reunion.__v = null
                 res.json({
                     data: {
+                        participant: session.sessionData,
                         reunion: reunion
                     }
                 })
