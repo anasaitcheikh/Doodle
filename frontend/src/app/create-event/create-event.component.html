@@ -90,7 +90,16 @@
 
 					</div>
 
-					<div class="row">
+          <div *ngFor="let participant of participants; let in=index" class="col-sm-3">
+            <div class="form-group">
+              Name : <input type="text" [(ngModel)]="participants[in].name" name="name{{in}}" class="form-control" #name="ngModel" required  placeholder="Nom du participant"/> <br>
+              Email : <input type="text" [(ngModel)]="participants[in].email" name="name{{in}}" class="form-control" #name="ngModel" required  placeholder="Email du partcipant"/>
+            </div>
+            <br />
+          </div>
+          <button (click)="addPartcipant()">Add Participant</button>
+          
+          <div class="row">
 
 						<div class="col">
 							<div class="col-sm-offset-2 col-sm-10">
@@ -109,7 +118,6 @@
 						</div>
 
 					</div>
-
 
 					<div class="col-sm-4">
 						<button type="submit" [disabled]="!f.valid" class="btn btn-default">Créer</button>

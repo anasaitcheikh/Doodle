@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service';
+import {Event, Participant} from '../../utils/types';
+
 
 @Component({
   selector: 'app-create-event',
@@ -7,10 +9,7 @@ import { EventsService } from '../events.service';
   styleUrls: ['./create-event.component.css']
 })
 export class CreateEventComponent implements OnInit {
-   events = [
-       
-    
-   ];
+   events = [];
 
   event =  {
      reunion : {
@@ -28,12 +27,22 @@ export class CreateEventComponent implements OnInit {
       }
     };
 
+  event1 : Event;
+  participants : Participant[] = [];
+
   constructor(private eventService:EventsService) { 
      this.events = this.eventService.getAllEvents();
 
   }
 
   ngOnInit() {
+  }
+
+  addPartcipant(){
+    this.participants.push({
+      name:"",
+      email:""
+    })
   }
 
   onAddEvent(form){
@@ -46,6 +55,7 @@ export class CreateEventComponent implements OnInit {
      this.event.reunion.date.push({date:form.date,hourStart:form.hourStart,hourEnd:form.hourEnd});
      this.event.reunion.addComment = true;
      this.event.reunion.maxParticipant = form.maxParticipant;
+     this.event.reunion.participants = this.participants;
      console.log(this.event);
      this.eventService.addEvent(this.event);
      this.events = this.eventService.getAllEvents();
