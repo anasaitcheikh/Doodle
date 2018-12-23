@@ -9,7 +9,7 @@ import { LogInComponent } from './log-in/log-in.component';
 import { EventsComponent } from './events/events.component';
 import { EventsService } from './events.service';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 
@@ -36,7 +36,7 @@ const routes:Routes=[
     AppRoutingModule,
     FormsModule,
     RouterModule.forRoot(routes),
-    HttpModule
+    HttpClientModule
   ],
   providers: [EventsService],
   bootstrap: [AppComponent]

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from "@angular/common/http";
 import { HttpHeaders } from '@angular/common/http'; 
 
 @Injectable()
 export class EventsService {
 
-  constructor(private http:Http) { 
+  constructor(private http:HttpClient) {
       
   }
 
@@ -53,11 +53,11 @@ export class EventsService {
       event
     })
       .subscribe(
-        res => {
-          console.log(res);
+        data => {
+          console.log("POST Request is successful ", data);
         },
-        err => {
-          console.log("Error occured");
+        error => {
+          console.log("Error", error);
         }
       );
   }
