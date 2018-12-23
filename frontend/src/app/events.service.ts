@@ -49,9 +49,10 @@ export class EventsService {
      //headers: httpHeaders
      //};
 
-    const req = this.http.post('http://localhost:8080/api/open/reunions/', {
-      event
-    })
+    const req = this.http.post('http://localhost:8080/api/open/reunions/',
+      {
+        data:event
+      })
       .subscribe(
         data => {
           console.log("POST Request is successful ", data);

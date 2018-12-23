@@ -12,8 +12,7 @@ export class CreateEventComponent implements OnInit {
     
    ];
 
-  event = {
-    data : {
+  event =  {
      reunion : {
       admin : {
          email : "",
@@ -27,8 +26,7 @@ export class CreateEventComponent implements OnInit {
       maxParticipant : 1,
       participants : []
       }
-    }
-  };
+    };
 
   constructor(private eventService:EventsService) { 
      this.events = this.eventService.getAllEvents();
@@ -40,14 +38,14 @@ export class CreateEventComponent implements OnInit {
 
   onAddEvent(form){
      console.log(form.email);
-     this.event.data.reunion.admin.email = form.email;
-     this.event.data.reunion.admin.name = form.name;
-     this.event.data.reunion.title = form.title;
-     this.event.data.reunion.place = form.place;
-     this.event.data.reunion.note = form.note;
-     this.event.data.reunion.date.push({date:form.date,hourStart:form.hourStart,hourEnd:form.hourEnd});
-     this.event.data.reunion.addComment = true;
-     this.event.data.reunion.maxParticipant = form.maxParticipant;
+     this.event.reunion.admin.email = form.email;
+     this.event.reunion.admin.name = form.name;
+     this.event.reunion.title = form.title;
+     this.event.reunion.place = form.place;
+     this.event.reunion.note = form.note;
+     this.event.reunion.date.push({date:form.date,hourStart:form.hourStart,hourEnd:form.hourEnd});
+     this.event.reunion.addComment = true;
+     this.event.reunion.maxParticipant = form.maxParticipant;
      console.log(this.event);
      this.eventService.addEvent(this.event);
      this.events = this.eventService.getAllEvents();
