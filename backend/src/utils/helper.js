@@ -1,4 +1,5 @@
 var nodemailer = require('nodemailer')
+var emailExistence = require ('email-existence')
 
 isJSON = function (data) {
     try {
@@ -25,6 +26,9 @@ responseStatus = {
 }
 
 function sendMail(emailDest, subject, html){
+    // emailExistence.check('ademou00000000000000000000000000000000000000000000000000000000000000000000000@gmail.com', function(error, response){
+    //     console.log('res: ',response);
+    // })
     const user = 'middleware.project.2018@gmail.com'
     var transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
@@ -43,12 +47,12 @@ function sendMail(emailDest, subject, html){
     }
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) { console.log(error) }
-        else { console.log('Email sent: ' + info.response) }
+        else { console.log('Email sent: ', info.response) }
         transporter.close();
     })
 }
 
-//sendMail('ademoub@gmail.com', 'ouverture de la reunion', '<html><h1>nouvelle reunion ouverte</h1></html>')
+sendMail('ademoub@gmail.com', 'ouverture de la reunion', '<html><h1>nouvelle reunion ouverte</h1></html>')
 
 function sendMailToParticipants(emailData) {
     const suject = "Ajout à une nouvelle réunion"

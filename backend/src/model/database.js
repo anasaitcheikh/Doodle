@@ -35,6 +35,14 @@ const Participant = new mongoose.Schema({
                       update_at : { type: Date, default: Date.now }
                     })
 
+  const UserSchema = new mongoose.Schema({
+                      name :  { type : String },
+                      email : { type : String },
+                      password : { type : String },
+                      create_at : { type: Date, default: Date.now },
+                      update_at : { type: Date, default: Date.now }
+                    })
+
 
 // Création du schéma pour les reunions
 const ReunionSchema = new mongoose.Schema({
@@ -54,6 +62,9 @@ const ReunionSchema = new mongoose.Schema({
 
 // Création du Model pour les commentaires
 var ReunionModel = mongoose.model('reunion', ReunionSchema)
+
+
+var UserModel = mongoose.model('user', UserSchema)
  
 
 // On crée une instance du Model
@@ -100,6 +111,14 @@ reunion.participant.push({
                           create_at : new Date().now,
                           update_at : new Date().now
                         })
+
+
+var user = new UserModel()
+user.name = 'moub user 0'
+user.email = 'moub email user 0'
+user.password = 'moub password user 0'
+user.create_at = new Date().now
+user.update_at = new Date().now
 
 module.exports = {
   ReunionModel:ReunionModel,
@@ -152,6 +171,12 @@ module.exports = {
 // reunion.save(function (err) {
 //   if (err) { throw err }
 //   console.log('Commentaire ajouté avec succès !')
+//   // On se déconnecte de MongoDB maintenant
+//   mongoose.connection.close()
+// }) 
+// user.save(function (err) {
+//   if (err) { throw err }
+//   console.log('User ajouté avec succès !')
 //   // On se déconnecte de MongoDB maintenant
 //   mongoose.connection.close()
 // })
