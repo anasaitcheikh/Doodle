@@ -1,6 +1,70 @@
-<ul>
-	 <li *ngFor="let event of events">
-        {{ event.titre }}
-     </li>
+<!DOCTYPE html>
+<html>
 
-</ul>
+<head>
+  <title></title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="panel-group" style="margin-left: 50px;margin-right: 50px; margin-top: 50px">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h2 class="panel-title">
+          {{reponse.data.reunion.title}}
+        </h2>
+      </div>
+      <div class="panel-body" style="background-color: #fdf5f5">
+
+        <label class="glyphicon glyphicon-map-marker" id="place" name="place"> {{reponse.data.reunion.place}}</label>
+        <br><br>
+        <label class="glyphicon glyphicon-calendar" id="time" name="time" *ngFor="let d of reponse.data.reunion.date">
+          le : {{d.date}}, de {{d.hourStart}} à {{d.hourEnd}}</label>
+        <br><br>
+        <label class="glyphicon glyphicon-pencil" id="note" name="note"> {{reponse.data.reunion.note}}</label>
+        <br><br>
+        <h5 class="glyphicon glyphicon-user"> Participants :</h5>
+        <br><br>
+        <table class="table">
+          <tr>
+            <th>Nom</th>
+            <th>Email </th>
+            <th>Commentaire</th>
+            <th></th>
+          </tr>
+
+          <tr>
+            <td> {{reponse.data.reunion.admin.name}}</td>
+            <td> {{reponse.data.reunion.admin.email}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr *ngFor="let p of reponse.data.reunion.participant">
+            <td> {{p.name}}</td>
+            <td> {{p.email}}</td>
+            <td>
+              <ng-container *ngFor="let c of reponse.data.reunion.comment">
+                <ng-container *ngIf="c.email==p.email"> {{c.text}} </ng-container>
+              </ng-container>
+            </td>
+            <td></td>
+          </tr>
+
+          <tr *ngIf="reponse.data.reunion.participant.length <= reponse.data.reunion.maxParticipant">
+            <td> <input id="n" type="text"> </td>
+            <td> <input id="em" type="text"></td>
+            <td><input id="com" *ngIf="reponse.data.reunion.addComment" type="text"></td>
+            <td> <input id="add" type="submit" class="btn btn-success" value="Ajouter"></td>
+          </tr>
+        </table>
+
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
