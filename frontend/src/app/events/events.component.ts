@@ -1,11 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service';
+import {Observable} from "rxjs/Observable";
+import {HttpClient} from "@angular/common/http";
+import 'rxjs/Rx';
+
+interface Metting {
+  title: string;
+  date: string[];
+  place : string;
+  note: string;
+  addComment: string;
+  maxParticipant: string;
+  participant: string[];
+  comment: string[];
+  admin : string[];
+
+
+
+}
+
 
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.css']
 })
+
 export class EventsComponent implements OnInit {
 
   events = [];
@@ -79,13 +99,16 @@ export class EventsComponent implements OnInit {
     }
   };
 
+  reunion: Observable<Metting[]>;
 
-  constructor(private eventService: EventsService) {
-    this.events = this.eventService.getAllEvents();
-
+  constructor(private http:HttpClient) {
   }
 
   ngOnInit() {
-  }
+    this.reunion = this.http
+        .get<Metting[]>("/reunions.json")
+        //.map(data => data.forEach(d=>d.d.toString()))
+        .do(console.log);
+}
 
 }
