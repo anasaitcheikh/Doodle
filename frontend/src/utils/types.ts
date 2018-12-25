@@ -1,5 +1,23 @@
-export interface Event {
-  participants: [Participant?]
+export interface Event{
+  reunion : {
+    admin : {
+      email : string,
+      name : string
+    },
+    title : string,
+    place : string,
+    note : string,
+    date : [Date],
+    addComment : boolean,
+    maxParticipant : number,
+    participants : [Participant?]
+  }
+}
+
+export interface Date {
+   date : string,
+   hourStart : string,
+   hourEnd : string
 }
 
 export interface Participant {

@@ -9,7 +9,7 @@
 			<body>
 
 
-				<form #f="ngForm" (ngSubmit)="onAddEvent(f.value)">
+				<form #f="ngForm">
 					<h2>Nouveau Doodle</h2><br>
 					<h3>Pour quelle occasion ?</h3> <br>
 					<div class="row">  
@@ -98,13 +98,13 @@
             <br />
           </div>
           <button (click)="addPartcipant()">Add Participant</button>
-          
+
           <div class="row">
 
 						<div class="col">
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
-									<label><input type="checkbox" name="addComment" >Ajouter Commentaire</label>
+									<label><input #changeAddComment id="changeAddComment" type="checkbox" name="addComment"  [checked]="addComment" (click)="onChangeAddComment(changeAddComment.checked)">Ajouter Commentaire</label>
 								</div>
 							</div>
 
@@ -120,7 +120,7 @@
 					</div>
 
 					<div class="col-sm-4">
-						<button type="submit" [disabled]="!f.valid" class="btn btn-default">Créer</button>
+						<button type="submit" [disabled]="!f.valid" class="btn btn-primary" (click)="onAddEvent(f.value)">Créer</button>
 					</div>
 
 				</form>
