@@ -54,12 +54,12 @@ export class CreateEventComponent implements OnInit {
      this.event = {
        reunion : {
          admin : {
-           email : form.email,
-           name :  form.name
+           email : form.adminEmail,
+           name :  form.adminName
          },
          title : form.title,
          place : form.place,
-         note :  form.place,
+         note :  form.note,
          date : [
            { date : form.date,
              hourStart : form.hourStart,
