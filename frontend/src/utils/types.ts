@@ -7,10 +7,10 @@ export interface Event{
     title : string,
     place : string,
     note : string,
-    date : [Date],
+    date : Date[],
     addComment : boolean,
     maxParticipant : number,
-    participants : [Participant?]
+    participants : Participant[]
   }
 }
 
@@ -24,4 +24,10 @@ export interface Participant {
   name : string;
   email : string;
   id?: string
+}
+
+export interface Date {
+  date: string;
+  hourStart: string;
+  hourEnd: string
 }
