@@ -8,8 +8,12 @@
      <div class="collapse navbar-collapse">
          <ul class="navbar-nav">
              <li class="nav-item">
-                    <a class="nav-link" routerLink='/events'>Events</a>
+                    <a class="nav-link" routerLink='/events'>Reunions</a>
                 </li>
+           <li *ngIf="userSession" class="nav-item">
+             <a class="nav-link" routerLink='/events'>Mes invitations</a>
+           </li>
+
                 <li class="nav-item">
                         <a class="nav-link" href="#">Demo</a>
                     </li>
@@ -17,20 +21,35 @@
          
      </div>
      <!--span class="navbar-text">Create Account</span!-->
-     <img src="../assets/icon/man-user.png" alt="user" style="margin-right: 8px;">
-      <div *ngIf="!userName">
-       <span class="navbar-text" style="margin-right: 80px;"><a routerLink='/login'>Log In</a></span>
+
+      <div *ngIf="!userSession">
+        <img src="../assets/icon/new-user.png" alt="new-user" style="margin-right: 8px; margin-left: 8px">
+        <span class="navbar-text" style="margin-right: 80px;"><a routerLink='/register'>S'inscrire</a></span>
       </div>
-      <div *ngIf="userName">
-        <div class="dropdown show">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+      <div *ngIf="!userSession">
+        <img src="../assets/icon/man-user.png" alt="user" style="margin-right: 8px; margin-left: 8px">
+       <span class="navbar-text" style="margin-right: 80px;"><a routerLink='/login'>Se connecter</a></span>
+      </div>
+      <div *ngIf="userSession" style="margin-right: 100px;">
+        <div class="dropdown show pull-left">
+          <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white">
             {{userName}}
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="#">Paramètres du compte</a>
-            <a class="dropdown-item" href="#">Aide</a>
-            <a class="dropdown-item" href="#" (click)="logout()">Se deconnecter</a>
+            <a class="dropdown-item" href="/account-settings">
+              <img src="../assets/icon/settings.png" alt="user" style="margin-right: 2px;">
+              Paramètres du compte
+            </a>
+            <a class="dropdown-item" href="#">
+              <img src="../assets/icon/information.png" alt="user" style="margin-right: 2px;">
+              Aide
+            </a>
+            <a class="dropdown-item" href="#" (click)="logout()">
+              <img src="../assets/icon/logout.png" alt="user" style="margin-right: 2px;">
+              Se deconnecter
+            </a>
           </div>
         </div>
       </div>

@@ -9,22 +9,23 @@ import { Router} from "@angular/router";
 })
 export class SignInComponent implements OnInit {
 
+  addUser : boolean;
+  testPassword : boolean;
   constructor(private userService:UsersService,
               private router:Router) { }
 
   ngOnInit() {
   }
   createAccount(user){
-     this.userService.createAccount(user)
-       .subscribe(
-         data => {
-           console.log("data");
-           console.log(data);
-           this.router.navigate(['/']);
-         },
-         error => {
-           console.log(error);
-         }
-       );
-}
+      if(user.password == user.confirm_password){
+        this.testPassword = true;
+        this.addUser = this.userService.createAccount(user);
+        if(this.addUser){
+          this.router.navigate(['']);
+        }
+      }
+      else {
+        this.testPassword = false;
+      }
+  }
 }

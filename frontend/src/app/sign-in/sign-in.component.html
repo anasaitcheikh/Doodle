@@ -1,4 +1,26 @@
-<form #f="ngForm">
+<form #f="ngForm" style="position: center;">
+  <div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Nom ET Premon" name="name" required="" ngModel >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" name="email" required="" ngModel >
+      <div *ngIf="f.submitted && !addUser" class="help-block">Email déjà utilisé</div>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Mot de Passe" name="password" required="" ngModel>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Confirmer Mot de Passe" name="confirm_password" required="" ngModel>
+      <div *ngIf="f.submitted && !testPassword" class="help-block">Les mots de passe ne sont pas identiques</div>
+    </mat-form-field>
+  </div>
+  <div class="form-group">
+    <button type="submit" [disabled]="!f.valid" class="btn btn-success my-2 my-sm-0" style="margin-left: 600px;"(click)="createAccount(f.value)">Créer mon compte</button>
+  </div>
+</form>
+
+<!--form #f="ngForm">
    <div class="form-group"  >
          	<label for="name">Nom</label>
          	<input type="text" required="" ngModel name="name" class="form-control">
@@ -6,6 +28,7 @@
   <div class="form-group">
          	<label for="email">Email</label>
          	<input type="text" required="" ngModel name="email" class="form-control">
+    <div *ngIf="f.submitted && !addUser" class="help-block">Email déjà utilisé</div>
   </div>
       <div class="form-group">
          	 <label for="password">Mot de Passe</label>
@@ -14,9 +37,10 @@
        <div class="form-group">
          	 <label for="confirm_password">Confirmer Mot de Passe</label>
          	<input type="password" required="" ngModel name="confirm_password" class="form-control">
+         <div *ngIf="f.submitted && !testPassword" class="help-block">Les mots de passe ne sont pas identiques</div>
        </div>
   <div class="form-group">
        <button type="submit" [disabled]="!f.valid" class="btn btn-success my-2 my-sm-0" (click)="createAccount(f.value)">Créer mon compte</button>
   </div>
 
-</form>
+</form!-->

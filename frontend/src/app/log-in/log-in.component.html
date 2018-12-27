@@ -1,8 +1,24 @@
-<form #f="ngForm">
+<form #f="ngForm" style="position: center;">
+  <div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Email" name="login" required="" ngModel >
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Mot de Passe" name="password" required="" ngModel="password">
+    </mat-form-field>
+  </div>
+  <div class="form-group">
+    <button type="submit" [disabled]="!f.valid" (click)="login(f.value)" class="btn btn-primary" style="margin-left: 500px;">Sauvegarder</button>
+    <a routerLink="/reset-password" class="btn btn-link" style="margin-left: 100px">Mot de Passe oublié?</a>
+  </div>
+  <a routerLink="/register" class="btn btn-link" style="margin-left: 600px;">Pas de compte? S'inscrire</a>
+</form>
+
+<!--form #f="ngForm">
 <div class="form-group"  >
       <div class="form-group">
          	<label for="login">Login</label>
-          <input type="text" name="login" required="" ngModel name="login" class="form-control">
+          <input type="text" name="login" required="" ngModel class="form-control">
       </div>
 
       <div class="form-group">
@@ -14,4 +30,4 @@
        <a routerLink="/register" class="btn btn-link">S'inscrire</a>
     </div>
 </div>
-</form>
+</form!-->

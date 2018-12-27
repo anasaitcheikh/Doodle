@@ -32,7 +32,7 @@ export class LogInComponent implements OnInit {
             console.log("login successful!");
            console.log("data");
            console.log(data);
-            this.router.navigate(['dashboard']);
+            this.router.navigate(['']);
          },
          error => {
               console.log(error);

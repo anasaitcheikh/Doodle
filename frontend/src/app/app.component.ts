@@ -14,10 +14,11 @@ export class AppComponent implements OnInit{
      if(localStorage.getItem('currentUser')){
        console.log("there is user logged!");
        this.userSession = localStorage.getItem('currentUser');
+       console.log(JSON.parse(this.userSession).data);
        this.userName = JSON.parse(this.userSession).data.user.name;
        console.log("app component: user name");
        console.log(this.userName);
-       this.router.navigate(['dashboard']);
+       //this.router.navigate(['dashboard']);
      }
   }
 

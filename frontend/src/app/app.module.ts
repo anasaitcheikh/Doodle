@@ -54,6 +54,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes:Routes=[
    {path:'events', component:EventsComponent},
@@ -61,7 +63,9 @@ const routes:Routes=[
    {path:'register', component: SignInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
-   {path:'dashboard', component: DashboardComponent},
+   //{path:'dashboard', component: DashboardComponent},
+   {path:'account-settings', component: AccountSettingsComponent},
+   {path:'reset-password', component: ResetPasswordComponent},
    {path:'', redirectTo: '/welcome', pathMatch:'full'},
 ]
 
@@ -73,7 +77,9 @@ const routes:Routes=[
     EventsComponent,
     WelcomeComponent,
     CreateEventComponent,
-    DashboardComponent
+    DashboardComponent,
+    AccountSettingsComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
