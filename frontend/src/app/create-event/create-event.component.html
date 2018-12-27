@@ -5,94 +5,130 @@
       <mat-tab label="Admin">
         <h3>Qui organise ?</h3>
         <div class="row">
-          <div class="col-lg-4 col-lg-offset-4">
-            <mat-form-field>
-              <input matInput #adminName name="adminName" placeholder="Votre prénom et nom" type="text" required="" class="form-control" ngModel>
+          <div class="col-lg-4 col-lg-offset-2 center">
+            <mat-form-field class="large">
+              <input matInput #adminName name="adminName" placeholder="Votre prénom et nom" type="text" required=""
+                class="form-control" ngModel>
             </mat-form-field>
           </div>
-          <div class="col-lg-4">
-            <mat-form-field>
-              <input matInput #adminEmail name="adminEmail" placeholder="Votre adresse email" type="text" required="" class="form-control" ngModel>
+          <div class="col-lg-4 col-lg-offset-2 center">
+            <mat-form-field class="large">
+              <input matInput #adminEmail name="adminEmail" placeholder="Votre adresse email" type="text" required=""
+                class="form-control" ngModel>
             </mat-form-field>
-          </div>
-          <div>
-            <button> Next </button>
           </div>
         </div>
       </mat-tab>
       <mat-tab label="Information de la réunion">
         <h3>Quelle rencontre ? Qui y participe ?</h3>
-        <mat-card>
-          <div class="example-container">
-            <mat-form-field>
-              <input matInput #title name="title" placeholder="Titre de la réunion" type="text" required="" class="form-control" ngModel>
-            </mat-form-field>
-            <mat-form-field>
-              <input type="text" required="" class="form-control" matInput #place name="place" placeholder="Lieu de la réunion" ngModel>
-            </mat-form-field>
-            <div class="row">
-              <div class="col-lg-6">
-                <mat-form-field>
-                  <input type="number" required="" class="form-control"  matInput #maxParticipants name="maxParticipant" placeholder="Nombre Max De Participants" ngModel>
-                </mat-form-field>
-              </div>
-              <div class="col-lg-6">
-                <mat-slide-toggle #changeAddComment name="addComment"  [checked]="addComment" (click)="onChangeAddComment(changeAddComment.checked)">Activer/désactiver les commentaires</mat-slide-toggle>
-              </div>
-            </div>
-            <mat-form-field>
-              <textarea matInput #note name="note" placeholder="Note" required="" class="form-control" ngModel></textarea>
+        <div class="row center">
+          <div class="col-lg-6">
+            <mat-form-field class="large">
+              <input matInput #title name="title" placeholder="Titre de la réunion" type="text" required="" class="form-control"
+                ngModel>
             </mat-form-field>
           </div>
-        </mat-card>
+          <div class="col-lg-6">
+            <mat-form-field class="large">
+              <input type="text" required="" class="form-control" matInput #place name="place" placeholder="Lieu de la réunion"
+                ngModel>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row center">
+          <div class="col-lg-6">
+            <mat-form-field class="large">
+              <input type="number" required="" class="form-control" matInput #maxParticipants name="maxParticipant"
+                placeholder="Nombre Max De Participants" [(ngModel)]="maxParticipant">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 large">
+            <mat-slide-toggle #changeAddComment name="addComment" [checked]="addComment" (click)="onChangeAddComment(changeAddComment.checked)">Activer/désactiver
+              les commentaires</mat-slide-toggle>
+          </div>
+        </div>
+        <div class="row center">
+          <div class="col-lg-12">
+            <mat-form-field class="large">
+              <textarea matInput #note name="note" placeholder="Note" required="" class="form-control" rows="10"
+                ngModel></textarea>
+            </mat-form-field>
+          </div>
+        </div>
       </mat-tab>
       <mat-tab label="Dates">
         <h3>Quand ?</h3>
-        <mat-card>
-          <div class="row">
-            <div class="col-lg-2 col-lg-offset-2">
-              <mat-form-field>
-                <input matInput [matDatepicker]="picker" placeholder="Date" required="" class="form-control" name="date" ngModel>
+        <div *ngFor="let date of dates | keyvalue">
+          <div class="row center">
+            <div class="col-lg-3">
+              <mat-form-field class="large">
+                <input matInput [matDatepicker]="picker" placeholder="Date" required="" class="form-control" name="date"
+                  [(ngModel)]="date.value.date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="col-lg-2">
-              <input matInput #startTime name="hourStart" placeholder="10H" required="" class="form-control" ngModel>
-              <input type="text"  required="" class="form-control" id="h_dep" name="hourStart" ngModel placeholder="Heure de départ">
+              <mat-form-field class="large">
+                <input type="text" required="" class="form-control" matInput name="hourStart{{date.key}}" placeholder="Début ex: 9h"
+                [(ngModel)]="date.value.hourStart">
+              </mat-form-field>
             </div>
             <div class="col-lg-2">
-              <input matInput #endTime name="hourEnd" placeholder="18H" required=""  class="form-control" ngModel>
+              <mat-form-field class="large">
+                <input type="text" required="" class="form-control" matInput name="hourEnd{{date.key}}" placeholder="Fin ex: 18h"
+                  [(ngModel)]="date.value.hourEnd">
+              </mat-form-field>
             </div>
-            <div class="col-lg-1">
-              <button matInput #addDate name="addDate">+</button>
-            </div>
-            <div class="col-lg-1">
-              <button matInput #deleteDate name="deleteDate">-</button>
+            <div class="col-lg-2 center">
+              <button mat-icon-button color="primary" (click)="addDate(date)">
+                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="removeDate(date.key)" *ngIf="dates.size > 1">
+                <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+              </button>
             </div>
           </div>
-        </mat-card>
+        </div>
       </mat-tab>
+
       <mat-tab label="Participants">
         <h3>Qui y participe ?</h3>
-        <div *ngFor="let participant of participants; let in=index" class="col-sm-3">
-          <div class="form-group">
-            Name : <input type="text" [(ngModel)]="participants[in].name" name="name{{in}}" class="form-control" #name="ngModel" required  placeholder="Nom du participant"/> <br>
-            Email : <input type="text" [(ngModel)]="participants[in].email" name="name{{in}}" class="form-control" #name="ngModel" required  placeholder="Email du partcipant"/>
+        <div class="row" *ngIf="participants.size == 0 && maxParticipant > 0">
+          <div class="col-lg-4 center">
+            <button class="btn btn-primary center" (click)="addParticipant()">Ajouter un participant</button>
           </div>
-          <br />
         </div>
-        <button (click)="addPartcipant()">Add Participant</button>
+        <div *ngFor="let participant of participants | keyvalue">
+          <div class="row center">
+            <div class="col-lg-3">
+              <mat-form-field class="large">
+                <input type="text" required="" class="form-control" matInput name="participantName{{participant.key}}" 
+                  placeholder="Prénom et Nom" [(ngModel)]="participant.value.name">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-4">
+              <mat-form-field class="large">
+                <input type="email" required="" class="form-control" matInput name="participantEmail{{participant.key}}" 
+                  placeholder="Adresse email" [(ngModel)]="participant.value.email">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-2 center">
+              <button mat-icon-button color="primary" (click)="addParticipant()" *ngIf="participants.size < maxParticipant">
+                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="removeParticipant(participant.key)">
+                <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       </mat-tab>
-      <div class="col-sm-4">
-        <button type="submit" [disabled]="!f.valid" class="btn btn-primary" (click)="onAddEvent(f.value)">Créer</button>
-      </div>
     </mat-tab-group>
-  </div>
-
-  <div>
-    <button type="submit" class="btn btn-primary" (click)="onAddEvent(f.value)">Créer</button>
-
+    <div class="row">
+      <div class="col-lg-3 center">
+        <button type="submit" class="btn btn-primary center" (click)="onAddEvent(f.value)">Créer</button>
+      </div>
+    </div>
   </div>
 </form>
-
