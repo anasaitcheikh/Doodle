@@ -4,11 +4,11 @@
       <input matInput placeholder="Email" name="login" required="" ngModel >
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Mot de Passe" name="password" required="" ngModel="password">
+      <input matInput placeholder="Mot de Passe" name="password" required="" ngModel>
     </mat-form-field>
   </div>
   <div class="form-group">
-    <button type="submit" [disabled]="!f.valid" (click)="login(f.value)" class="btn btn-primary" style="margin-left: 500px;">Sauvegarder</button>
+    <button type="submit" [disabled]="!f.valid" (click)="login(f.value)" class="btn btn-primary" style="margin-left: 500px;">Se connecter</button>
     <a routerLink="/reset-password" class="btn btn-link" style="margin-left: 100px">Mot de Passe oublié?</a>
   </div>
   <a routerLink="/register" class="btn btn-link" style="margin-left: 600px;">Pas de compte? S'inscrire</a>

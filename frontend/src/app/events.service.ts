@@ -39,16 +39,6 @@ export class EventsService {
   addEvent(event){
      this.events.push(event);
      console.log("try call API");
-    //post data on API
-    //httpHeaders = new HttpHeaders({
-    // 'Content-Type' : 'application/json',
-     //'Cache-Control': 'no-cache'
-     //});
-
-    // options = {
-     //headers: httpHeaders
-     //};
-
     const req = this.http.post('http://localhost:8080/api/open/reunions/',
       {
         data:event
