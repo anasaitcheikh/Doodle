@@ -30,6 +30,7 @@ export class CreateEventComponent implements OnInit {
   event: Event;
   participants: Map<Number, Participant>;
   dates: Map<Number, Date>;
+  maxParticipant = 0;
 
   constructor(private eventService: EventsService) {
     this.events = this.eventService.getAllEvents();
@@ -94,7 +95,7 @@ export class CreateEventComponent implements OnInit {
         note: form.note,
         date: Array.from(this.dates.values()),
         addComment: this.addComment,
-        maxParticipant: form.maxParticipant,
+        maxParticipant: this.maxParticipant,
         participants: Array.from(this.participants.values())
       }
     }

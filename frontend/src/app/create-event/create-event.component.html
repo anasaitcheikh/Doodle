@@ -39,7 +39,7 @@
           <div class="col-lg-6">
             <mat-form-field class="large">
               <input type="number" required="" class="form-control" matInput #maxParticipants name="maxParticipant"
-                placeholder="Nombre Max De Participants" ngModel>
+                placeholder="Nombre Max De Participants" [(ngModel)]="maxParticipant">
             </mat-form-field>
           </div>
           <div class="col-lg-6 large">
@@ -94,7 +94,7 @@
 
       <mat-tab label="Participants">
         <h3>Qui y participe ?</h3>
-        <div class="row" *ngIf="participants.size == 0">
+        <div class="row" *ngIf="participants.size == 0 && maxParticipant > 0">
           <div class="col-lg-4 center">
             <button class="btn btn-primary center" (click)="addParticipant()">Ajouter un participant</button>
           </div>
@@ -114,7 +114,7 @@
               </mat-form-field>
             </div>
             <div class="col-lg-2 center">
-              <button mat-icon-button color="primary" (click)="addParticipant()">
+              <button mat-icon-button color="primary" (click)="addParticipant()" *ngIf="participants.size < maxParticipant">
                 <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="removeParticipant(participant.key)">
