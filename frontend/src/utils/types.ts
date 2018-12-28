@@ -31,3 +31,10 @@ export interface Date {
   hourStart: string;
   hourEnd: string
 }
+
+export interface User {
+  name : string,
+  email : string,
+  id?: string,
+  password?: string
+}
