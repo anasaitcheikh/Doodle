@@ -43,7 +43,6 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //import { FormsModule }  from '@angular/forms';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { EventsComponent } from './events/events.component';
 import { EventsService } from './events.service';
@@ -56,13 +55,14 @@ import { CreateEventComponent } from './create-event/create-event.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes:Routes=[
    {path:'events', component:EventsComponent},
    {path:'login', component: LogInComponent},
-   {path:'register', component: SignInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
+   {path:'profile', component: ProfileComponent},
    //{path:'dashboard', component: DashboardComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
@@ -72,14 +72,14 @@ const routes:Routes=[
 @NgModule({
   declarations: [
     AppComponent,
-    SignInComponent,
     LogInComponent,
     EventsComponent,
     WelcomeComponent,
     CreateEventComponent,
     DashboardComponent,
     AccountSettingsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
