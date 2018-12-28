@@ -37,6 +37,9 @@ function sendMail(emailDest, subject, html){
         auth: {
             user: user,
             pass: 'azertyuiop789@'
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     })
     var mailOptions = {
@@ -58,7 +61,7 @@ function sendMailToParticipants(emailData) {
     const suject = "Ajout à une nouvelle réunion"
     const admin = emailData.admin
     for (let participant of emailData.participants) {
-        const baseLink = "http://localhost:8080/api/open/reunions"
+        const baseLink = "http://localhost:4200/events"
         const token = participant.token
         const text = `<html><h1>${admin.name} (${admin.email}) Vous a ajouté dans une nouvelle réunion</h1>
         <br>
