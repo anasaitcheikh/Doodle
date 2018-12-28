@@ -1,7 +1,7 @@
 
- <div style="background-color: #D8E4F2">
+ <div>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1b3a77;">
-        <a class="navbar-brand" href="#">Home</a>
+        <a class="navbar-brand" routerLink='/welcome'>Accueil</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -13,19 +13,10 @@
            <li *ngIf="userSession" class="nav-item">
              <a class="nav-link" routerLink='/events'>Mes invitations</a>
            </li>
-
-                <li class="nav-item">
-                        <a class="nav-link" href="#">Demo</a>
-                    </li>
          </ul>
          
      </div>
      <!--span class="navbar-text">Create Account</span!-->
-
-      <div *ngIf="!userSession">
-        <img src="../assets/icon/new-user.png" alt="new-user" style="margin-right: 8px; margin-left: 8px">
-        <span class="navbar-text" style="margin-right: 80px;"><a routerLink='/register'>S'inscrire</a></span>
-      </div>
 
       <div *ngIf="!userSession">
         <img src="../assets/icon/man-user.png" alt="user" style="margin-right: 8px; margin-left: 8px">
