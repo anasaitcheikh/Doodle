@@ -1,70 +1,51 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-  <title></title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-
-<body>
-  <div class="panel-group" style="margin-left: 50px;margin-right: 50px; margin-top: 50px">
-    <div class="panel panel-success">
-      <div class="panel-heading">
-        <h2 class="panel-title">
-          {{reponse.data.reunion.title}}
-        </h2>
+<div class="panel-group" style="margin-left: 50px;margin-right: 50px; margin-top: 50px">
+      <div class="panel panel-success">
+      <div class="panel-heading" style="background-color: aliceblue">
+        <p class="panel-title" style="margin-left: 250px">
+          <i class="fa fa-calendar-check-o">{{reponse.data.reunion.title}} </i>
+        </p>
       </div>
       <div class="panel-body" style="background-color: #fdf5f5">
 
-        <label class="glyphicon glyphicon-map-marker" id="place" name="place"> {{reponse.data.reunion.place}}</label>
+        <i class="fa fa-user-secret" aria-hidden="true" style="margin-left: 20px"> Administrateur : {{reponse.data.reunion.admin.name}}</i>
         <br><br>
-        <label class="glyphicon glyphicon-calendar" id="time" name="time" *ngFor="let d of reponse.data.reunion.date">
-          le : {{d.date}}, de {{d.hourStart}} à {{d.hourEnd}}</label>
-        <br><br>
-        <label class="glyphicon glyphicon-pencil" id="note" name="note"> {{reponse.data.reunion.note}}</label>
-        <br><br>
-        <h5 class="glyphicon glyphicon-user"> Participants :</h5>
-        <br><br>
-        <table class="table">
-          <tr>
-            <th>Nom</th>
-            <th>Email </th>
-            <th>Commentaire</th>
-            <th></th>
-          </tr>
 
-          <tr>
-            <td> {{reponse.data.reunion.admin.name}}</td>
-            <td> {{reponse.data.reunion.admin.email}}</td>
-            <td></td>
-            <td></td>
-          </tr>
+        <i class="fa fa-map-marker" aria-hidden="true" style="margin-left: 20px"> {{reponse.data.reunion.place}}</i>
+        <br><br>
+        <i class="fa fa-calendar" aria-hidden="true" *ngFor="let date of reponse.data.reunion.date" style="margin-left: 20px">
+          {{date.date |  date: 'MMM dd, yyyy'}}
+        </i>
+        <br><br>
 
-          <tr *ngFor="let p of reponse.data.reunion.participant">
-            <td> {{p.name}}</td>
-            <td> {{p.email}}</td>
-            <td>
-              <ng-container *ngFor="let c of reponse.data.reunion.comment">
-                <ng-container *ngIf="c.email==p.email"> {{c.text}} </ng-container>
-              </ng-container>
-            </td>
-            <td></td>
-          </tr>
+        <i class="fa fa-sticky-note-o" aria-hidden="true" style="margin-left: 20px"> {{reponse.data.reunion.note}}</i>
+        <br><br>
 
-          <tr *ngIf="reponse.data.reunion.participant.length <= reponse.data.reunion.maxParticipant">
-            <td> <input id="n" type="text"> </td>
-            <td> <input id="em" type="text"></td>
-            <td><input id="com" *ngIf="reponse.data.reunion.addComment" type="text"></td>
-            <td> <input id="add" type="submit" class="btn btn-success" value="Ajouter"></td>
-          </tr>
+        <i class="fa fa-user" style="margin-left: 20px">Participants </i>
+        <br><br>
+        <table style="margin-left: 20px">
+           <thead>
+             <tr>
+               <td>Nom</td>
+               <td>Email</td>
+               <td>Commentaire</td>
+             </tr>
+           </thead>
+             <tbody>
+                <tr *ngFor="let participant of reponse.data.reunion.participant">
+                  <td>{{participant.name}}</td>
+                  <td>{{participant.email}}</td>
+                  <td>
+                    <ng-container *ngFor="let c of reponse.data.reunion.comment">
+                      <ng-container *ngIf="c.email==participant.email"> {{c.text}} </ng-container>
+                    </ng-container>
+                  </td>
+                </tr>
+             </tbody>
+
         </table>
-
-
       </div>
     </div>
 
-  </div>
 
-</body>
-
-</html>
+    </div>
