@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule,  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -56,6 +57,8 @@ import { CreateEventComponent } from './create-event/create-event.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { InvitationsComponent } from './invitations/invitations.component';
 
 const routes:Routes=[
    {path:'events', component:EventsComponent},
@@ -63,7 +66,8 @@ const routes:Routes=[
    {path:'register', component: SignInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
-   //{path:'dashboard', component: DashboardComponent},
+   {path:'tutorial', component: TutorialComponent},
+   {path:'invitations', component: InvitationsComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
    {path:'', redirectTo: '/welcome', pathMatch:'full'},
@@ -79,7 +83,9 @@ const routes:Routes=[
     CreateEventComponent,
     DashboardComponent,
     AccountSettingsComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    TutorialComponent,
+    InvitationsComponent
   ],
   imports: [
     BrowserModule,
@@ -123,7 +129,8 @@ const routes:Routes=[
     MatTooltipModule,
     MatTreeModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule,
+    AngularFontAwesomeModule
   ],
   providers: [EventsService,
               AuthenticateService,

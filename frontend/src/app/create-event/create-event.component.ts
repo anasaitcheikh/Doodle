@@ -50,6 +50,8 @@ export class CreateEventComponent implements OnInit {
 
   onChangeAddComment(value: boolean) {
     this.addComment = value;
+    console.log("change add comment");
+    console.log(this.addComment);
   }
 
   addParticipant() {

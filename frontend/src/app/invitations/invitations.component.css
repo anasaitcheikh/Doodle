@@ -1,0 +1,11 @@
+table {
+  width: 100%;
+}
+
+.mat-row:hover{
+ background-color: aliceblue;
+}
+
+.mat-header-row{
+  background-color: aliceblue;
+}

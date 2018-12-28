@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticateService} from "./authenticate.service";
+import {User} from "../utils/types";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,17 +9,23 @@ import {AuthenticateService} from "./authenticate.service";
 })
 export class AppComponent implements OnInit{
 
-  userSession;
-  userName;
+  //userSession;
+  //userName;
+  userSession : User;
+  userData;
   constructor(private router: Router, private authenticateService:AuthenticateService){
      if(localStorage.getItem('currentUser')){
        console.log("there is user logged!");
-       this.userSession = localStorage.getItem('currentUser');
-       console.log(JSON.parse(this.userSession).data);
-       this.userName = JSON.parse(this.userSession).data.user.name;
+       //console.log(JSON.parse(this.userSession).data);
+       //this.userName = JSON.parse(this.userSession).data.user.name;
+       this.userData = JSON.parse(localStorage.getItem('currentUser'));
+       this.userSession = {
+          name : this.userData.data.user.name,
+          email : this.userData.data.user.email,
+         password : this.userData.data.user.password
+       }
        console.log("app component: user name");
-       console.log(this.userName);
-       //this.router.navigate(['dashboard']);
+       console.log(this.userSession.name);
      }
   }
 
