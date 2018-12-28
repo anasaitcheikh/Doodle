@@ -23,6 +23,7 @@ export class LogInComponent implements OnInit {
   ngOnInit() {
   }
 
+
   login(form) {
     this.authenticateService.login(form.login, form.password)
       .subscribe(
@@ -30,13 +31,15 @@ export class LogInComponent implements OnInit {
           console.log("login successful!");
           console.log("data");
           console.log(data);
-          this.router.navigate(['profile']);
+          window.location.reload();
+          this.router.navigate(['']);
         },
         error => {
           console.log(error);
         }
       );
   }
+
 
   signin(form) {
     if (form.password == form.confirm_password) {

@@ -16,8 +16,6 @@ export class AppComponent implements OnInit{
   constructor(private router: Router, private authenticateService:AuthenticateService){
      if(localStorage.getItem('currentUser')){
        console.log("there is user logged!");
-       //console.log(JSON.parse(this.userSession).data);
-       //this.userName = JSON.parse(this.userSession).data.user.name;
        this.userData = JSON.parse(localStorage.getItem('currentUser'));
        this.userSession = {
           name : this.userData.data.user.name,
