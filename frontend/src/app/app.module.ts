@@ -62,7 +62,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { HeaderComponent } from './header/header.component';
 
 const routes:Routes=[
-   {path:'events', component:EventsComponent},
+   {path:'events/:token', component:EventsComponent},
    {path:'login', component: LogInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
