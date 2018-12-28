@@ -1,40 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthenticateService} from "./authenticate.service";
-import {User} from "../utils/types";
+import { Router } from "@angular/router";
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   //userSession;
   //userName;
-  userSession : User;
-  userData;
-  constructor(private router: Router, private authenticateService:AuthenticateService){
-     if(localStorage.getItem('currentUser')){
-       console.log("there is user logged!");
-       //console.log(JSON.parse(this.userSession).data);
-       //this.userName = JSON.parse(this.userSession).data.user.name;
-       this.userData = JSON.parse(localStorage.getItem('currentUser'));
-       this.userSession = {
-          name : this.userData.data.user.name,
-          email : this.userData.data.user.email,
-         password : this.userData.data.user.password
-       }
-       console.log("app component: user name");
-       console.log(this.userSession.name);
-     }
-  }
-
-
-  ngOnInit(){
+  
+  constructor(private router: Router) {
 
   }
-  logout(){
-    this.authenticateService.logout();
+
+  ngOnInit() {
+    
   }
 
 }

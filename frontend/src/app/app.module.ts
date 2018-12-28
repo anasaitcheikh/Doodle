@@ -57,6 +57,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { InvitationsComponent } from './invitations/invitations.component';
+import { HeaderComponent } from './header/header.component';
 
 const routes:Routes=[
    {path:'events', component:EventsComponent},
@@ -64,10 +67,11 @@ const routes:Routes=[
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
    {path:'profile', component: ProfileComponent},
-   //{path:'dashboard', component: DashboardComponent},
+   {path:'tutorial', component: TutorialComponent},
+   {path:'invitations', component: InvitationsComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
-   {path:'', redirectTo: '/welcome', pathMatch:'full'},
+   {path:'', redirectTo: 'welcome', pathMatch:'full'},
 ]
 
 @NgModule({
@@ -80,7 +84,10 @@ const routes:Routes=[
     DashboardComponent,
     AccountSettingsComponent,
     ResetPasswordComponent,
-    ProfileComponent
+    ProfileComponent,
+    TutorialComponent,
+    InvitationsComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
