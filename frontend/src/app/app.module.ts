@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { InvitationsComponent} from "./invitations/invitations.component";
+import {TutorialComponent} from "./tutorial/tutorial.component";
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule,  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -64,7 +66,8 @@ const routes:Routes=[
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
    {path:'profile', component: ProfileComponent},
-   //{path:'dashboard', component: DashboardComponent},
+   {path:'invitations', component: InvitationsComponent},
+   {path:'tutorial', component: TutorialComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
    {path:'', redirectTo: '/welcome', pathMatch:'full'},
@@ -80,7 +83,9 @@ const routes:Routes=[
     DashboardComponent,
     AccountSettingsComponent,
     ResetPasswordComponent,
-    ProfileComponent
+    ProfileComponent,
+    InvitationsComponent,
+    TutorialComponent
   ],
   imports: [
     BrowserModule,
@@ -125,7 +130,7 @@ const routes:Routes=[
     MatTreeModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
   ],
   providers: [EventsService,
               AuthenticateService,
