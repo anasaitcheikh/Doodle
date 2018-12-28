@@ -83,7 +83,7 @@ openController.post('/reunions', (req, res) => {
 
                 sendMailToParticipants(emailData)
 
-                sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:8080/api/open/reunions/${token}`)
+                sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:4200/events/${token}`)
 
                 console.log('emailData', emailData)
                 res.json({
