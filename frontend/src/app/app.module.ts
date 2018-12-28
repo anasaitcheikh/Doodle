@@ -59,8 +59,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
-import { TutorialComponent } from './tutorial/tutorial.component';
-import { InvitationsComponent } from './invitations/invitations.component';
 import { HeaderComponent } from './header/header.component';
 
 const routes:Routes=[
