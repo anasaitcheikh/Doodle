@@ -24,13 +24,13 @@ export class LogInComponent implements OnInit {
   }
 
   login(form) {
-    this.authenticateService.login(form.login, form.password)
+    this.authenticateService.login(form.email, form.password)
       .subscribe(
         data => {
           console.log("login successful!");
           console.log("data");
           console.log(data);
-          this.router.navigate(['profile']);
+          this.router.navigate(['']);
         },
         error => {
           console.log(error);
