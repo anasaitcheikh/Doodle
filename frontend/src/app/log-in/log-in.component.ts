@@ -23,6 +23,7 @@ export class LogInComponent implements OnInit {
   ngOnInit() {
   }
 
+
   login(form) {
     this.authenticateService.login(form.email, form.password)
       .subscribe(
@@ -37,6 +38,7 @@ export class LogInComponent implements OnInit {
         }
       );
   }
+
 
   signin(form) {
     if (form.password == form.confirm_password) {
