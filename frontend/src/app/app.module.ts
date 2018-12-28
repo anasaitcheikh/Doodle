@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule,  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -123,7 +124,8 @@ const routes:Routes=[
     MatTooltipModule,
     MatTreeModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule,
+    AngularFontAwesomeModule
   ],
   providers: [EventsService,
               AuthenticateService,

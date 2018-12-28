@@ -11,8 +11,12 @@
                     <a class="nav-link" routerLink='/events'>Reunions</a>
                 </li>
            <li *ngIf="userSession" class="nav-item">
-             <a class="nav-link" routerLink='/events'>Mes invitations</a>
+             <a class="nav-link" routerLink='/invitations'>Mes invitations</a>
            </li>
+
+                <li class="nav-item">
+                        <a class="nav-link" routerLink="/tutorial">Tutoriel</a>
+                    </li>
          </ul>
          
      </div>
@@ -25,15 +29,15 @@
       <div *ngIf="userSession" style="margin-right: 100px;">
         <div class="dropdown show pull-left">
           <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white">
-            {{userName}}
+            {{userSession.name}}
           </a>
 
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="/account-settings">
+            <a class="dropdown-item" routerLink="/account-settings">
               <img src="../assets/icon/settings.png" alt="user" style="margin-right: 2px;">
               Paramètres du compte
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" routerLink="/tutorial">
               <img src="../assets/icon/information.png" alt="user" style="margin-right: 2px;">
               Aide
             </a>

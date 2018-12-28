@@ -1,20 +1,20 @@
 <form #f="ngForm">
   <div class="container">
-    <h1>Nouveau Doodle</h1>
-    <mat-tab-group>
+    <h2 style="margin-left: 400px; margin-top: 40px">NOUVELLE REUNION</h2>
+    <mat-tab-group style="margin-top: 60px">
       <mat-tab label="Admin">
         <h1 class="big-title title-margin">Qui organise ?</h1>
         <div class="row center mat-card">
           <div class="col-lg-6 col-md-6">
             <mat-form-field class="large">
               <input matInput #adminName name="adminName" placeholder="Votre prénom et nom" type="text" required=""
-                class="form-control" ngModel>
+                ngModel>
             </mat-form-field>
           </div>
           <div class="col-lg-6 col-md-6">
             <mat-form-field class="large">
               <input matInput #adminEmail name="adminEmail" placeholder="Votre adresse email" type="text" required=""
-                class="form-control" ngModel>
+                 ngModel>
             </mat-form-field>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="row center mat-card">
             <div class="col-lg-3 col-md-3">
               <mat-form-field class="large">
-                <input matInput [matDatepicker]="picker" placeholder="Date" required="" class="form-control" name="date"
+                <input matInput [matDatepicker]="picker" placeholder="Date" required="" name="date"
                   [(ngModel)]="date.value.date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
@@ -78,7 +78,7 @@
             </div>
             <div class="col-lg-2 col-md-2">
               <mat-form-field class="large">
-                <input type="text" required="" class="form-control" matInput name="hourEnd{{date.key}}" placeholder="Fin ex: 18h"
+                <input type="text" required="" matInput name="hourEnd{{date.key}}" placeholder="Fin ex: 18h"
                   [(ngModel)]="date.value.hourEnd">
               </mat-form-field>
             </div>

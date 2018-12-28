@@ -14,6 +14,21 @@ export interface Event{
   }
 }
 
+export interface User {
+   name: string;
+   email: string;
+   password?: string;
+   owner? : Event[];
+   guest? : Event[];
+}
+
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
 export interface Date {
    date : string,
    hourStart : string,
