@@ -531,7 +531,7 @@ module.exports = {
 
 //findAllReunion((reunions)=>{  console.log('findAllReunion') ;console.log(reunions)})
 
-//findReunion('5c1acc97f4b824298854bb44', (reunion)=>{ console.log('findReunion') ;console.log(reunion)})
+//findReunion('5c26d891817377468059798a', (reunion)=>{ console.log('findReunion') ;console.log(reunion)})
 
 // renvoi un tableau vide [] si les reunions ne sont pas trouvé
 // renvoie un tableau d'objet reunion s'il en trouve
