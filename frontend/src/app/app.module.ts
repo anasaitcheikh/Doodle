@@ -97,8 +97,7 @@ const routes:Routes=[
     HeaderComponent,
     CloseEventsComponent,
     ShowEventComponent,
-    CommentsDetailsComponent,
-    CreateCloseEventComponent
+    CommentsDetailsComponent
   ],
   imports: [
     BrowserModule,
