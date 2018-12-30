@@ -1,1 +1,0 @@
-*installer mangodb version 4.0.2 -> https://www.mongodb.com/download-center?jmp=nav#community
