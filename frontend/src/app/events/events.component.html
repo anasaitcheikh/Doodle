@@ -1,51 +1,50 @@
+<app-header></app-header>
 
-<div class="panel-group" style="margin-left: 50px;margin-right: 50px; margin-top: 50px">
-      <div class="panel panel-success">
-      <div class="panel-heading" style="background-color: aliceblue">
-        <p class="panel-title" style="margin-left: 250px">
-          <i class="fa fa-calendar-check-o">{{reponse.data.reunion.title}} </i>
-        </p>
-      </div>
-      <div class="panel-body" style="background-color: #fdf5f5">
+<div class="panel panel-success" id="div1" *ngIf="isDataAvailable">
+  <div class="panel-heading" id="title">
+    <i class="fa fa-calendar-check-o" style="color: rgb(255, 255, 255);"> {{reponse.data.reunion.title}} </i>
+  </div>
+  <div class="panel-body" style="background-color: #ffffff;">
+    <br>
+    <i class="fa fa-user-secret" aria-hidden="true" style="margin-left: 20px"><B> Administrateur : </B>{{reponse.data.reunion.admin.name}}</i>
+    <br><br>
 
-        <i class="fa fa-user-secret" aria-hidden="true" style="margin-left: 20px"> Administrateur : {{reponse.data.reunion.admin.name}}</i>
-        <br><br>
+    <i class="fa fa-map-marker" aria-hidden="true" style="margin-left: 20px"> {{reponse.data.reunion.place}}</i>
+    <br><br>
+    <i class="fa fa-calendar" aria-hidden="true" *ngFor="let date of reponse.data.reunion.date" style="margin-left: 20px">
+      {{date.date | date: 'dd MMM yyyy'}}
+    </i>
+    <br><br>
 
-        <i class="fa fa-map-marker" aria-hidden="true" style="margin-left: 20px"> {{reponse.data.reunion.place}}</i>
-        <br><br>
-        <i class="fa fa-calendar" aria-hidden="true" *ngFor="let date of reponse.data.reunion.date" style="margin-left: 20px">
-          {{date.date |  date: 'MMM dd, yyyy'}}
-        </i>
-        <br><br>
+    <i class="fa fa-sticky-note-o" aria-hidden="true" style="margin-left: 20px"><B> Note : </B>{{reponse.data.reunion.note}}</i>
+    <br><br>
 
-        <i class="fa fa-sticky-note-o" aria-hidden="true" style="margin-left: 20px"> {{reponse.data.reunion.note}}</i>
-        <br><br>
+    <i class="fa fa-user" style="margin-left: 20px"><B> Participants : </B></i>
+    <br><br>
+    <table id="tab">
+      <tr>
+        <th>Nom</th>
+        <th>Email </th>
+        <th>Commentaire</th>
+      </tr>
 
-        <i class="fa fa-user" style="margin-left: 20px">Participants </i>
-        <br><br>
-        <table style="margin-left: 20px">
-           <thead>
-             <tr>
-               <td>Nom</td>
-               <td>Email</td>
-               <td>Commentaire</td>
-             </tr>
-           </thead>
-             <tbody>
-                <tr *ngFor="let participant of reponse.data.reunion.participant">
-                  <td>{{participant.name}}</td>
-                  <td>{{participant.email}}</td>
-                  <td>
-                    <ng-container *ngFor="let c of reponse.data.reunion.comment">
-                      <ng-container *ngIf="c.email==participant.email"> {{c.text}} </ng-container>
-                    </ng-container>
-                  </td>
-                </tr>
-             </tbody>
+      <tr>
+        <td class="fa fa-user-secret"> {{reponse.data.reunion.admin.name}}</td>
+        <td> {{reponse.data.reunion.admin.email}}</td>
+        <td></td>
+      </tr>
 
-        </table>
-      </div>
-    </div>
+      <tr *ngFor="let p of reponse.data.reunion.participant">
+        <td> {{p.name}}</td>
+        <td> {{p.email}}</td>
+        <td>
+          <ng-container *ngFor="let c of reponse.data.reunion.comment">
+            <ng-container *ngIf="c.email==p.email"> {{c.text}} </ng-container>
+          </ng-container>
+        </td>
+      </tr>
 
-
-    </div>
+    </table>
+    <br>
+  </div>
+</div>
