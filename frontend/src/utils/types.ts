@@ -28,6 +28,19 @@ export interface Event{
   }
 }
 
+export interface Close_Event{
+    title : string,
+    place : string,
+    note : string,
+    date : Date[],
+    addComment : boolean,
+    maxParticipant : number,
+    participant : Participant[],
+    comment: Comment[],
+    update_at?: string,
+    _id?: string
+}
+
 export interface User {
    name: string;
    email: string;
