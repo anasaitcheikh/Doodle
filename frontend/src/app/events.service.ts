@@ -44,14 +44,7 @@ export class EventsService {
       {
         data:event
       })
-      .subscribe(
-        data => {
-          console.log("POST Request is successful ", data);
-        },
-        error => {
-          console.log("Error", error);
-        }
-      );
+      return req;
   }
 
   getAllEvents(){

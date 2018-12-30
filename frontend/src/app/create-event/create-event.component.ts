@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { EventsService } from '../events.service';
 import { Date, Event, Participant } from '../../utils/types';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class CreateEventComponent implements OnInit {
   dates: Map<Number, Date> = new Map();
   maxParticipant = 0;
 
-  constructor(private eventService: EventsService) {
+  constructor(private eventService: EventsService, private router: Router) {
   }
 
   ngOnInit() {
@@ -80,7 +81,13 @@ export class CreateEventComponent implements OnInit {
     }
 
     console.log('event', this.event);
-    this.eventService.addEvent(this.event);
+    this.eventService.addEvent(this.event)
+    .subscribe(
+      res => {
+        const token = JSON.parse(JSON.stringify(res)).data.token
+        this.router.navigate([`open-event/${token}`])
+      }
+    )
   }
 
 }
