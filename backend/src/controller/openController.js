@@ -28,9 +28,8 @@ openController.post('/reunions', (req, res) => {
     reunion.place = reqBodyData.reunion.place
     reunion.note = reqBodyData.reunion.note
     reunion.date = jsDate
-    const participants = reqBodyData.reunion.participants
-    reunion.participant = (participants == undefined) ? {} : participants
-    reunion.comment = {}
+    reunion.participant = reqBodyData.reunion.participant
+    reunion.comment = []
     reunion.addComment = reqBodyData.reunion.addComment
     reunion.maxParticipant = reqBodyData.reunion.maxParticipant
 
@@ -83,7 +82,7 @@ openController.post('/reunions', (req, res) => {
 
                 sendMailToParticipants(emailData)
 
-                sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:4200/events/${token}`)
+                sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:4200/open-event/${token}`)
 
                 console.log('emailData', emailData)
                 res.json({
