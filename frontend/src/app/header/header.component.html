@@ -8,8 +8,11 @@
      <div class="collapse navbar-collapse">
          <ul class="navbar-nav">
              <li class="nav-item">
-                    <a class="nav-link" routerLink='/events'>Reunions</a>
+                    <a class="nav-link" routerLink='/open-event'>Reunions</a>
                 </li>
+                <li *ngIf="userSession != null" class="nav-item">
+                    <a class="nav-link" routerLink='/close-events'>Mes réunions</a>
+                  </li>
            <li *ngIf="userSession != null" class="nav-item">
              <a class="nav-link" routerLink='/invitations'>Mes invitations</a>
            </li>

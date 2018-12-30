@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { HttpHeaders } from '@angular/common/http'; 
+import {OpenEventResponse} from '../utils/types';
 
 @Injectable()
 export class EventsService {
@@ -55,5 +56,42 @@ export class EventsService {
 
   getAllEvents(){
      return this.events;
+  }
+
+  getCloseEvent(eventId, token){
+    const req = this.http.get(`http://localhost:8080/api/close/reunions/${eventId}/${token}`)
+    return req;
+  }
+
+  updateCloseEvent(eventId, event, token){
+    const req = this.http.put(`http://localhost:8080/api/close/reunions/${eventId}`, {
+      data: {
+        reunion: event,
+        token: token
+      }
+    })
+    return req;
+  }
+
+  deleteCloseEvent(eventId, token){
+    const req = this.http.delete(`http://localhost:8080/api/close/reunions/${eventId}/${token}`)
+    return req;
+  }
+
+  // OPEN event
+
+  getOpenEvent(token){
+    const req = this.http.get(`http://localhost:8080/api/open/reunions/${token}`)
+    return req;
+  }
+
+  updateOpenReunionParticipant(idReunion, idParticipant, participant, token){
+    const req = this.http.put(`http://localhost:8080/api/open/reunions/${idReunion}/participants/${idParticipant}`, {
+      data: {
+        token: token,
+        participant: participant
+      }
+    })
+    return req;
   }
 }

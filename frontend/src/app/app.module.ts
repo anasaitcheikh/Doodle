@@ -45,7 +45,6 @@ import {
 } from '@angular/material';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-//import { FormsModule }  from '@angular/forms';
 import { LogInComponent } from './log-in/log-in.component';
 import { EventsComponent } from './events/events.component';
 import { EventsService } from './events.service';
@@ -60,9 +59,11 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HeaderComponent } from './header/header.component';
+import { CloseEventsComponent } from './close-events/close-events.component';
+import { ShowEventComponent } from './show-event/show-event.component';
 
 const routes:Routes=[
-   {path:'events', component:EventsComponent},
+   {path:'open-event/:token', component:EventsComponent},
    {path:'login', component: LogInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
@@ -71,6 +72,8 @@ const routes:Routes=[
    {path:'tutorial', component: TutorialComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
+   {path:'close-events', component: CloseEventsComponent},
+   {path:'show-event/:id_event', component: ShowEventComponent},
    {path:'', redirectTo: 'welcome', pathMatch:'full'},
 ]
 
@@ -87,7 +90,9 @@ const routes:Routes=[
     ProfileComponent,
     TutorialComponent,
     InvitationsComponent,
-    HeaderComponent
+    HeaderComponent,
+    CloseEventsComponent,
+    ShowEventComponent
   ],
   imports: [
     BrowserModule,

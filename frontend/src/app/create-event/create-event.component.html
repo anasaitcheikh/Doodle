@@ -1,10 +1,11 @@
+<app-header></app-header>
 <form #f="ngForm">
   <div class="container">
     <h2 style="margin-left: 400px; margin-top: 40px">NOUVELLE REUNION</h2>
     <mat-tab-group style="margin-top: 60px">
       <mat-tab label="Admin">
         <h1 class="big-title title-margin">Qui organise ?</h1>
-        <div class="row center mat-card">
+        <div class="row center mat-card rounded-corners">
           <div class="col-lg-6 col-md-6">
             <mat-form-field class="large">
               <input matInput #adminName name="adminName" placeholder="Votre prénom et nom" type="text" required=""
@@ -14,14 +15,14 @@
           <div class="col-lg-6 col-md-6">
             <mat-form-field class="large">
               <input matInput #adminEmail name="adminEmail" placeholder="Votre adresse email" type="text" required=""
-                 ngModel>
+                ngModel>
             </mat-form-field>
           </div>
         </div>
       </mat-tab>
       <mat-tab label="Informations de la réunion">
         <h1 class="big-title title-margin">Quelle rencontre ?</h1>
-        <div class="center mat-card">
+        <div class="center mat-card rounded-corners">
           <div class="row center">
             <div class="col-lg-6 col-md-6">
               <mat-form-field class="large">
@@ -44,7 +45,7 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-md-6 large">
-              <mat-slide-toggle #changeAddComment name="addComment" [checked]="addComment" (click)="onChangeAddComment(changeAddComment.checked)">Activer/désactiver
+              <mat-slide-toggle #changeAddComment name="addComment" (change)="onChangeAddComment($event)">Activer/désactiver
                 les commentaires</mat-slide-toggle>
             </div>
           </div>
@@ -58,42 +59,40 @@
           </div>
         </div>
       </mat-tab>
+      <!-- Dates -->
       <mat-tab label="Dates">
         <h1 class="big-title title-margin">Quand ?</h1>
         <div *ngFor="let date of dates | keyvalue">
-          <div class="row center mat-card">
-            <div class="col-lg-3 col-md-3">
-              <mat-form-field class="large">
-                <input matInput [matDatepicker]="picker" placeholder="Date" required="" name="date"
-                  [(ngModel)]="date.value.date">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <div class="col-lg-2 col-md-2">
-              <mat-form-field class="large">
-                <input type="text" required="" class="form-control" matInput name="hourStart{{date.key}}" placeholder="Début ex: 9h"
-                  [(ngModel)]="date.value.hourStart">
-              </mat-form-field>
-            </div>
-            <div class="col-lg-2 col-md-2">
-              <mat-form-field class="large">
-                <input type="text" required="" matInput name="hourEnd{{date.key}}" placeholder="Fin ex: 18h"
-                  [(ngModel)]="date.value.hourEnd">
-              </mat-form-field>
-            </div>
-            <div class="col-lg-2 col-md-2 center">
-              <button mat-icon-button color="primary" (click)="addDate(date)">
-                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="removeDate(date.key)" *ngIf="dates.size > 1">
-                <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
-              </button>
-            </div>
-          </div>
+            <div class="row center mat-card rounded-corners">
+                <div class="col-lg-3 col-md-3">
+                  <mat-form-field class="large">
+                    <input class="form-control" matInput [matDatepicker]="picker" placeholder="Date" name="date{{date.key}}" required="" [(ngModel)]="date.value.date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                  <mat-form-field class="large">
+                    <input type="text" required="" class="form-control" name="hourStart{{date.key}}" matInput placeholder="Début ex: 9h" [(ngModel)]="date.value.hourStart"> 
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                  <mat-form-field class="large">
+                    <input type="text" required="" class="form-control" name="hourEnd{{date.key}}" matInput placeholder="Fin ex: 18h" [(ngModel)]="date.value.hourEnd">
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-2 col-md-3 center">
+                    <button mat-icon-button color="primary" name="addDate{{date.key}}" (click)="addDate()">
+                      <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" name="removeDate{{date.key}}" (click)="removeDate(date.key)" *ngIf="dates.size > 1">
+                      <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+                    </button>
+                  </div>
+              </div>
         </div>
       </mat-tab>
-
+      <!-- Participants -->
       <mat-tab label="Participants">
         <h1 class="big-title title-margin">Qui y participe ?</h1>
         <div class="row center" *ngIf="participants.size == 0 && maxParticipant > 0">
@@ -102,28 +101,30 @@
           </div>
         </div>
         <div *ngFor="let participant of participants | keyvalue">
-          <div class="row center mat-card">
-            <div class="col-lg-3 col-md-3">
-              <mat-form-field class="large">
-                <input type="text" required="" class="form-control" matInput name="participantName{{participant.key}}"
-                  placeholder="Prénom et Nom" [(ngModel)]="participant.value.name">
-              </mat-form-field>
-            </div>
-            <div class="col-lg-4 col-md-4">
-              <mat-form-field class="large">
-                <input type="email" required="" class="form-control" matInput name="participantEmail{{participant.key}}"
-                  placeholder="Adresse email" [(ngModel)]="participant.value.email">
-              </mat-form-field>
-            </div>
-            <div class="col-lg-2 col-md-2 center">
-              <button mat-icon-button color="primary" (click)="addParticipant()" *ngIf="participants.size < maxParticipant">
-                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="removeParticipant(participant.key)">
-                <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
-              </button>
-            </div>
-          </div>
+            <div class="row center mat-card rounded-corners">
+                <div class="col-lg-4 col-md-4">
+                  <mat-form-field class="large">
+                    <input type="text" required="" class="form-control" name="participantName{{participant.key}}" matInput placeholder="Prénom et nom"
+                      [(ngModel)]="participant.value.name">
+                  </mat-form-field>
+                </div>
+              
+                <div class="col-lg-4 col-md-4">
+                    <mat-form-field class="large">
+                      <input type="text" required="" class="form-control" name="participantEmail{{participant.key}}" matInput placeholder="Adresse email"
+                        [(ngModel)]="participant.value.email">
+                    </mat-form-field>
+                  </div>
+              
+                <div class="col-lg-2 col-md-2 center">
+                  <button mat-icon-button color="primary" name="addParticipant{{participant.key}}" (click)="addParticipant()" *ngIf="participants.size < maxParticipant">
+                    <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" name="removeParticipant{{participant.key}}" (click)="removeParticipant(participant.key)">
+                    <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+                  </button>
+                </div>
+              </div>
         </div>
       </mat-tab>
     </mat-tab-group>

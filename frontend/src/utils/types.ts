@@ -1,3 +1,14 @@
+export interface OpenEventResponse {
+  data: {
+    participant: {
+      admin: boolean,
+      email: string,
+      idReunion: string,
+      name: string
+    },
+    reunion: Event
+  }
+}
 export interface Event{
   reunion : {
     admin : {
@@ -10,7 +21,10 @@ export interface Event{
     date : Date[],
     addComment : boolean,
     maxParticipant : number,
-    participants : Participant[]
+    participant : Participant[],
+    comment: Comment[],
+    update_at?: string,
+    _id?: string
   }
 }
 
@@ -20,13 +34,6 @@ export interface User {
    password?: string;
    owner? : Event[];
    guest? : Event[];
-}
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
 }
 
 export interface Date {
@@ -52,4 +59,11 @@ export interface User {
   email : string,
   id?: string,
   password?: string
+}
+
+export interface Comment {
+  id? : string
+  name : string,
+  email : string,
+  text?: string
 }

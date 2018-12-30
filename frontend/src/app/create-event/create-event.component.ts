@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { EventsService } from '../events.service';
 import { Date, Event, Participant } from '../../utils/types';
 
@@ -9,49 +9,26 @@ import { Date, Event, Participant } from '../../utils/types';
   styleUrls: ['./create-event.component.css']
 })
 export class CreateEventComponent implements OnInit {
-  events = [];
-
-  /* event =  {
-      reunion : {
-       admin : {
-          email : "",
-          name : ""
-       },
-       title : "",
-       place : "",
-       note : "",
-       date : [],
-       addComment : true,
-       maxParticipant : 1,
-       participants : []
-       }
-     };*/
-  addComment: boolean;
+  addComment: boolean = false;
   event: Event;
-  participants: Map<Number, Participant>;
-  dates: Map<Number, Date>;
+  participants: Map<Number, Participant> = new Map();
+  dates: Map<Number, Date> = new Map();
   maxParticipant = 0;
 
   constructor(private eventService: EventsService) {
-    this.events = this.eventService.getAllEvents();
   }
 
   ngOnInit() {
-    this.participants = new Map();
-    this.dates = new Map();
     const date = {
       date: "2018-12-12",
       hourStart: '9h',
       hourEnd: '18h'
     }
     this.dates.set(1, date);
-    console.log(JSON.stringify(this.dates.get(1).date))
   }
 
-  onChangeAddComment(value: boolean) {
-    this.addComment = value;
-    console.log("change add comment");
-    console.log(this.addComment);
+  onChangeAddComment(change) {
+    this.addComment = change.checked
   }
 
   addParticipant() {
@@ -63,29 +40,28 @@ export class CreateEventComponent implements OnInit {
       name: '',
       email: ''
     }
-    this.participants.set(lastIndex + 1, participant);
+    this.participants.set(lastIndex+1, participant);
   }
 
   addDate() {
     const date = {
-      date: "2018-12-12",
-      hourStart: '9h',
-      hourEnd: '18h'
+      date: '',
+      hourStart: '',
+      hourEnd: ''
     }
     const lastIndex = Array.from(this.dates.keys()).pop().valueOf();
-    this.dates.set(lastIndex + 1, date);
+    this.dates.set(lastIndex+1, date);
   }
 
-  removeParticipant(index) {
-    this.participants.delete(index);
+  removeParticipant(key) {
+    this.participants.delete(key)
   }
 
-  removeDate(index) {
-    this.dates.delete(index);
+  removeDate(key) {
+    this.dates.delete(key)
   }
 
   onAddEvent(form) {
-    console.log(form.email);
     this.event = {
       reunion: {
         admin: {
@@ -98,23 +74,13 @@ export class CreateEventComponent implements OnInit {
         date: Array.from(this.dates.values()),
         addComment: this.addComment,
         maxParticipant: this.maxParticipant,
-        participants: Array.from(this.participants.values())
+        participant: Array.from(this.participants.values()),
+        comment: []
       }
     }
 
-
-    /*this.event.reunion.admin.email = form.email;
-    this.event.reunion.admin.name = form.name;
-    this.event.reunion.title = form.title;
-    this.event.reunion.place = form.place;
-    this.event.reunion.note = form.note;
-    this.event.reunion.date.push({date:form.date,hourStart:form.hourStart,hourEnd:form.hourEnd});
-    this.event.reunion.addComment = this.addComment;
-    this.event.reunion.maxParticipant = form.maxParticipant;
-    this.event.reunion.participants = this.participants;*/
-    console.log(this.event);
+    console.log('event', this.event);
     this.eventService.addEvent(this.event);
-    this.events = this.eventService.getAllEvents();
   }
 
 }

@@ -1,70 +1,161 @@
-<!DOCTYPE html>
-<html>
+<app-header></app-header>
+<div class="container" *ngIf="event != undefined && event != null">
+  <form #f="ngForm">
+    <mat-tab-group>
+      <mat-tab label="Mes Infos">
+        <h1 class="big-title title-margin">Mes informations personnelles?</h1>
+        <div class="row center mat-card rounded-corners">
+          <div class="col-lg-5 col-md-5">
+            <mat-form-field class="large">
+              <input matInput #currentUserName name="currentUserName" placeholder="Votre prénom et nom" type="text"
+                required="" [(ngModel)]="currentParticipant.name">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-5 col-md-5">
+            <mat-form-field class="large">
+              <input matInput #currentUserEmail [disabled]="true" name="currentUserEmail" placeholder="Votre adresse email"
+                type="text" required="" [(ngModel)]="currentParticipant.email">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2 col-md-2">
+            <button mat-icon-button color="primary" name="updateCurrentUser" (click)="updateCurrentUser()">
+              <mat-icon aria-label="Example icon-button with a heart icon">done</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Admin -->
+      <mat-tab label="Admin" *ngIf="!isAdmin">
+        <h1 class="big-title title-margin">Qui organise ?</h1>
+        <div class="row center mat-card rounded-corners">
+          <div class="col-lg-6 col-md-6">
+            <mat-form-field class="large">
+              <input matInput #adminName name="adminName" placeholder="Votre prénom et nom" type="text" [disabled]="!isAdmin"
+                required="" [(ngModel)]="event.admin.name">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <mat-form-field class="large">
+              <input matInput #adminEmail name="adminEmail" placeholder="Votre adresse email" type="text" [disabled]="!isAdmin"
+                required="" [(ngModel)]="event.admin.email">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Event -->
+      <mat-tab label="Informations de la réunion">
+        <h1 class="big-title title-margin">Quelle rencontre ?</h1>
+        <div class="center mat-card rounded-corners">
+          <div class="row center">
+            <div class="col-lg-6 col-md-6">
+              <mat-form-field class="large">
+                <input matInput #title name="title" placeholder="Titre de la réunion" [disabled]="!isAdmin" type="text"
+                  required="" [(ngModel)]="event.title">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <mat-form-field class="large">
+                <input type="text" required="" [disabled]="!isAdmin" matInput #place name="place" placeholder="Lieu de la réunion"
+                  [(ngModel)]="event.place">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row center">
+            <div class="col-lg-6 col-md-6">
+              <mat-form-field class="large">
+                <input type="number" [disabled]="!isAdmin" required="" matInput #maxParticipants name="maxParticipant"
+                  placeholder="Nombre Max De Participants" [(ngModel)]="event.maxParticipant">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6 large">
+              <mat-slide-toggle #changeAddComment [disabled]="!isAdmin" name="addComment" [(ngModel)]="event.addComment"
+                [checked]="event.addComment">Activer/désactiver
+                les commentaires</mat-slide-toggle>
+            </div>
+          </div>
+          <div class="row center">
+            <div class="col-lg-12 col-md-12">
+              <mat-form-field class="large">
+                <textarea matInput #note name="note" [disabled]="!isAdmin" placeholder="Note" required="" rows="10"
+                  [(ngModel)]="event.note"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Dates -->
+      <mat-tab label="Dates">
+        <h1 class="big-title title-margin">Dates</h1>
+        <div class="row center mat-card rounded-corners" *ngFor="let date of event.date">
+          <div class="col-lg-3 col-md-3">
+            <mat-form-field class="large">
+              <input matInput [disabled]="!isAdmin" [matDatepicker]="picker" placeholder="Date" name="date{{event.date.indexOf(date)}}"
+                required="" [(ngModel)]="date.date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <mat-form-field class="large">
+              <input type="text" required="" [disabled]="!isAdmin" name="hourStart{{event.date.indexOf(date)}}"
+                matInput placeholder="Début ex: 9h" [(ngModel)]="date.hourStart">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <mat-form-field class="large">
+              <input type="text" required="" [disabled]="!isAdmin" name="hourEnd{{event.date.indexOf(date)}}" matInput
+                placeholder="Fin ex: 18h" [(ngModel)]="date.hourEnd">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2 col-md-3 center" *ngIf="isAdmin">
+            <button mat-icon-button color="primary" (click)="addDate()">
+              <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="deleteDate(date)" *ngIf="event.date.length > 1">
+              <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Participants -->
+      <mat-tab label="Participants">
+        <h1 class="big-title title-margin">Participants</h1>
+        <div class="row center mat-card rounded-corners" *ngFor="let participant of event.participant">
+          <div class="col-lg-4 col-md-4">
+            <mat-form-field class="large">
+              <input type="text" required="" [disabled]="!isAdmin" name="participantName{{participant.name}}" matInput
+                placeholder="Prénom et nom" [(ngModel)]="participant.name">
+            </mat-form-field>
+          </div>
 
-<head>
-  <title></title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
+          <div class="col-lg-4 col-md-4">
+            <mat-form-field class="large">
+              <input type="text" required="" [disabled]="!isAdmin" name="participantEmail{{participant.email}}"
+                matInput placeholder="Adresse email" [(ngModel)]="participant.email">
+            </mat-form-field>
+          </div>
 
-<body>
-  <div class="panel-group" style="margin-left: 50px;margin-right: 50px; margin-top: 50px">
-    <div class="panel panel-success">
-      <div class="panel-heading">
-        <h2 class="panel-title">
-          {{reponse.data.reunion.title}}
-        </h2>
-      </div>
-      <div class="panel-body" style="background-color: #fdf5f5">
-
-        <label class="glyphicon glyphicon-map-marker" id="place" name="place"> {{reponse.data.reunion.place}}</label>
-        <br><br>
-        <label class="glyphicon glyphicon-calendar" id="time" name="time" *ngFor="let d of reponse.data.reunion.date">
-          le : {{d.date}}, de {{d.hourStart}} à {{d.hourEnd}}</label>
-        <br><br>
-        <label class="glyphicon glyphicon-pencil" id="note" name="note"> {{reponse.data.reunion.note}}</label>
-        <br><br>
-        <h5 class="glyphicon glyphicon-user"> Participants :</h5>
-        <br><br>
-        <table class="table">
-          <tr>
-            <th>Nom</th>
-            <th>Email </th>
-            <th>Commentaire</th>
-            <th></th>
-          </tr>
-
-          <tr>
-            <td> {{reponse.data.reunion.admin.name}}</td>
-            <td> {{reponse.data.reunion.admin.email}}</td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          <tr *ngFor="let p of reponse.data.reunion.participant">
-            <td> {{p.name}}</td>
-            <td> {{p.email}}</td>
-            <td>
-              <ng-container *ngFor="let c of reponse.data.reunion.comment">
-                <ng-container *ngIf="c.email==p.email"> {{c.text}} </ng-container>
-              </ng-container>
-            </td>
-            <td></td>
-          </tr>
-
-          <tr *ngIf="reponse.data.reunion.participant.length <= reponse.data.reunion.maxParticipant">
-            <td> <input id="n" type="text"> </td>
-            <td> <input id="em" type="text"></td>
-            <td><input id="com" *ngIf="reponse.data.reunion.addComment" type="text"></td>
-            <td> <input id="add" type="submit" class="btn btn-success" value="Ajouter"></td>
-          </tr>
-        </table>
-
-
-      </div>
-    </div>
-
-  </div>
-
-</body>
-
-</html>
+          <div class="col-lg-2 col-md-2 center" *ngIf="isAdmin">
+            <button mat-icon-button color="primary" (click)="addParticipant()" *ngIf="event.participant.length < event.maxParticipant">
+              <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="deleteParticipant(participant)">
+              <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+      <!-- Comments -->
+      <mat-tab label="Commentaires">
+        <h1 class="big-title title-margin">Commentaires</h1>
+        <div class="row center mat-card rounded-corners" *ngFor="let comment of event.comments">
+          <div class="col-lg-12 col-md-12 center">
+            <textarea matInput class="large" [disabled]="!isAdmin">{{comment.text}}</textarea>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+  <br>
+  <mat-divider></mat-divider>
+</div>

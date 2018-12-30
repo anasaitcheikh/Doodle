@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { PeriodicElement} from "../../utils/types";
 
 /*const ELEMENT_DATA: PeriodicElement[] = [
   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
