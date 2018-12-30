@@ -61,7 +61,7 @@ function sendMailToParticipants(emailData) {
     const suject = "Ajout à une nouvelle réunion"
     const admin = emailData.admin
     for (let participant of emailData.participants) {
-        const baseLink = "http://localhost:4200/events"
+        const baseLink = "http://localhost:4200/open-event"
         const token = participant.token
         const text = `<html><h1>${admin.name} (${admin.email}) Vous a ajouté dans une nouvelle réunion</h1>
         <br>
