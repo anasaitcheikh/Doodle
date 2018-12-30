@@ -1,98 +1,105 @@
 <app-header></app-header>
 <div class="row" style="width: 100%">
 
-<div class="col-md-6" style="height:90%;padding:0;margin-top: 20px;margin-left: 2.7%;">
+<div class="col-md-5" style="height:90%;padding:0;margin-top: 20px;margin-left: 2.7%;">
     <div class="panel panel-default tabel-panel-1" style="height: 85%; border: 1px solid lightgrey;">
 
       <div class="panel-body project-panel" >
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <table id="tableInvitations" *ngIf="guestReunions.length>0" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
           <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
 
-          <!-- Position Column -->
-          <!--ng-container matColumnDef="position">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let element"> {{index}} </td>
-          </ng-container!-->
-
+          <!-- add checkbox for select option!-->
+          <ng-container matColumnDef="checked">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+            <mat-cell *matCellDef="let reunion">
+              <mat-checkbox [(ngModel)]="reunion.checked" (change)="onChange(reunion.checked)"></mat-checkbox>
+            </mat-cell>
+          </ng-container>
           <!-- Titre Column -->
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef> Titre </th>
+            <th mat-header-cell *matHeaderCellDef> <b>Titre</b> </th>
             <td mat-cell *matCellDef="let reunion"> {{reunion.title}} </td>
           </ng-container>
 
           <!-- Lieu Column -->
           <ng-container matColumnDef="place">
-            <th mat-header-cell *matHeaderCellDef> Lieu </th>
+            <th mat-header-cell *matHeaderCellDef> <b>Lieu</b> </th>
             <td mat-cell *matCellDef="let reunion"> {{reunion.place}} </td>
           </ng-container>
 
           <!-- Symbol Column -->
           <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <th mat-header-cell *matHeaderCellDef><b> Date </b></th>
             <td mat-cell *matCellDef="let reunion"> {{reunion.date[0].date | date: 'MMM dd, yyyy'}} </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns" style=""></tr>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" style="">
+
+          </tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectRow(row)" style="background-color: gray()"></tr>
         </table>
-
+        <div *ngIf="guestReunions.length == 0 ">
+            Vous n'avez pas d'invitation pour le moment
+        </div>
 
       </div>
     </div>
   </div>
 
 
-  <div class="col-md-5" style="height:90%;padding:0;margin-top: 20px;margin-left: 2.7%; border: 1px solid lightgrey;">
-    <div class="panel panel-success">
+  <div class="col-md-6" style="height:90%;padding:0;margin-top: 20px;margin-left: 2.7%; border: 1px solid lightgrey;">
+    <div *ngIf="guestReunions.length > 0" class="panel panel-default">
       <div class="panel-heading" style="background-color: aliceblue">
-        <p class="panel-title" style="margin-left: 250px">
-          <i class="fa fa-calendar-check-o">{{currentReunion.title}} </i>
-        </p>
+        <div class="panel-title" style="margin-left: 250px">
+          <i class="fa fa-calendar-check-o">
+               {{currentReunion.title}} </i>
+        </div>
       </div>
       <div class="panel-body" style="background-color: #fdf5f5">
 
-        <i class="fa fa-user-secret" aria-hidden="true" style="margin-left: 20px"> Administrateur : {{currentReunion.admin.name}}</i>
+        <i class="fa fa-address-card">  Administrateur : {{currentReunion.admin.name}}</i>
         <br><br>
 
-        <i class="fa fa-map-marker" aria-hidden="true" style="margin-left: 20px"> {{currentReunion.place}}</i>
+        <i class="fa fa-map-marker" aria-hidden="true"> {{currentReunion.place}}</i>
         <br><br>
         <i class="fa fa-calendar" aria-hidden="true" *ngFor="let date of currentReunion.date" style="margin-left: 20px">
           {{date.date |  date: 'MMM dd, yyyy'}}
         </i>
         <br><br>
 
-        <i class="fa fa-sticky-note-o" aria-hidden="true" style="margin-left: 20px"> {{currentReunion.note}}</i>
+        <i class="fa fa-sticky-note-o" aria-hidden="true"> {{currentReunion.note}}</i>
         <br><br>
 
-        <i class="fa fa-user" style="margin-left: 20px"> Participants </i>
+        <i class="fa fa-user"> Participants </i>
         <br><br>
-        <table style="margin-left: 20px">
+        <table id="tablePartcipants">
            <thead>
              <tr>
-               <td>Nom</td>
-               <td>Email</td>
-               <td>Commentaire</td>
+               <th>Nom</th>
+               <th>Email</th>
+               <!--td>Commentaire</td!-->
              </tr>
            </thead>
              <tbody>
                 <tr *ngFor="let participant of currentReunion.participant">
                   <td>{{participant.name}}</td>
                   <td>{{participant.email}}</td>
-                  <td>
+                  <!--td>
                     <ng-container *ngFor="let c of currentReunion.comment">
                       <ng-container *ngIf="c.email==participant.email"> {{c.text}} </ng-container>
                     </ng-container>
-                  </td>
+                  </td!-->
                 </tr>
              </tbody>
 
         </table>
+        <div>
+          <a routerLink="/comments-details">Visualiser les commentaires</a>
+        </div>
       </div>
     </div>
 
-
-    </div>
-
+</div>
 </div>

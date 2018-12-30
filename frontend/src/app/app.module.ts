@@ -60,6 +60,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HeaderComponent } from './header/header.component';
+import { CommentsDetailsComponent } from './comments-details/comments-details.component';
 
 const routes:Routes=[
    {path:'events/:token', component:EventsComponent},
@@ -69,6 +70,7 @@ const routes:Routes=[
    {path:'profile', component: ProfileComponent},
    {path:'invitations', component: InvitationsComponent},
    {path:'tutorial', component: TutorialComponent},
+   {path:'comments-details', component: CommentsDetailsComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
    {path:'', redirectTo: 'welcome', pathMatch:'full'},
@@ -87,7 +89,8 @@ const routes:Routes=[
     ProfileComponent,
     TutorialComponent,
     InvitationsComponent,
-    HeaderComponent
+    HeaderComponent,
+    CommentsDetailsComponent
   ],
   imports: [
     BrowserModule,

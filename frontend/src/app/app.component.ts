@@ -8,9 +8,6 @@ import { Router } from "@angular/router";
 })
 export class AppComponent implements OnInit {
 
-  //userSession;
-  //userName;
-  
   constructor(private router: Router) {
 
   }
