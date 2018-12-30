@@ -83,3 +83,5 @@ export class EventsComponent implements OnInit {
     return this.eventsService.getOpenEvent(this.token)
   }
 }
+
+

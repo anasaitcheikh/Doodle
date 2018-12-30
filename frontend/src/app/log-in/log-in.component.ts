@@ -3,6 +3,7 @@ import { AuthenticateService } from "../authenticate.service";
 import { UsersService } from "../users.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { User } from "../../utils/types";
+import {style} from "@angular/animations";
 
 @Component({
   selector: 'app-log-in',
@@ -17,14 +18,14 @@ export class LogInComponent implements OnInit {
     private usersService: UsersService) {
 
   }
-  returnUrl: string
   log = false;
-
+  isSignIn : boolean;
   ngOnInit() {
   }
 
 
   login(form) {
+    //document.getElementById('loader').style.display = 'block';
     this.authenticateService.login(form.email, form.password)
       .subscribe(
         data => {
@@ -32,6 +33,7 @@ export class LogInComponent implements OnInit {
           console.log("data");
           console.log(data);
           this.router.navigate(['']);
+          //document.getElementById('loader').style.display = 'none';
         },
         error => {
           console.log(error);
@@ -49,10 +51,16 @@ export class LogInComponent implements OnInit {
       }
       console.log(user)
       this.usersService.createAccount(user).
-        subscribe(res => console.log(res))
+        subscribe(res => {
+          console.log(res);
+          this.isSignIn = true;
+          document.getElementById('dialogButton').click();
+        }
+      )
     }
     else {
-      return false;
+      //return false;
+      this.isSignIn = false;
     }
   }
 }

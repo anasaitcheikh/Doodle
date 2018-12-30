@@ -59,6 +59,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HeaderComponent } from './header/header.component';
+import { CommentsDetailsComponent } from './comments-details/comments-details.component';
 import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
 
@@ -70,6 +71,7 @@ const routes:Routes=[
    {path:'profile', component: ProfileComponent},
    {path:'invitations', component: InvitationsComponent},
    {path:'tutorial', component: TutorialComponent},
+   {path:'comments-details', component: CommentsDetailsComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
    {path:'close-events', component: CloseEventsComponent},
@@ -93,6 +95,7 @@ const routes:Routes=[
     HeaderComponent,
     CloseEventsComponent,
     ShowEventComponent
+    CommentsDetailsComponent
   ],
   imports: [
     BrowserModule,
