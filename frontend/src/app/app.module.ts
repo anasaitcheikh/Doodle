@@ -88,6 +88,7 @@ const routes:Routes=[
     EventsComponent,
     WelcomeComponent,
     CreateEventComponent,
+    CreateCloseEventComponent,
     DashboardComponent,
     AccountSettingsComponent,
     ResetPasswordComponent,
