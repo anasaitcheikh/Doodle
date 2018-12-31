@@ -716,7 +716,7 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
                     dao.deleteParticipant(idReunion, idParticipant, (resDelete) => {
                         console.log('resDelete', resDelete)
                         if (resDelete == null) {
-                            res.status('404').end("participant not found")
+                            res.status('404').end("participant not found side admin")
                         }
                         else {
                             res.status('200').end()
@@ -725,7 +725,7 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
                 }else{
                     dao.findParticipant(idReunion, idParticipant, (resFind) => {
                         if (resFind.participant.length == 0) {
-                            res.status('404').end("participant not found")
+                            res.status('404').end("participant not found side participant")
                         }
                         else {
                             // console.log("resFind ->", resFind.participant[0])
