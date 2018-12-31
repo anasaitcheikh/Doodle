@@ -17,10 +17,7 @@ openController.post('/reunions', (req, res) => {
     }
 
     let date = reqBodyData.reunion.date 
-
-    console.log('date')
-    console.log(date)
-
+    
     let reunion = {}
     reunion.admin = reqBodyData.reunion.admin
     reunion.title = reqBodyData.reunion.title
@@ -34,7 +31,6 @@ openController.post('/reunions', (req, res) => {
 
 
     dao.createReunion(reunion, (reunionAdded) => {
-        console.log("return reunion", reunionAdded)
         if (reunionAdded == undefined) {
             res.status('403').end()
         }
@@ -103,20 +99,52 @@ openController.get('/reunions/:token', (req, res) => {
     try {
         const session = tokenHandler.verifyJWTToken(token, true)
 
-        dao.findReunion(session.sessionData.idReunion, (reunion) => {
-            if (reunion == null) {
-                res.status('404').end()
-            }
-            else {
-                reunion.__v = null
-                res.json({
-                    data: {
-                        participant: session.sessionData,
-                        reunion: reunion
+        if(session.sessionData.admin){
+            dao.findReunion(session.sessionData.idReunion, (reunion) => {
+                if (reunion == null) {
+                    res.status('404').end()
+                }
+                else {
+                    reunion.__v = null
+                    res.json({
+                        data: {
+                            participant: session.sessionData,
+                            reunion: reunion
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            dao.findReunion(session.sessionData.idReunion, (reunion) => {
+                if (reunion == null) {
+                    res.status('404').end()
+                }
+                else {
+                    let participantExists = false 
+                    reunion.participant.forEach(p => 
+                        {
+                            if(p.email == session.sessionData.email) {
+                                participantExists = true
+                                return
+                            } 
+                        
+                        })
+                    if(!participantExists){
+                        res.status('401').end()
                     }
-                })
-            }
-        })
+                    else{
+                    reunion.__v = null
+                    res.json({
+                        data: {
+                            participant: session.sessionData,
+                            reunion: reunion
+                        }
+                    })
+                }
+                }
+            })
+        }
     }
     catch (error) {
         res.status('404').end()
@@ -216,16 +244,16 @@ openController.post('/reunions/:id_reunion/participants', (req, res) => {
                                 sessionData: {
                                     name: participant.name,
                                     admin: false,
-                                    email: reunion.admin.email,
+                                    email: participant.email,
                                     idReunion: idReunion,
                                     idParticipant: idParticipant
                                 }
                             }
-
+                            console.log('admin', participantAdded.admin)
                             try {
                                 const token = tokenHandler.createJWToken(session, true)
                                 const emailData = {
-                                    admin: resUpdate.admin,
+                                    admin: participantAdded.admin,
                                     participants: [
                                         {
                                             email: participant.email,
@@ -247,7 +275,7 @@ openController.post('/reunions/:id_reunion/participants', (req, res) => {
                                 res.json(response)
                             }
                             catch (error) {
-                                res.send('500')
+                                res.status('500').end()
                             }
                         }
                     })
@@ -390,10 +418,10 @@ openController.put('/reunions/:id_reunion/participants/:id_participant', (req, r
     }
 })
 
-openController.delete('/reunions/:id_reunion/participants/:id_participant', (req, res) => {
+openController.delete('/reunions/:id_reunion/participants/:id_participant/:token', (req, res) => {
     try {
         const reqBodyData = req.body.data
-        const token = reqBodyData.token
+        const token = req.params.token
         const session = tokenHandler.verifyJWTToken(token, true)
 
         if (session.sessionData.idReunion == req.params.id_reunion) {
