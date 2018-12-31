@@ -1,5 +1,10 @@
 <app-header></app-header>
 <div class="container" *ngIf="event != undefined && event != null">
+  <div *ngIf="hasError">
+    <p class="text-center error">
+      {{errorMsg}}
+    </p>
+  </div>
   <form #f="ngForm">
     <mat-tab-group>
       <mat-tab label="Mes Infos">
@@ -18,8 +23,12 @@
             </mat-form-field>
           </div>
           <div class="col-lg-2 col-md-2">
-            <button mat-icon-button color="primary" name="updateCurrentUser" (click)="updateCurrentUser()">
+            <button mat-icon-button color="primary" title="Valider la modification" name="updateCurrentUser" (click)="updateParticipant()">
               <mat-icon aria-label="Example icon-button with a heart icon">done</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" title="Quitter la réunion" name="leaveEvent" (click)="deleteParticipant(currentParticipant.idParticipant)"
+              >
+              <mat-icon aria-label="Example icon-button with a heart icon">arrow_right_alt</mat-icon>
             </button>
           </div>
         </div>
@@ -68,8 +77,8 @@
               </mat-form-field>
             </div>
             <div class="col-lg-6 col-md-6 large">
-              <mat-slide-toggle #changeAddComment [disabled]="!isAdmin" name="addComment" [(ngModel)]="event.addComment"
-                [checked]="event.addComment">Activer/désactiver
+              <mat-slide-toggle #changeAddComment title="Activer ou désactiver les commentaires" [disabled]="!isAdmin"
+                name="addComment" [(ngModel)]="event.addComment" [checked]="event.addComment">Activer/désactiver
                 les commentaires</mat-slide-toggle>
             </div>
           </div>
@@ -120,26 +129,41 @@
       <!-- Participants -->
       <mat-tab label="Participants">
         <h1 class="big-title title-margin">Participants</h1>
+        <div class="row center mat-card rounded-corners new-comment" *ngIf="event.participant.length < event.maxParticipant">
+          <div class="col-lg-4 col-md-5">
+            <mat-form-field class="large">
+              <input type="text" required="" name="newParticipantName" matInput placeholder="Prénom et nom" [(ngModel)]="newParticipant.name">
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-4 col-md-5">
+            <mat-form-field class="large">
+              <input type="text" required="" name="newParticipantEmail" matInput placeholder="Adresse email"
+                [(ngModel)]="newParticipant.email">
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2 col-md-2 center">
+            <button class="btn btn-primary large" (click)="createParticipant()">Ajouter</button>
+          </div>
+        </div>
+
         <div class="row center mat-card rounded-corners" *ngFor="let participant of event.participant">
           <div class="col-lg-4 col-md-4">
             <mat-form-field class="large">
-              <input type="text" required="" [disabled]="!isAdmin" name="participantName{{participant.name}}" matInput
+              <input type="text" required="" [disabled]="true" name="participantName{{participant.name}}" matInput
                 placeholder="Prénom et nom" [(ngModel)]="participant.name">
             </mat-form-field>
           </div>
 
           <div class="col-lg-4 col-md-4">
             <mat-form-field class="large">
-              <input type="text" required="" [disabled]="!isAdmin" name="participantEmail{{participant.email}}"
-                matInput placeholder="Adresse email" [(ngModel)]="participant.email">
+              <input type="text" required="" [disabled]="true" name="participantEmail{{participant.email}}" matInput
+                placeholder="Adresse email" [(ngModel)]="participant.email">
             </mat-form-field>
           </div>
 
           <div class="col-lg-2 col-md-2 center" *ngIf="isAdmin">
-            <button mat-icon-button color="primary" (click)="addParticipant()" *ngIf="event.participant.length < event.maxParticipant">
-              <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="deleteParticipant(participant)">
+            <button mat-icon-button color="primary" title="Supprimer le participant" (click)="deleteParticipant(participant._id)">
               <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
             </button>
           </div>
@@ -148,9 +172,37 @@
       <!-- Comments -->
       <mat-tab label="Commentaires">
         <h1 class="big-title title-margin">Commentaires</h1>
-        <div class="row center mat-card rounded-corners" *ngFor="let comment of event.comments">
-          <div class="col-lg-12 col-md-12 center">
-            <textarea matInput class="large" [disabled]="!isAdmin">{{comment.text}}</textarea>
+        <div class="row center mat-card rounded-corners new-comment" *ngIf="event.addComment">
+          <div class="col-lg-11 col-md-11 center">
+            <mat-form-field class="large">
+              <textarea matInput class="large" name="newComment" [(ngModel)]="newCommentText" placeholder="Ajouter un nouveau commentaire"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-1 col-md-1 center">
+              <button mat-icon-button color="primary" title="Ajouter le commentaire" (click)="createComment(newComment)">
+                  <mat-icon aria-label="Example icon-button with a heart icon">check_circle</mat-icon>
+                </button>
+          </div>
+        </div>
+
+        <div class="row center" *ngIf="!event.addComment">
+          <div class="col-lg-6 col-md-6 center">
+            <p class="text-center">L'ajout de commentaires est désactivé.</p>
+          </div>
+        </div>
+
+        <div class="row center mat-card rounded-corners" *ngFor="let comment of event.comment">
+          <div class="col-lg-10 col-md-10 center">
+            <textarea matInput class="large" [(ngModel)]="comment.text" name="comment{{comment._id}}" [disabled]="!isAdmin">{{comment.text}}</textarea>
+            <span>{{comment.name}} ({{comment.email}})</span>
+          </div>
+          <div class="col-lg-2 col-md-2 center">
+              <button mat-icon-button color="primary" title="Supprimer le commentaire" (click)="removeComment(comment._id)" *ngIf="(comment.name == currentParticipant.name) || isAdmin"> 
+                  <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" title="Modifier le commentaire" (click)="updateComment(comment._id, comment.text)" *ngIf="(comment.name == currentParticipant.name)"> 
+                  <mat-icon aria-label="Example icon-button with a heart icon">create</mat-icon>
+              </button>
           </div>
         </div>
       </mat-tab>

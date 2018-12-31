@@ -28,18 +28,25 @@ export interface Event{
   }
 }
 
+export interface Close_Event{
+    title : string,
+    place : string,
+    note : string,
+    date : Date[],
+    addComment : boolean,
+    maxParticipant : number,
+    participant : Participant[],
+    comment: Comment[],
+    update_at?: string,
+    _id?: string
+}
+
 export interface User {
    name: string;
    email: string;
    password?: string;
    owner? : Event[];
    guest? : Event[];
-}
-
-export interface Date {
-   date : string,
-   hourStart : string,
-   hourEnd : string
 }
 
 export interface Participant {
@@ -62,8 +69,8 @@ export interface User {
 }
 
 export interface Comment {
-  id? : string
   name : string,
   email : string,
-  text?: string
+  text?: string,
+  _id?: string
 }
