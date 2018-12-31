@@ -62,6 +62,7 @@ import { HeaderComponent } from './header/header.component';
 import { CommentsDetailsComponent } from './comments-details/comments-details.component';
 import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
+import { EmailValidatorService } from './email-validator.service'
 
 const routes:Routes=[
    {path:'open-event/:token', component:EventsComponent},
@@ -144,7 +145,8 @@ const routes:Routes=[
   ],
   providers: [EventsService,
               AuthenticateService,
-              UsersService],
+              UsersService,
+              EmailValidatorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
