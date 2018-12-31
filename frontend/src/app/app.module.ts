@@ -94,7 +94,7 @@ const routes:Routes=[
     InvitationsComponent,
     HeaderComponent,
     CloseEventsComponent,
-    ShowEventComponent
+    ShowEventComponent,
     CommentsDetailsComponent
   ],
   imports: [

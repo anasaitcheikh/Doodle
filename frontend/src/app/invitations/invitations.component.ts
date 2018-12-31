@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import {SelectionModel} from '@angular/cdk/collections';
+import {EventsService} from "../events.service";
 
 
 @Component({
@@ -14,19 +15,25 @@ export class InvitationsComponent implements OnInit {
 
   userData = JSON.parse(localStorage.getItem('currentUser')).data;
   guestReunions = this.userData.reunions.guest;
-  //ownerReunions = this.userData.reunions.owner;
+  userId = this.userData.user.id;
+  userToken = this.userData.token;
   currentReunion = null;
-  displayedColumns: string[] = ['checked','title', 'place', 'date'];
+  reunionIdList : string[] = [];
+  displayedColumns: string[] = ['select','title', 'place', 'date'];
   dataSource = this.guestReunions;
+  selection = new SelectionModel(true, []);
 
-  constructor() {
 
-     //console.log(this.guestReunions);
-    // console.log(this.guestReunions[0].date);
+  constructor(private eventService: EventsService) {
+     console.log(this.userData);
+     console.log('user id');
+     console.log(this.userId);
+     console.log('token');
+     console.log(this.userToken);
      console.log('data source');
      console.log(this.dataSource);
      console.log('lenght guest');
-     console.log(this.guestReunions);
+     console.log(this.guestReunions.length);
   }
 
 
@@ -44,6 +51,43 @@ export class InvitationsComponent implements OnInit {
     console.log(row);
     this.currentReunion = row;
   }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.forEach(row => this.selection.select(row));
+  }
+
+  leaveReunion(){
+    console.log(this.selection.selected);
+    this.reunionIdList = [];
+    this.selection.selected.forEach(row => this.reunionIdList.push(row._id));
+    console.log(this.reunionIdList);
+    this.reunionIdList.forEach(idReunion =>{
+       this.eventService.leaveCloseEvent(idReunion, this.userId, this.userToken).subscribe(
+          res =>{
+            console.log(res);
+           },
+         error =>{
+            console.log(error);
+       })
+    })
+
+  //  http://localhost:8080/api/close/reunions/5c27d94f98b5340b6001d582/participants/5c27e8d5d5c12545b0b97563
+  }
+
+  confirmLeaveReunion(){
+    console.log('confirm leave reunion');
+    //this.leaveReunion();
+  }
+
 }
 
 

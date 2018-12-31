@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { HttpHeaders } from '@angular/common/http'; 
+import { HttpHeaders } from '@angular/common/http';
+
 import {OpenEventResponse} from '../utils/types';
 
 @Injectable()
 export class EventsService {
 
   constructor(private http:HttpClient) {
-      
+
   }
 
   events = [
@@ -85,6 +86,12 @@ export class EventsService {
         participant: participant
       }
     })
+    return req;
+  }
+
+  leaveCloseEvent(idReunion,idParticipant,token){
+    const req = this.http.delete(`http://localhost:8080/api/close/reunions/${idReunion}/participants/${idParticipant}/${token}`)
+
     return req;
   }
 }
