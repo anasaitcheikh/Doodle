@@ -62,6 +62,7 @@ import { HeaderComponent } from './header/header.component';
 import { CommentsDetailsComponent } from './comments-details/comments-details.component';
 import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
+import { CreateCloseEventComponent } from './create-close-event/create-close-event.component';
 import { EmailValidatorService } from './email-validator.service'
 
 const routes:Routes=[
@@ -69,6 +70,7 @@ const routes:Routes=[
    {path:'login', component: LogInComponent},
    {path:'welcome', component: WelcomeComponent},
    {path:'createEvent', component: CreateEventComponent},
+   {path:'createCloseEvent', component: CreateCloseEventComponent},
    {path:'profile', component: ProfileComponent},
    {path:'invitations', component: InvitationsComponent},
    {path:'tutorial', component: TutorialComponent},
@@ -87,6 +89,7 @@ const routes:Routes=[
     EventsComponent,
     WelcomeComponent,
     CreateEventComponent,
+    CreateCloseEventComponent,
     DashboardComponent,
     AccountSettingsComponent,
     ResetPasswordComponent,
