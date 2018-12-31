@@ -15,35 +15,10 @@ export class EventsService {
 
   }
 
-  events = [
-    {
-      date: "16 novembre 2018",
-      email: "doumbiadoussou197@yahoo.fr",
-      h_dep: "20h",
-      h_fin: "23h",
-      lieu: "Créteil",
-      nbmax_part: 5,
-      nom: "doussou",
-      note: "middleware",
-      titre: "reunion"
-    },
-    {
-      date: "26 décembre 2018",
-      email: "mid@upec.fr",
-      h_dep: "20h",
-      h_fin: "23h",
-      lieu: "Paris",
-      nbmax_part: 5,
-      nom: "doussou",
-      note: "notre projet",
-      titre: "projet"
-    },
 
-
-  ];
 
   addEvent(event) {
-    this.events.push(event);
+    console.log('event', event)
     console.log("try call API");
     const req = this.http.post('http://localhost:8080/api/open/reunions/',
       {
@@ -53,7 +28,6 @@ export class EventsService {
   }
 
   addCloseEvent(event, token) {
-    this.events.push(event);
     console.log("try call API");
     const req = this.http.post('http://localhost:8080/api/close/reunions/', {
       data: {
@@ -64,9 +38,7 @@ export class EventsService {
     return req;
   }
 
-  getAllEvents() {
-    return this.events;
-  }
+
 
   getCloseEvent(eventId, token) {
     const req = this.http.get(`http://localhost:8080/api/close/reunions/${eventId}/${token}`)
@@ -118,6 +90,13 @@ export class EventsService {
 
   deleteParticipant(idReunion, idParticipant, token){
     const req = this.http.delete(`http://localhost:8080/api/open/reunions/${idReunion}/participants/${idParticipant}/${token}`)
+    return req;
+  }
+
+  deleteCloseParticipant(idReunion, idParticipant, token){
+    console.log("call deleteCloseParticipant");
+    console.log("http://localhost:8080/api/close/reunions/"+idReunion+"/participants/"+idParticipant+"/"+token);
+    const req = this.http.delete(`http://localhost:8080/api/close/reunions/${idReunion}/participants/${idParticipant}/${token}`);
     return req;
   }
 

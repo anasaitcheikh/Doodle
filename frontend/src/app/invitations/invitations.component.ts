@@ -15,25 +15,20 @@ export class InvitationsComponent implements OnInit {
 
   userData = JSON.parse(localStorage.getItem('currentUser')).data;
   guestReunions = this.userData.reunions.guest;
-  userId = this.userData.user.id;
+  userEmail = this.userData.user.email;
   userToken = this.userData.token;
   currentReunion = null;
   reunionIdList : string[] = [];
   displayedColumns: string[] = ['select','title', 'place', 'date'];
   dataSource = this.guestReunions;
   selection = new SelectionModel(true, []);
-
+  participantToReunion = [];
 
   constructor(private eventService: EventsService) {
-     console.log(this.userData);
-     console.log('user id');
-     console.log(this.userId);
-     console.log('token');
-     console.log(this.userToken);
+     console.log('user email');
+     console.log(this.userEmail);
      console.log('data source');
      console.log(this.dataSource);
-     console.log('lenght guest');
-     console.log(this.guestReunions.length);
   }
 
 
@@ -65,27 +60,39 @@ export class InvitationsComponent implements OnInit {
       this.dataSource.forEach(row => this.selection.select(row));
   }
 
+
+
   leaveReunion(){
     console.log(this.selection.selected);
     this.reunionIdList = [];
-    this.selection.selected.forEach(row => this.reunionIdList.push(row._id));
-    console.log(this.reunionIdList);
-    this.reunionIdList.forEach(idReunion =>{
-       this.eventService.leaveCloseEvent(idReunion, this.userId, this.userToken).subscribe(
+    this.selection.selected.forEach(row => {
+        this.reunionIdList.push(row._id);
+        console.log("participant");
+        console.log(row.participant);
+        row.participant.forEach(p=>{
+            if(p.email == this.userEmail){
+                 this.participantToReunion.push({pId: p._id, rId: row._id})
+            }
+        })
+      }
+    );
+    console.log(this.participantToReunion);
+    this.participantToReunion.forEach(reunion =>{
+       this.eventService.deleteCloseParticipant(reunion.rId, reunion.pId, this.userToken).subscribe(
           res =>{
             console.log(res);
+
            },
          error =>{
             console.log(error);
        })
     })
-
-  //  http://localhost:8080/api/close/reunions/5c27d94f98b5340b6001d582/participants/5c27e8d5d5c12545b0b97563
+    window.location.reload();
   }
 
   confirmLeaveReunion(){
     console.log('confirm leave reunion');
-    //this.leaveReunion();
+    this.leaveReunion();
   }
 
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-comments-details',
@@ -7,11 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CommentsDetailsComponent implements OnInit {
 
+   id: number;
+   private sub : any;
   userData = JSON.parse(localStorage.getItem('currentUser')).data;
   comments = this.userData.reunions.guest[0].comment;
   displayedColumns: string[] = ['checked','title', 'place', 'date'];
   dataSource = this.comments;
-  constructor() {
+  constructor(private route: ActivatedRoute) {
 
     console.log('comments');
     console.log(this.userData);
@@ -19,6 +22,12 @@ export class CommentsDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+    })
   }
 
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 }
