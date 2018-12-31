@@ -203,7 +203,7 @@ closeController.post('/reunions', (req, res) => {
     reunion.date = jsDate
     const participants = reqBodyData.reunion.participants
     reunion.participant = (participants == undefined) ? {} : participants
-    reunion.comment = {}
+    reunion.comment = []
     reunion.addComment = reqBodyData.reunion.addComment
     reunion.maxParticipant = reqBodyData.reunion.maxParticipant
 
@@ -269,12 +269,12 @@ closeController.post('/reunions', (req, res) => {
 closeController.get('/reunions/:reunion_id/:token', (req, res) => {
     const token = req.params.token
     try {
-        // verifier si il la personne est autorisé a recupérer la reunion
         //console.log("token -> ", token) 
         const session = tokenHandler.verifyJWTToken(token)
         //console.log("session -> ", session)
         dao.findParticipantWithEmail(req.params.reunion_id, session.sessionData.email, (resFind) => {
-            if (resFind.participant.length != 0) {
+            //console.log('resFind ->', resFind)
+            if (resFind.participant.length == 0) {
                 dao.findReunion(req.params.reunion_id, (reunion) => {
                     //console.log("reunion ->",reunion)
                     if (reunion == null) {
@@ -392,6 +392,7 @@ closeController.delete('/reunions/:reunion_id/:token', (req, res) => {
 
 //l'admin peut ajouter et supprimer tout le monde or le participant landa ne peut que se supprimer
 closeController.post('/reunions/:id_reunion/participants', (req, res) => {
+    console.log("/reunions/:id_reunion/participants")
     try {
         //const reqBodyData = req.body.data
         //const token = reqBodyData.token
@@ -463,12 +464,15 @@ closeController.post('/reunions/:id_reunion/participants', (req, res) => {
                             })
                         }
                     })
+                }else{
+                    res.status('403').end()
                 }
             }
         }) 
     }
     catch (error) {
-        res.status('401')
+        console.log(error)
+        res.status('401').end()
     }
 })
 
@@ -695,11 +699,13 @@ closeController.put('/reunions/:id_reunion/participants/:id_participant', (req, 
 })
 
 
-closeController.delete('/reunions/:id_reunion/participants/:id_participant', (req, res) => {
+closeController.delete('/reunions/:id_reunion/participants/:id_participant/:token', (req, res) => {
     try {
         const idReunion = req.params.id_reunion
         const idParticipant = req.params.id_participant
-        
+        const token = req.params.token
+        const session = tokenHandler.verifyJWTToken(token)
+
         dao.findReunion(idReunion, (reunion) => {
             //console.log("reunion ->",reunion)
             if (reunion == null) {
@@ -722,7 +728,9 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant', (re
                             res.status('404').end()
                         }
                         else {
-                            if (resFind.participant[0]._id == session.sessionData.idParticipant) {
+                            // console.log("resFind ->", resFind.participant[0])
+                            // console.log("session.sessionData.idParticipant ->", session.sessionData)
+                            if (resFind.participant[0].email == session.sessionData.email) {
                                 dao.deleteParticipant(idReunion, idParticipant, (resDelete) => {
                                     if (resDelete == null) {
                                         res.status('404').end()
@@ -773,7 +781,8 @@ closeController.post('/reunions/:id_reunion/comments', (req, res) => {
                     })
                 }else{
                     dao.findParticipantWithEmail(req.params.id_reunion, session.sessionData.email, (resFind) => {
-                        if (resFind == null) {
+                        //console.log("resFind ->",resFind)
+                        if (resFind.participant.length == 0) {
                             res.status('401').end('The participant is not allowed to add comment in this meeting')
                         }
                         else {
@@ -818,7 +827,7 @@ closeController.put('/reunions/:id_reunion/comments/:id_comment', (req, res) => 
                     }
                     else {
                         if (resFind.comment[0].email != comment.email) {
-                            res.status('403').end()
+                            res.status('401').end()
                         }
                         else {
                             dao.updateComment(comment, (resUpdate) => {
@@ -841,16 +850,21 @@ closeController.put('/reunions/:id_reunion/comments/:id_comment', (req, res) => 
     }
 })
 
-closeController.delete('/reunions/:id_reunion/comments/:id_comment', (req, res) => {
+closeController.delete('/reunions/:id_reunion/comments/:id_comment/:token', (req, res) => {
     try {
-        //const token = req.body.data.token
-        //const session = tokenHandler.verifyJWTToken(token, true)
+        const token = req.params.token
+        const session = tokenHandler.verifyJWTToken(token)
 
         const idReunion = req.params.id_reunion
         const idComment = req.params.id_comment
 
+        // console.log('idReunion ->', idReunion)
+        // console.log('idComment ->', idComment)
+        // console.log('token ->', token)
+        // console.log('session ->', session)
+
         dao.findReunion(idReunion, (reunion) => {
-            //console.log("reunion ->",reunion)
+            console.log("reunion ->",reunion)
             if (reunion == null) {
                 res.status('404').end()
             }
@@ -889,7 +903,8 @@ closeController.delete('/reunions/:id_reunion/comments/:id_comment', (req, res) 
         })
     }
     catch (error) {
-        res.status('401').end()
+        console.log(error)
+        res.status('404').end()
     }
 })
 
