@@ -41,3 +41,11 @@
     padding: 20px; 
     margin-bottom: 10px;
 }
+
+.error {
+    color: #FF4136
+}
+
+.new-comment{
+    background-color:rgb(200, 221, 245);
+}
