@@ -392,6 +392,7 @@ closeController.delete('/reunions/:reunion_id/:token', (req, res) => {
 
 //l'admin peut ajouter et supprimer tout le monde or le participant landa ne peut que se supprimer
 closeController.post('/reunions/:id_reunion/participants', (req, res) => {
+    console.log("/reunions/:id_reunion/participants")
     try {
         //const reqBodyData = req.body.data
         //const token = reqBodyData.token
@@ -463,12 +464,15 @@ closeController.post('/reunions/:id_reunion/participants', (req, res) => {
                             })
                         }
                     })
+                }else{
+                    res.status('403').end()
                 }
             }
         }) 
     }
     catch (error) {
-        res.status('401')
+        console.log(error)
+        res.status('401').end()
     }
 })
 
@@ -695,11 +699,13 @@ closeController.put('/reunions/:id_reunion/participants/:id_participant', (req, 
 })
 
 
-closeController.delete('/reunions/:id_reunion/participants/:id_participant', (req, res) => {
+closeController.delete('/reunions/:id_reunion/participants/:id_participant/:token', (req, res) => {
     try {
         const idReunion = req.params.id_reunion
         const idParticipant = req.params.id_participant
-        
+        const token = req.params.token
+        const session = tokenHandler.verifyJWTToken(token)
+
         dao.findReunion(idReunion, (reunion) => {
             //console.log("reunion ->",reunion)
             if (reunion == null) {
@@ -722,7 +728,9 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant', (re
                             res.status('404').end()
                         }
                         else {
-                            if (resFind.participant[0]._id == session.sessionData.idParticipant) {
+                            // console.log("resFind ->", resFind.participant[0])
+                            // console.log("session.sessionData.idParticipant ->", session.sessionData)
+                            if (resFind.participant[0].email == session.sessionData.email) {
                                 dao.deleteParticipant(idReunion, idParticipant, (resDelete) => {
                                     if (resDelete == null) {
                                         res.status('404').end()
