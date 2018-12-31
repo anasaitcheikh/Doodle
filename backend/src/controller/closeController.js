@@ -709,14 +709,14 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
         dao.findReunion(idReunion, (reunion) => {
             //console.log("reunion ->",reunion)
             if (reunion == null) {
-                res.status('404').end()
+                res.status('404').end("reunion not found")
             }
             else {
                 if(reunion.admin.email==session.sessionData.email){
                     dao.deleteParticipant(idReunion, idParticipant, (resDelete) => {
                         console.log('resDelete', resDelete)
                         if (resDelete == null) {
-                            res.status('404').end()
+                            res.status('404').end("participant not found")
                         }
                         else {
                             res.status('200').end()
