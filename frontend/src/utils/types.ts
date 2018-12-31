@@ -36,12 +36,6 @@ export interface User {
    guest? : Event[];
 }
 
-export interface Date {
-   date : string,
-   hourStart : string,
-   hourEnd : string
-}
-
 export interface Participant {
   name : string;
   email : string;
@@ -62,8 +56,8 @@ export interface User {
 }
 
 export interface Comment {
-  id? : string
   name : string,
   email : string,
-  text?: string
+  text?: string,
+  _id?: string
 }
