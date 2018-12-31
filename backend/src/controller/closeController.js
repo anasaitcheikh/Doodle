@@ -725,7 +725,7 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
                 }else{
                     dao.findParticipant(idReunion, idParticipant, (resFind) => {
                         if (resFind.participant.length == 0) {
-                            res.status('404').end()
+                            res.status('404').end("participant not found")
                         }
                         else {
                             // console.log("resFind ->", resFind.participant[0])
