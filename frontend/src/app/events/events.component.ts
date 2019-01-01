@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service';
 import { EmailValidatorService } from '../email-validator.service';
+import { EventdateService } from '../eventdate.service';
 import { Event, Date, Participant, OpenEventResponse, Comment } from '../../utils/types'
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import 'rxjs/Rx';
 
 @Component({
@@ -22,10 +24,19 @@ export class EventsComponent implements OnInit {
     name: '',
     email: ''
   }
+  newDate: Date = {
+    date: '',
+    hourStart: '',
+    hourEnd: ''
+  }
   hasError = false
   errorMsg
 
-  constructor(private eventsService: EventsService, private emailValidatorService: EmailValidatorService, private route: ActivatedRoute) {
+  constructor(private eventsService: EventsService, 
+              private emailValidatorService: EmailValidatorService, 
+              private eventdateService: EventdateService,
+              private route: ActivatedRoute, 
+              private router: Router) {
 
   }
 
@@ -45,27 +56,46 @@ export class EventsComponent implements OnInit {
   }
 
   updateEvent() {
+    const currentEvent = JSON.parse(JSON.stringify(this.event))
+    const event = {
+        title: currentEvent.title,
+        place: currentEvent.place,
+        note: currentEvent.note,
+        maxParticipant: currentEvent.maxParticipant,
+        addComment: currentEvent.addComment,
+      
+    }
 
+    this.eventsService.updateEvent(this.resJson.data.reunion._id, event, this.token)
+    .subscribe(
+      res => console.log('updateEvent', res)
+    )
   }
 
   deleteEvent() {
-
+    this.eventsService.deleteOpenEvent(this.resJson.data.reunion._id,this.token)
+      .subscribe(
+        _ => this.router.navigate(['welcome']),
+        error => console.log('error', error)
+      )
   }
 
-  addDate() {
-    const date: Date = {
-      date: '',
-      hourStart: '',
-      hourEnd: ''
+  createDate() {
+    this.newDate.date = this.eventdateService.formatDate(this.newDate.date)
+    if(!this.eventdateService.isEventDateValid(this.newDate)){
+      return
     }
-    this.event.reunion.date.push(date)
+    this.eventsService.createDate(this.resJson.data.reunion._id, this.newDate,this.token)
+      .subscribe(
+        res => console.log('newDate', res)
+    )
   }
 
-  deleteDate(date) {
-    const index: number = this.event.reunion.date.indexOf(date);
-    if (index !== -1) {
-      this.event.reunion.date.splice(index, 1);
-    }
+  deleteDate(idDate) {
+    this.eventsService.removeDate(this.resJson.data.reunion._id, idDate, this.token)
+      .subscribe(
+        res => console.log('deleteDate', res)
+      )
   }
 
   addParticipant() {
@@ -88,12 +118,12 @@ export class EventsComponent implements OnInit {
       this.errorMsg = "L'email du participant n'est pas valide."
       return
     }
-    
+
     const participants: Participant[] = this.resJson.data.reunion.participant
 
     let test = true
     participants.forEach(p => {
-      if(p.email == this.newParticipant.email){
+      if (p.email == this.newParticipant.email) {
         this.hasError = true
         this.errorMsg = "Un participant utilise déjà cet email."
         test = false
@@ -101,7 +131,7 @@ export class EventsComponent implements OnInit {
       }
     })
 
-    if(!test){
+    if (!test) {
       return
     }
 
@@ -142,7 +172,15 @@ export class EventsComponent implements OnInit {
   deleteParticipant(idParticipant) {
     this.eventsService.deleteParticipant(this.resJson.data.reunion._id, idParticipant, this.token)
       .subscribe(
-        res => console.log('deleteParticipant', res)
+        res => {
+          if(this.isAdmin){
+
+          }
+          else{
+            this.router.navigate(['welcome'])
+          }
+        },
+        error => console.log('errorDeleteParticipant', error)
       )
   }
 
@@ -191,6 +229,16 @@ export class EventsComponent implements OnInit {
     this.eventsService.removeComment(this.resJson.data.reunion._id, idComment, this.token)
       .subscribe(
         res => console.log('deleteComment', res)
+      )
+  }
+
+  updateAdmin(){
+    this.eventsService.updateAdmin(this.resJson.data.reunion._id, this.currentParticipant.name, this.currentParticipant.email, this.token)
+      .subscribe(
+        res => {
+          const token = JSON.parse(JSON.stringify(res)).data.token
+          this.router.navigate([`open-event/${token}`])
+        } 
       )
   }
 }

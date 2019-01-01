@@ -47,6 +47,16 @@ export class EventsService {
     return req;
   }
 
+  updateEvent(idReunion, reunion, token){
+    const req = this.http.put(`http://localhost:8080/api/open/reunions/${idReunion}`, {
+      data: {
+        reunion: reunion,
+        token: token
+      }
+    })
+    return req;
+  }
+
   addCloseEvent(event, token) {
     this.events.push(event);
     console.log("try call API");
@@ -100,6 +110,11 @@ export class EventsService {
     return req;
   }
 
+  deleteOpenEvent(eventId, token) {
+    const req = this.http.delete(`http://localhost:8080/api/open/reunions/${eventId}/${token}`)
+    return req;
+  }
+
   updateOpenReunionParticipant(idReunion, idParticipant, participant, token){
     const req = this.http.put(`http://localhost:8080/api/open/reunions/${idReunion}/participants/${idParticipant}`, {
       data: {
@@ -140,4 +155,31 @@ export class EventsService {
     return req;
   }
 
+  updateAdmin(idReunion, adminName, adminEmail, token){
+    const req = this.http.put(`http://localhost:8080/api/open/reunions/${idReunion}/admin`, {
+      data: {
+        token: token,
+        admin: {
+          name: adminName,
+          email: adminEmail
+        }
+      }
+    })
+    return req;
+  }
+
+  createDate(idReunion, date, token){
+    const req = this.http.post(`http://localhost:8080/api/open/reunions/${idReunion}/dates`, {
+      data: {
+        token: token,
+        date: date
+      }
+    })
+    return req;
+  }
+
+  removeDate(idReunion, idDate, token){
+    const req = this.http.delete(`http://localhost:8080/api/open/reunions/${idReunion}/dates/${idDate}/${token}`)
+    return req;
+  }
 }

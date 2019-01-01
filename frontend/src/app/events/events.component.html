@@ -23,10 +23,10 @@
             </mat-form-field>
           </div>
           <div class="col-lg-2 col-md-2">
-            <button mat-icon-button color="primary" title="Valider la modification" name="updateCurrentUser" (click)="updateParticipant()">
+            <button mat-icon-button color="primary" title="Valider la modification" name="updateCurrentUser" (click)="isAdmin ? updateAdmin() : updateParticipant()">
               <mat-icon aria-label="Example icon-button with a heart icon">done</mat-icon>
             </button>
-            <button mat-icon-button color="primary" title="Quitter la réunion" name="leaveEvent" (click)="deleteParticipant(currentParticipant.idParticipant)"
+            <button mat-icon-button color="primary" title="Quitter la réunion" name="leaveEvent" (click)="isAdmin ? deleteEvent() : deleteParticipant(currentParticipant.idParticipant)"
               >
               <mat-icon aria-label="Example icon-button with a heart icon">arrow_right_alt</mat-icon>
             </button>
@@ -90,15 +90,49 @@
               </mat-form-field>
             </div>
           </div>
+          <div class="row center" *ngIf="isAdmin">
+            <div class="col-lg-3 center">
+              <button mat-icon-button class="center new-comment" color="primary" title="Valider la modification" name="updateReunion" (click)="updateEvent()">
+                  <mat-icon aria-label="Example icon-button with a heart icon">done</mat-icon>
+              </button>
+            </div>
+          </div>
         </div>
       </mat-tab>
       <!-- Dates -->
       <mat-tab label="Dates">
         <h1 class="big-title title-margin">Dates</h1>
+        <div class="row center mat-card rounded-corners new-comment" *ngIf="isAdmin">
+            <div class="col-lg-3 col-md-3">
+              <mat-form-field class="large">
+                <input matInput [matDatepicker]="picker" placeholder="Date" name="newDate"
+                  required="" [(ngModel)]="newDate.date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-3">
+              <mat-form-field class="large">
+                <input type="text" required="" name="newHourStart"
+                  matInput placeholder="Début ex: 9h" [(ngModel)]="newDate.hourStart">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-3">
+              <mat-form-field class="large">
+                <input type="text" required="" name="newHourEnd" matInput
+                  placeholder="Fin ex: 18h" [(ngModel)]="newDate.hourEnd">
+              </mat-form-field>
+            </div>
+            <div class="col-lg-2 col-md-3 center">
+              <button mat-icon-button color="primary" (click)="createDate()">
+                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
+              </button>
+            </div>
+          </div>
         <div class="row center mat-card rounded-corners" *ngFor="let date of event.date">
           <div class="col-lg-3 col-md-3">
             <mat-form-field class="large">
-              <input matInput [disabled]="!isAdmin" [matDatepicker]="picker" placeholder="Date" name="date{{event.date.indexOf(date)}}"
+              <input matInput [disabled]="true" [matDatepicker]="picker" placeholder="Date" name="date{{event.date.indexOf(date)}}"
                 required="" [(ngModel)]="date.date">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -106,21 +140,18 @@
           </div>
           <div class="col-lg-3 col-md-3">
             <mat-form-field class="large">
-              <input type="text" required="" [disabled]="!isAdmin" name="hourStart{{event.date.indexOf(date)}}"
+              <input type="text" required="" [disabled]="true" name="hourStart{{event.date.indexOf(date)}}"
                 matInput placeholder="Début ex: 9h" [(ngModel)]="date.hourStart">
             </mat-form-field>
           </div>
           <div class="col-lg-3 col-md-3">
             <mat-form-field class="large">
-              <input type="text" required="" [disabled]="!isAdmin" name="hourEnd{{event.date.indexOf(date)}}" matInput
+              <input type="text" required="" [disabled]="true" name="hourEnd{{event.date.indexOf(date)}}" matInput
                 placeholder="Fin ex: 18h" [(ngModel)]="date.hourEnd">
             </mat-form-field>
           </div>
           <div class="col-lg-2 col-md-3 center" *ngIf="isAdmin">
-            <button mat-icon-button color="primary" (click)="addDate()">
-              <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="deleteDate(date)" *ngIf="event.date.length > 1">
+            <button mat-icon-button color="primary" (click)="deleteDate(date._id)" *ngIf="event.date.length > 1">
               <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
             </button>
           </div>

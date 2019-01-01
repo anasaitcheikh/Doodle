@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { InvitationsComponent} from "./invitations/invitations.component";
-import {TutorialComponent} from "./tutorial/tutorial.component";
+import { InvitationsComponent } from "./invitations/invitations.component";
+import { TutorialComponent } from "./tutorial/tutorial.component";
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule,  NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -48,8 +48,8 @@ import { AppComponent } from './app.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { EventsComponent } from './events/events.component';
 import { EventsService } from './events.service';
-import { AuthenticateService} from "./authenticate.service";
-import { UsersService} from "./users.service";
+import { AuthenticateService } from "./authenticate.service";
+import { UsersService } from "./users.service";
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -64,22 +64,23 @@ import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
 import { CreateCloseEventComponent } from './create-close-event/create-close-event.component';
 import { EmailValidatorService } from './email-validator.service'
+import { EventdateService } from './eventdate.service'
 
-const routes:Routes=[
-   {path:'open-event/:token', component:EventsComponent},
-   {path:'login', component: LogInComponent},
-   {path:'welcome', component: WelcomeComponent},
-   {path:'createEvent', component: CreateEventComponent},
-   {path:'createCloseEvent', component: CreateCloseEventComponent},
-   {path:'profile', component: ProfileComponent},
-   {path:'invitations', component: InvitationsComponent},
-   {path:'tutorial', component: TutorialComponent},
-   {path:'comments-details', component: CommentsDetailsComponent},
-   {path:'account-settings', component: AccountSettingsComponent},
-   {path:'reset-password', component: ResetPasswordComponent},
-   {path:'close-events', component: CloseEventsComponent},
-   {path:'show-event/:id_event', component: ShowEventComponent},
-   {path:'', redirectTo: 'welcome', pathMatch:'full'},
+const routes: Routes = [
+  { path: 'open-event/:token', component: EventsComponent },
+  { path: 'login', component: LogInComponent },
+  { path: 'welcome', component: WelcomeComponent },
+  { path: 'createEvent', component: CreateEventComponent },
+  { path: 'createCloseEvent', component: CreateCloseEventComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'invitations', component: InvitationsComponent },
+  { path: 'tutorial', component: TutorialComponent },
+  { path: 'comments-details', component: CommentsDetailsComponent },
+  { path: 'account-settings', component: AccountSettingsComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'close-events', component: CloseEventsComponent },
+  { path: 'show-event/:id_event', component: ShowEventComponent },
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
 ]
 
 @NgModule({
@@ -147,9 +148,10 @@ const routes:Routes=[
     AngularFontAwesomeModule,
   ],
   providers: [EventsService,
-              AuthenticateService,
-              UsersService,
-              EmailValidatorService],
+    AuthenticateService,
+    UsersService,
+    EmailValidatorService,
+    EventdateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
