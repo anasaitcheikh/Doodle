@@ -81,6 +81,7 @@ const routes: Routes = [
   { path: 'close-events', component: CloseEventsComponent },
   { path: 'show-event/:id_event', component: ShowEventComponent },
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+   {path:'comments-details/:id_event', component: CommentsDetailsComponent},
 ]
 
 @NgModule({

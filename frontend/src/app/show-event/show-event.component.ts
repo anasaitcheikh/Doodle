@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service'
 import { Event, Date, Participant } from '../../utils/types'
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-show-event',
@@ -8,11 +9,30 @@ import { Event, Date, Participant } from '../../utils/types'
   styleUrls: ['./show-event.component.css']
 })
 export class ShowEventComponent implements OnInit {
-  event: Event
+  event: Event;
+  event2: Event;
+  reunionId: string;
+  private sub : any;
+  ownerReunions = [];
+  currentReunion;
+  userData = JSON.parse(localStorage.getItem('currentUser')).data;
   
-  constructor(private eventsService: EventsService) { }
+  constructor(private route: ActivatedRoute, private eventsService: EventsService) { }
 
   ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      console.log(params);
+      this.reunionId = params['id_event'];
+    });
+    this.ownerReunions = this.userData.reunions.owner;
+    this.ownerReunions.forEach(reunion=>{
+      if(reunion._id == this.reunionId){
+        this.event2 = reunion;
+      }
+    });
+    console.log("current reunion");
+    console.log(this.event2);
+
     const text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     this.event = {
       reunion: {

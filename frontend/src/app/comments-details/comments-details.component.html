@@ -1,14 +1,32 @@
 <app-header></app-header>
-<div class="container">
-<div>
+<!-- Comments -->
+<div label="Commentaires">
   <h1 class="big-title title-margin">Commentaires</h1>
-    <div class="row center">
-      <div class="col-lg-12 col-md-12 mat-card">
-        <mat-form-field class="large">
-                <textarea matInput #commentaire name="commentaire" placeholder="Commentaire" required="" class="form-control" rows="10"
-                          ngModel></textarea>
-        </mat-form-field>
+  <div class="row center mat-card rounded-corners" *ngFor="let comment of comments">
+    <div class="col-lg-10 col-md-10 center">
+      <span>{{comment.name}} ({{comment.email}})</span>
+      <textarea matInput class="large" [(ngModel)]="comment.text" name="comment{{comment._id}}">{{comment.text}}</textarea>
+    </div>
+    <div class="col-lg-2 col-md-2 center">
+      <button mat-icon-button color="primary" title="Supprimer le commentaire" (click)="removeComment(comment._id)" *ngIf="comment.email == userData.user.email">
+        <mat-icon aria-label="Example icon-button with a heart icon">remove_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" title="Modifier le commentaire" (click)="updateComment(comment._id, comment.text)" *ngIf="comment.email == userData.user.email">
+        <mat-icon aria-label="Example icon-button with a heart icon">create</mat-icon>
+      </button>
+    </div>
   </div>
+
+  <div class="row center mat-card rounded-corners new-comment">
+    <div class="col-lg-11 col-md-11 center">
+      <mat-form-field class="large">
+        <textarea matInput class="large" name="newComment" [(ngModel)]="newCommentText" placeholder="Ajouter un nouveau commentaire"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-1 col-md-1 center">
+      <button mat-icon-button color="primary" title="Ajouter le commentaire" (click)="createComment(newComment)">
+        <mat-icon aria-label="Example icon-button with a heart icon">check_circle</mat-icon>
+      </button>
+    </div>
   </div>
-</div>
 </div>

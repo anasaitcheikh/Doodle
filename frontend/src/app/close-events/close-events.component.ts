@@ -3,12 +3,6 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { Event, User, Date } from '../../utils/types';
 import { Router } from '@angular/router';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
 
 const ELEMENT_DATA: Event[] = [
   {
@@ -64,8 +58,12 @@ const ELEMENT_DATA: Event[] = [
 })
 
 export class CloseEventsComponent implements OnInit {
-  displayedColumns: string[] = ['title', 'place', 'adminName', 'adminEmail', 'numberOfParticipants'];
-  dataSource = ELEMENT_DATA;
+
+  userData = JSON.parse(localStorage.getItem('currentUser')).data;
+  ownerReunions = this.userData.reunions.owner;
+  displayedColumns: string[] = ['title', 'place', 'numberOfParticipants', 'date']
+  //dataSource = ELEMENT_DATA;
+  dataSource = this.ownerReunions;
   searchText = '';
   filteredEvents: MatTableDataSource<Event>;
   @ViewChild(MatSort) sort: MatSort;
@@ -94,6 +92,6 @@ export class CloseEventsComponent implements OnInit {
   }
 
   showEvent(elem){
-    this.router.navigate(['show-event/hoho'])
+    this.router.navigate(['show-event/',elem._id]);
   }
 }
