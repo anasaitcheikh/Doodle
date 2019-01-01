@@ -17,7 +17,7 @@ openController.post('/reunions', (req, res) => {
     }
 
     let date = reqBodyData.reunion.date 
-    
+
     let reunion = {}
     reunion.admin = reqBodyData.reunion.admin
     reunion.title = reqBodyData.reunion.title
@@ -76,7 +76,7 @@ openController.post('/reunions', (req, res) => {
                 emailData.participants = emailParticipants
 
                 sendMailToParticipants(emailData)
-
+              
                 sendMail(reunion.admin.email, 'Votre réunion', `http://localhost:4200/open-event/${token}`)
 
                 console.log('emailData', emailData)
@@ -101,7 +101,7 @@ openController.get('/reunions/:token', (req, res) => {
 
         if(session.sessionData.admin){
             dao.findReunion(session.sessionData.idReunion, (reunion) => {
-                if (reunion == null) {
+                if ((reunion == null) || (reunion.admin.name != session.sessionData.name)) {
                     res.status('404').end()
                 }
                 else {
@@ -151,24 +151,29 @@ openController.get('/reunions/:token', (req, res) => {
     }
 })
 
-openController.put('/reunions', (req, res) => {
+openController.put('/reunions/:id_reunion', (req, res) => {
     try {
         const reqBodyData = req.body.data
         const session = tokenHandler.verifyJWTToken(reqBodyData.token, true)
-
+        const idReunion = req.params.id_reunion
 
         let reunion = {}
         reunion.id = session.sessionData.idReunion
         reunion.title = reqBodyData.reunion.title
         reunion.place = reqBodyData.reunion.place
         reunion.note = reqBodyData.reunion.note
-        reunion.date = reqBodyData.reunion.date
         reunion.addComment = reqBodyData.reunion.addComment
         reunion.maxParticipant = reqBodyData.reunion.maxParticipant
+
+        console.log('reunion', reqBodyData)
 
         const isAdmin = session.sessionData.admin
 
         //console.log("session", session.sessionData)
+        if(session.sessionData.idReunion != idReunion){
+            res.status('400').end()
+        }
+        else{
         if (isAdmin) {
             dao.updateReunion(reunion, (reunionUpdate) => {
                 if (reunionUpdate == null) {
@@ -183,31 +188,39 @@ openController.put('/reunions', (req, res) => {
             res.status('401').end()
         }
     }
+    }
     catch (error) {
         res.status('401').end("token ko")
     }
 })
 
-openController.delete('/reunions', (req, res) => {
+openController.delete('/reunions/:id_reunion/:token', (req, res) => {
     try {
-        const token = req.body.data.token
+        const token = req.params.token
         const session = tokenHandler.verifyJWTToken(token, true)
 
         const idReunion = session.sessionData.idReunion
         const isAdmin = session.sessionData.admin
 
-        if (isAdmin) {
-            dao.deleteReunion(idReunion, (reunionDelete) => {
-                if (reunionDelete == null) {
-                    res.status('403').end()
-                }
-                else {
-                    res.status('200').end()
-                }
-            })
+        if(req.params.id_reunion != idReunion){
+            res.status('400').end()
         }
-        else {
-            res.status('401').end()
+        else{
+            if (isAdmin) {
+                res.status('200').end()
+                dao.deleteReunion(idReunion, (reunionDelete) => {
+                    if (reunionDelete == null) {
+                        res.status('403').end()
+                    }
+                    else {
+                        res.status('200').end()
+                    }
+                })
+            }
+            else {
+                res.status('401').end()
+            }
+
         }
     }
     catch (error) {
@@ -594,6 +607,106 @@ openController.delete('/reunions/:id_reunion/comments/:id_comment/:token', (req,
     catch (error) {
         res.status('401').end()
     }
+})
+
+// Admin
+openController.put('/reunions/:id_reunion/admin', (req, res) => {
+    if(req.body.data == undefined){
+        res.status('400').end()
+    }
+    else{
+        try{
+            const reqBodyData = req.body.data
+            const session = tokenHandler.verifyJWTToken(reqBodyData.token, true)
+            if(session.sessionData.idReunion != req.params.id_reunion){
+                res.status('400').end('Bad Reunion')
+            }
+            else{
+                dao.updateAdmin(session.sessionData.idReunion, reqBodyData.admin, (resUpdate) => {
+                    if(resUpdate == null){
+                        res.status('404').end()
+                    }
+                    else{
+                        const newSession = {
+                            sessionData: {
+                                idReunion: session.sessionData.idReunion,
+                                email: session.sessionData.email,
+                                admin: true,
+                                name: resUpdate.admin.name
+                            }
+                        }
+                        try{
+                            const newToken = tokenHandler.createJWToken(newSession, true)
+                            sendMail(session.sessionData.email, "Votre nouveau lien d'accès", `http://localhost:4200/open-event/${newToken}`)
+                            res.json(
+                                {
+                                    data:{
+                                        token: newToken
+                                    }
+                                }
+                            )
+                        }
+                        catch(error){
+                            res.status('500').end()
+                        }
+                    }
+                })
+            }
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
+    }
+})
+
+
+//Dates
+openController.post('/reunions/:id_reunion/dates', (req, res) =>{
+    if(req.body.data == undefined){
+        res.status('400').end()
+    }
+    else{
+        try{
+            const reqBodyData = req.body.data
+            console.log(reqBodyData)
+            const session = tokenHandler.verifyJWTToken(reqBodyData.token, true)
+            if(session.sessionData.idReunion != req.params.id_reunion){
+                res.status('400').end('Bad Reunion')
+            }
+            else{
+                console.log('hello')
+                dao.createDate(session.sessionData.idReunion, reqBodyData.date, (resAdd) => {
+                    console.log('resAdd', resAdd)
+                    res.status('200').end()
+                })
+            }
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
+    }
+})
+
+openController.delete('/reunions/:id_reunion/dates/:id_date/:token', (req, res) =>{
+        try{
+            const session = tokenHandler.verifyJWTToken(req.params.token, true)
+            if(session.sessionData.idReunion != req.params.id_reunion){
+                res.status('400').end('Bad Reunion')
+            }
+            else{
+                dao.deleteDate(session.sessionData.idReunion, req.params.id_date, (resDelete) => {
+                    if(resDelete== null) {
+                        res.status('403').end()
+                    }
+                    else{
+                        res.status('200').end()
+                    }
+                })
+            }
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
 })
 
 module.exports = openController
