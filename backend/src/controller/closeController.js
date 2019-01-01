@@ -479,219 +479,147 @@ closeController.post('/reunions/:id_reunion/participants', (req, res) => {
 //seul les participants qui n'ont pas de compte peuvent être modifié  -------------------------------------------------------------------------------
 closeController.put('/reunions/:id_reunion/participants/:id_participant', (req, res) => {
     try {
-        const reqBodyData = req.body.data
-        const token = reqBodyData.token
-        const session = tokenHandler.verifyJWTToken(token, true)
-
-        if (session.sessionData.idReunion == req.params.id_reunion) {// est il 
-            const idReunion = req.params.id_reunion
-            let participant = {}
-            participant.id = req.params.id_participant
-            participant.email = reqBodyData.participant.email
-            participant.name = reqBodyData.participant.name
-
-            if (session.sessionData.admin) {
-                dao.findParticipant(idReunion, participant.id, (resFind) => {
-                    if (resFind.participant.length == 0) {
-                        res.status('403').end()
-                    }
-                    else {
-                        dao.findParticipantWithEmail(idReunion, participant.email, (resFindEmail) => {
-                            console.log('resFindEmail.participant', resFindEmail.participant[0]._id)
-                            if (resFindEmail.participant.length != 0) {
-                                if (resFindEmail.participant[0]._id != participant.id) {
-                                    res.status('403').end('This email is already taken')
-                                }
-                                else {
-                                    dao.updateParticipant(participant, (resUpdate) => {
-                                        console.log('resUpdate', resUpdate)
-                                        if (resUpdate == {}) {
-                                            res.status('304').end()
-                                        }
-                                        else {
-                                            const session = {
-                                                sessionData: {
-                                                    name: participant.name,
-                                                    admin: false,
-                                                    email: participant.email,
-                                                    idReunion: idReunion,
-                                                    idParticipant: participant.id
-                                                }
-                                            }
-                                            try {
-                                                const newToken = tokenHandler.createJWToken(session, true)
-                                                const emailData = {
-                                                    admin: resUpdate.admin,
-                                                    participants: [
-                                                        {
-                                                            email: participant.email,
-                                                            token: newToken
-                                                        }
-                                                    ]
-                                                }
-
-                                                sendMailToParticipants(emailData)
-
-                                                res.json({
-                                                    data: {
-                                                        token: newToken
-                                                    }
-                                                })
-                                            }
-                                            catch (error) {
-                                                res.end('500')
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                            else {
-                                dao.updateParticipant(participant, (resUpdate) => {
-                                    console.log('resUpdate', resUpdate)
-                                    if (resUpdate == {}) {
-                                        res.status('304').end()
-                                    }
-                                    else {
-                                        const session = {
-                                            sessionData: {
-                                                name: participant.name,
-                                                admin: false,
-                                                email: participant.email,
-                                                idReunion: idReunion,
-                                                idParticipant: participant.id
-                                            }
-                                        }
-                                        try {
-                                            const newToken = tokenHandler.createJWToken(session, true)
-
-                                            const emailData = {
-                                                admin: resUpdate.admin,
-                                                participants: [
-                                                    {
-                                                        email: participant.email,
-                                                        token: newToken
-                                                    }
-                                                ]
-                                            }
-
-                                            sendMailToParticipants(emailData)
-
-                                            res.json({
-                                                data: {
-                                                    token: newToken
-                                                }
-                                            })
-                                        }
-                                        catch (error) {
-                                            res.status('500').end()
-                                        }
-                                    }
-                                })
-                            }
-                        })
-                    }
-                })
+        //const reqBodyData = req.body.data
+        //let token = reqBodyData.token
+        //let session = tokenHandler.verifyJWTToken(token, true)
+        console.log("session ->",session)
+        dao.findReunion(req.params.id_reunion, (reunion) => {
+            //console.log("reunion ->",reunion)
+            if (reunion == null) {
+                res.status('404').end()
             }
             else {
-                if (session.sessionData.idParticipant != participant.id) {
-                    res.status('401').end()
-                }
-                else {
-                    dao.findParticipantWithEmail(idReunion, participant.email, (resFindEmail) => {
-                        if (resFindEmail.participant.length != 0) {
-                            if (resFindEmail.participant[0]._id != participant.id) {
-                                res.status('403').end('This email is already taken')
-                            }
-                            else {
-                                dao.updateParticipant(participant, (resUpdate) => {
-                                    if (resUpdate == {}) {
-                                        res.status('304').end()
-                                    }
-                                    else {
-                                        const session = {
-                                            sessionData: {
-                                                name: participant.name,
-                                                participant: participant.email,
-                                                idReunion: idReunion,
-                                                idParticipant: participant.id
-                                            }
-                                        }
-                                        try {
-                                            const newToken = tokenHandler.createJWToken(session, true)
+                const idReunion = req.params.id_reunion //ici
+                let participant = {}
+                participant.id = req.params.id_participant
+                //participant.email = session.sessionData.email
+                participant.name = reqBodyData.participant.name
 
-                                            const emailData = {
-                                                admin: resUpdate.admin,
-                                                participants: [
-                                                    {
-                                                        email: participant.email,
-                                                        token: newToken
-                                                    }
-                                                ]
-                                            }
-
-                                            sendMailToParticipants(emailData)
-
-                                            res.json({
-                                                data: {
-                                                    token: newToken
-                                                }
-                                            })
-                                        }
-                                        catch (error) {
-                                            res.status('500').end()
-                                        }
-                                    }
-                                })
-                            }
+                if (session.sessionData.email==reunion.admin.email) {
+                    dao.findParticipant(idReunion, participant.id, (resFind) => {
+                        //console.log('participant ici 0->', resFind)
+                        participant.email = resFind.participant[0].email
+                        if (resFind.participant.length == 0) {
+                            res.status('404').end()
                         }
                         else {
                             dao.updateParticipant(participant, (resUpdate) => {
-                                if (resUpdate == {}) {
-                                    res.status('304').end()
+                                //console.log('participant ici ->', resUpdate)
+                                if(resUpdate == {}){
+                                    res.status('500').end()
                                 }
-                                else {
-                                    const session = {
-                                        sessionData: {
-                                            name: participant.name,
-                                            participant: participant.email,
-                                            idReunion: idReunion,
-                                            idParticipant: participant.id
+                                else{
+                                    dao.findUserByEmail(participant.email, (user) =>{ 
+                                        //console.log('user ->', user,' ',participant)
+                                        emailData={}
+                                        emailData.admin = reunion.admin
+                                        if(user!=null){
+                                            emailData.user_participants = []
+                                            emailData.user_participants.push({
+                                                email: participant.email
+                                            })
+                                            sendMailToUsers(emailData)
+                                            res.json({})
                                         }
-                                    }
-                                    try {
-                                        const newToken = tokenHandler.createJWToken(session, true)
-
-                                        const emailData = {
-                                            admin: resUpdate.admin,
-                                            participants: [
-                                                {
-                                                    email: participant.email,
-                                                    token: newToken
+                                        else{
+                                            try {
+                                                const participantSession = {
+                                                    sessionData: {
+                                                        name: participant.name,
+                                                        admin: false,
+                                                        email: participant.email,
+                                                        idReunion: req.params.id_reunion,
+                                                        idParticipant:  req.params.id_participant
+                                                    }
                                                 }
-                                            ]
-                                        }
-
-                                        sendMailToParticipants(emailData)
-
-                                        res.json({
-                                            data: {
-                                                token: newToken
+                                                const participantToken = tokenHandler.createJWToken(participantSession, true)
+                                                emailData.participants = []
+                                                emailData.participants.push({
+                                                    email: participant.email,
+                                                    token: participantToken
+                                                })
+                                                sendMailToParticipants(emailData)
+                                                res.json({})
                                             }
-                                        })
-                                    }
-                                    catch (error) {
-                                        res.status('500').end()
-                                    }
+                                            catch (error) {
+                                                console.log(error)
+                                                res.status('500').end()
+                                            }
+                                        }  
+                                    })
                                 }
-                            })
+                            })  
                         }
                     })
                 }
-            }
-        }
-        else {
-            res.status('401')
-        }
+                else {
+                    //
+                    // if (resFind.participant[0].email==session.sessionData.email) {
+                    //     res.status('401').end()
+                    // }
+                    // else {
+                        dao.findParticipant(idReunion, participant.id, (resFind) => {
+                            console.log("resFind ->", resFind)
+                            participant.email = resFind.participant[0].email
+                            if (resFind.participant.length == 0) {
+                                res.status('404').end()
+                            }
+                            else if (resFind.participant[0].email==session.sessionData.email) {
+                                dao.updateParticipant(participant, (resUpdate) => {
+                                    //console.log('participant ici ->', resUpdate)
+                                    if(resUpdate == {}){
+                                        res.status('500').end()
+                                    }
+                                    else{
+                                        dao.findUserByEmail(participant.email, (user) =>{ 
+                                            //console.log('user ->', user,' ',participant)
+                                            emailData={}
+                                            emailData.admin = reunion.admin
+                                            if(user!=null){
+                                                emailData.user_participants = []
+                                                emailData.user_participants.push({
+                                                    email: participant.email
+                                                })
+                                                sendMailToUsers(emailData)
+                                                res.json({})
+                                            }
+                                            else{
+                                                try {
+                                                    const participantSession = {
+                                                        sessionData: {
+                                                            name: participant.name,
+                                                            admin: false,
+                                                            email: participant.email,
+                                                            idReunion: req.params.id_reunion,
+                                                            idParticipant:  req.params.id_participant
+                                                        }
+                                                    }
+                                                    const participantToken = tokenHandler.createJWToken(participantSession, true)
+                                                    emailData.participants = []
+                                                    emailData.participants.push({
+                                                        email: participant.email,
+                                                        token: participantToken
+                                                    })
+                                                    sendMailToParticipants(emailData)
+                                                    res.json({})
+                                                }
+                                                catch (error) {
+                                                    console.log(error)
+                                                    res.status('500').end()
+                                                }
+                                            }  
+                                        })
+                                    }
+                                })
+                            }
+                            else {
+                                res.status('401').end("The participant does not have permission to modify this meeting")
+                            }
+                        })
+                    //}
+                }
+            }    
+        })
     }
     catch (error) {
         res.status('401')
@@ -709,14 +637,14 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
         dao.findReunion(idReunion, (reunion) => {
             //console.log("reunion ->",reunion)
             if (reunion == null) {
-                res.status('404').end()
+                res.status('404').end("reunion not found")
             }
             else {
                 if(reunion.admin.email==session.sessionData.email){
                     dao.deleteParticipant(idReunion, idParticipant, (resDelete) => {
                         console.log('resDelete', resDelete)
                         if (resDelete == null) {
-                            res.status('404').end()
+                            res.status('404').end("participant not found side admin")
                         }
                         else {
                             res.status('200').end()
@@ -725,7 +653,7 @@ closeController.delete('/reunions/:id_reunion/participants/:id_participant/:toke
                 }else{
                     dao.findParticipant(idReunion, idParticipant, (resFind) => {
                         if (resFind.participant.length == 0) {
-                            res.status('404').end()
+                            res.status('404').end("participant not found side participant")
                         }
                         else {
                             // console.log("resFind ->", resFind.participant[0])
