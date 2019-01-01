@@ -89,7 +89,7 @@ function updateReunion(reunion, callback){
     db.ReunionModel.findOneAndUpdate(
                                     {"_id":  new MongoObjectID(reunion.id)},
                                     {"$set": {"title": reunion.title, "place": reunion.place, "note": reunion.note,
-                                              "addComment": reunion.addComment, "maxParticipant": reunion.maxParticipant, "date": reunion.date, 
+                                              "addComment": reunion.addComment, "maxParticipant": reunion.maxParticipant, 
                                               "$.update_at": new Date().now }},
                                     {new:true},  
                                     (err, results) => {
@@ -437,6 +437,63 @@ function findUserByEmail(emailUser, callback){
     })
 }
 
+/*** POUR LES ADMINS */
+function updateAdmin(idReunion, admin, callback){
+    connect()
+    db.ReunionModel.findOneAndUpdate({_id: new MongoObjectID(idReunion)},
+                                    {$set: {
+                                        admin:{
+                                            name: admin.name,
+                                            email: admin.email
+                                        },
+                                        "$.update_at": new Date().now 
+                                    }},
+                                    {new:true},
+                            (err, results) =>{
+        if(err){console.log(err)}
+        if(!results){
+            console.log("element not found")
+        }
+        disconnect()
+        callback(results)
+    })
+}
+
+/*** POUR LES DATES */
+function createDate(idReunion, date, callback){
+    connect()
+    db.ReunionModel.findOneAndUpdate(
+                                    {"_id":  new MongoObjectID(idReunion)},
+                                    { $addToSet:{"date":date}},
+                                    {new:true},  
+                                    (err, results) => {
+        if (err) { console.log(err) }
+        if (!results) {
+        console.log("element not add")
+        }
+        disconnect()
+        callback(results)
+    })
+}
+
+function deleteDate(idReunion, idDate, callback){
+    connect()
+    db.ReunionModel.findOneAndUpdate(
+                                    {"_id":  new MongoObjectID(idReunion),
+                                     "date._id":  new MongoObjectID(idDate)
+                                    },
+                                    { $pull: {"date": { "_id": new MongoObjectID(idDate)}}},
+                                    {new:true},  
+                                    (err, results) => {
+        if (err) { console.log(err) }
+        if (!results) {
+        console.log("element not found")
+        }
+        //console.log(results)
+        disconnect()
+        callback(results)
+    })
+}
 
 module.exports = {
     findAllReunion : findAllReunion,
@@ -465,7 +522,12 @@ module.exports = {
     updateUser : updateUser,
     createUser : createUser,
     deleteUser : deleteUser,
-    findUserByEmail : findUserByEmail
+    findUserByEmail : findUserByEmail,
+
+    updateAdmin : updateAdmin,
+
+    createDate : createDate,
+    deleteDate : deleteDate
     
 } 
 
