@@ -92,6 +92,6 @@ export class CloseEventsComponent implements OnInit {
   }
 
   showEvent(elem){
-    this.router.navigate(['show-event/hoho'])
+    this.router.navigate(['show-event/',elem._id]);
   }
 }

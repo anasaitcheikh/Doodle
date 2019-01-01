@@ -18,14 +18,17 @@ export class LogInComponent implements OnInit {
     private usersService: UsersService) {
 
   }
-  log = false;
-  isSignIn : boolean;
+
+  passwordError: string;
+  signInErrorMsg : string;
+  signInError: boolean;
+  loginError : boolean;
   ngOnInit() {
   }
 
 
   login(form) {
-    //document.getElementById('loader').style.display = 'block';
+    this.loginError = false;
     this.authenticateService.login(form.email, form.password)
       .subscribe(
         data => {
@@ -33,17 +36,21 @@ export class LogInComponent implements OnInit {
           console.log("data");
           console.log(data);
           this.router.navigate(['']);
-          //document.getElementById('loader').style.display = 'none';
+
         },
         error => {
           console.log(error);
+          this.loginError = true;
         }
       );
   }
 
 
   signin(form) {
-    if (form.password == form.confirm_password) {
+    this.signInError = false;
+    console.log(form.password);
+    console.log(form.confirmPassword);
+    if (form.password == form.confirmPassword) {
       const user: User = {
         name: form.name,
         email: form.email,
@@ -53,14 +60,18 @@ export class LogInComponent implements OnInit {
       this.usersService.createAccount(user).
         subscribe(res => {
           console.log(res);
-          this.isSignIn = true;
           document.getElementById('dialogButton').click();
+        },
+        error => {
+           console.log(error);
+           this.signInErrorMsg = "Cet email est déjà associé à un compte";
+           this.signInError = true;
         }
       )
     }
     else {
-      //return false;
-      this.isSignIn = false;
+      this.signInErrorMsg = "Les mots de passe ne correspondent pas";
+      this.signInError = true;
     }
   }
 }

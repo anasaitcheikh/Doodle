@@ -74,7 +74,7 @@ const routes:Routes=[
    {path:'profile', component: ProfileComponent},
    {path:'invitations', component: InvitationsComponent},
    {path:'tutorial', component: TutorialComponent},
-   {path:'comments-details', component: CommentsDetailsComponent},
+   {path:'comments-details/:id_event', component: CommentsDetailsComponent},
    {path:'account-settings', component: AccountSettingsComponent},
    {path:'reset-password', component: ResetPasswordComponent},
    {path:'close-events', component: CloseEventsComponent},

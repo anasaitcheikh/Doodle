@@ -14,11 +14,12 @@
             <input matInput placeholder="Email" name="email" required="" ngModel>
           </mat-form-field>
           <mat-form-field class="large">
-            <input matInput placeholder="Mot de Passe" name="password" required="" ngModel>
+            <input type="password" matInput placeholder="Mot de Passe" name="password" required="" ngModel>
           </mat-form-field>
           <mat-form-field class="large">
-            <input matInput placeholder="Confirmation du Mot de Passe" name="confirm_password" required="" ngModel>
+            <input type="password" matInput placeholder="Confirmation du Mot de Passe" name="confirmPassword" required="" ngModel>
           </mat-form-field>
+          <div class="text-center error" *ngIf="signInError">{{signInErrorMsg}}</div>
           <div class="row center">
             <div class="col-lg-6 center">
               <button type="submit" [disabled]="!signinForm.valid" (click)="signin(signinForm.value)" class="btn btn-primary">
@@ -37,7 +38,7 @@
               <input matInput placeholder="Email" name="email" required="" ngModel>
             </mat-form-field>
             <mat-form-field class="large">
-              <input matInput placeholder="Mot de Passe" name="password" required="" ngModel>
+              <input type="password" matInput placeholder="Mot de Passe" name="password" required="" ngModel>
             </mat-form-field>
             <div class="row center">
               <div class="col-lg-6">
@@ -49,6 +50,7 @@
               </div>
             </div>
           </form>
+          <div class="text-center error" *ngIf="loginError">L'email ou le mot de passe est incorrect</div>
         </mat-card>
       </div>
   </div>
