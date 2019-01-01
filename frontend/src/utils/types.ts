@@ -11,18 +11,18 @@ export interface OpenEventResponse {
 }
 export interface Event{
   reunion : {
-    admin : {
+    admin? : {
       email : string,
       name : string
     },
     title : string,
     place : string,
     note : string,
-    date : Date[],
+    date? : Date[],
     addComment : boolean,
     maxParticipant : number,
-    participant : Participant[],
-    comment: Comment[],
+    participant? : Participant[],
+    comment?: Comment[],
     update_at?: string,
     _id?: string
   }
@@ -58,7 +58,8 @@ export interface Participant {
 export interface Date {
   date: string;
   hourStart: string;
-  hourEnd: string
+  hourEnd: string;
+  _id?: string
 }
 
 export interface User {
