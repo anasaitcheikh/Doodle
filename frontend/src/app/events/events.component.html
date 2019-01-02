@@ -203,7 +203,7 @@
       <!-- Comments -->
       <mat-tab label="Commentaires">
         <h1 class="big-title title-margin">Commentaires</h1>
-        <div class="row center mat-card rounded-corners new-comment" *ngIf="event.addComment">
+        <div class="row center mat-card rounded-corners new-comment" *ngIf="canAddComment">
           <div class="col-lg-11 col-md-11 center">
             <mat-form-field class="large">
               <textarea matInput class="large" name="newComment" [(ngModel)]="newCommentText" placeholder="Ajouter un nouveau commentaire"></textarea>
@@ -216,7 +216,7 @@
           </div>
         </div>
 
-        <div class="row center" *ngIf="!event.addComment">
+        <div class="row center" *ngIf="!canAddComment">
           <div class="col-lg-6 col-md-6 center">
             <p class="text-center">L'ajout de commentaires est désactivé.</p>
           </div>
