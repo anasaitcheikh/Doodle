@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { EventsService } from '../events.service';
 import { EmailValidatorService } from '../email-validator.service';
+import { EventdateService } from '../eventdate.service';
 import { Event, Date, Participant, OpenEventResponse, Comment } from '../../utils/types'
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import 'rxjs/Rx';
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-events',
@@ -22,10 +25,21 @@ export class EventsComponent implements OnInit {
     name: '',
     email: ''
   }
+  newDate: Date = {
+    date: '',
+    hourStart: '',
+    hourEnd: ''
+  }
   hasError = false
   errorMsg
 
-  constructor(private eventsService: EventsService, private emailValidatorService: EmailValidatorService, private route: ActivatedRoute) {
+  private canAddComment = false
+
+  constructor(private eventsService: EventsService,
+    private emailValidatorService: EmailValidatorService,
+    private eventdateService: EventdateService,
+    private route: ActivatedRoute,
+    private router: Router) {
 
   }
 
@@ -38,6 +52,7 @@ export class EventsComponent implements OnInit {
         this.currentParticipant = this.resJson.data.participant;
         this.isAdmin = this.resJson.data.participant.admin;
         this.event = this.resJson.data.reunion;
+        this.canAddComment = this.resJson.data.reunion.addComment;
         console.log(this.currentParticipant)
       },
       error => console.log(error)
@@ -45,35 +60,67 @@ export class EventsComponent implements OnInit {
   }
 
   updateEvent() {
+    const currentEvent = JSON.parse(JSON.stringify(this.event))
+    if (currentEvent.title.length < 3) {
+      this.errorMsg = "Le titre de la rencontre doit contenir au moins 3 caractères."
+      return false
+    }
 
+    if(currentEvent.maxParticipant < 1){
+      this.errorMsg = "La rencontre doit avoir au minimum un participant."
+      return false
+    }
+
+    if(currentEvent.maxParticipant < this.resJson.data.reunion.participant.length){
+      this.errorMsg = "Le nombre max de participant doit être supérieur ou égal au nombre de participant."
+      return false
+    }
+
+    if (currentEvent.place.length < 3) {
+      this.errorMsg = "Le lieu de la rencontre doit contenir au moins 3 caractères."
+      return false
+    }
+    const event = {
+      title: currentEvent.title,
+      place: currentEvent.place,
+      note: currentEvent.note,
+      maxParticipant: currentEvent.maxParticipant,
+      addComment: currentEvent.addComment,
+
+    }
+
+    this.eventsService.updateEvent(this.resJson.data.reunion._id, event, this.token)
+      .subscribe(
+        res => console.log('updateEvent', res)
+      )
   }
 
   deleteEvent() {
-
+    this.eventsService.deleteOpenEvent(this.resJson.data.reunion._id, this.token)
+      .subscribe(
+        _ => this.router.navigate(['welcome']),
+        error => console.log('error', error)
+      )
   }
 
-  addDate() {
-    const date: Date = {
-      date: '',
-      hourStart: '',
-      hourEnd: ''
+  createDate() {
+    this.newDate.date = this.eventdateService.formatDate(this.newDate.date)
+    if (!this.eventdateService.isEventDateValid(this.newDate)) {
+      this.errorMsg = "Au moins une des dates n'est pas valide. Vérifez que la date est postérieure à la date actuelle et que l'heure de fin n'est pas antérieure à celle de début"
+      this.hasError = true
+      return
     }
-    this.event.reunion.date.push(date)
+    this.eventsService.createDate(this.resJson.data.reunion._id, this.newDate, this.token)
+      .subscribe(
+        res => console.log('newDate', res)
+      )
   }
 
-  deleteDate(date) {
-    const index: number = this.event.reunion.date.indexOf(date);
-    if (index !== -1) {
-      this.event.reunion.date.splice(index, 1);
-    }
-  }
-
-  addParticipant() {
-    const participant: Participant = {
-      name: '',
-      email: ''
-    }
-    this.event.reunion.participant.push(participant)
+  deleteDate(idDate) {
+    this.eventsService.removeDate(this.resJson.data.reunion._id, idDate, this.token)
+      .subscribe(
+        res => console.log('deleteDate', res)
+      )
   }
 
   createParticipant() {
@@ -88,12 +135,12 @@ export class EventsComponent implements OnInit {
       this.errorMsg = "L'email du participant n'est pas valide."
       return
     }
-    
+
     const participants: Participant[] = this.resJson.data.reunion.participant
 
     let test = true
     participants.forEach(p => {
-      if(p.email == this.newParticipant.email){
+      if (p.email == this.newParticipant.email) {
         this.hasError = true
         this.errorMsg = "Un participant utilise déjà cet email."
         test = false
@@ -101,7 +148,7 @@ export class EventsComponent implements OnInit {
       }
     })
 
-    if(!test){
+    if (!test) {
       return
     }
 
@@ -124,10 +171,17 @@ export class EventsComponent implements OnInit {
   }
 
   updateParticipant() {
+    if (this.currentParticipant.name.length < 3) {
+      this.hasError = true
+      this.errorMsg = "Le nom du participant doit contenir au moins 3 caractères."
+      return
+    }
+
     const participant: Participant = {
       name: this.currentParticipant.name,
       email: this.currentParticipant.email
     }
+
     this.eventsService.updateOpenReunionParticipant(
       this.resJson.data.reunion._id,
       this.currentParticipant.idParticipant,
@@ -142,7 +196,15 @@ export class EventsComponent implements OnInit {
   deleteParticipant(idParticipant) {
     this.eventsService.deleteParticipant(this.resJson.data.reunion._id, idParticipant, this.token)
       .subscribe(
-        res => console.log('deleteParticipant', res)
+        res => {
+          if (this.isAdmin) {
+
+          }
+          else {
+            this.router.navigate(['welcome'])
+          }
+        },
+        error => console.log('errorDeleteParticipant', error)
       )
   }
 
@@ -151,7 +213,7 @@ export class EventsComponent implements OnInit {
   }
 
   createComment() {
-    if (this.newCommentText.length < 3) {
+    if (this.newCommentText.length < 2) {
       console.log('less than 2')
     }
     else {
@@ -171,7 +233,7 @@ export class EventsComponent implements OnInit {
   updateComment(idComment, commentText) {
     if (commentText.length < 2) {
       this.hasError = true
-      this.errorMsg = "Le commentaire doit contenir au moins deux caractères."
+      this.errorMsg = "Le commentaire doit contenir au moins 2 caractères."
       return
     }
     const comment: Comment = {
@@ -191,6 +253,21 @@ export class EventsComponent implements OnInit {
     this.eventsService.removeComment(this.resJson.data.reunion._id, idComment, this.token)
       .subscribe(
         res => console.log('deleteComment', res)
+      )
+  }
+
+  updateAdmin() {
+    if(this.currentParticipant.name){
+      this.hasError = true
+      this.errorMsg = "Le nom de l'admin doit contenir au moins 3 caractères."
+      return
+    }
+    this.eventsService.updateAdmin(this.resJson.data.reunion._id, this.currentParticipant.name, this.currentParticipant.email, this.token)
+      .subscribe(
+        res => {
+          const token = JSON.parse(JSON.stringify(res)).data.token
+          this.router.navigate([`open-event/${token}`])
+        }
       )
   }
 }
