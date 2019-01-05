@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { InvitationsComponent } from "./invitations/invitations.component";
-import { TutorialComponent } from "./tutorial/tutorial.component";
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -64,7 +63,10 @@ import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
 import { CreateCloseEventComponent } from './create-close-event/create-close-event.component';
 import { EmailValidatorService } from './email-validator.service'
-import { EventdateService } from './eventdate.service'
+import { EventdateService } from './eventdate.service';
+import { NotFoundComponent } from './not-found/not-found.component'
+import {APP_BASE_HREF} from '@angular/common';
+import { RedirectComponent } from './redirect/redirect.component';
 
 const routes: Routes = [
   { path: 'open-event/:token', component: EventsComponent },
@@ -74,14 +76,16 @@ const routes: Routes = [
   { path: 'createCloseEvent', component: CreateCloseEventComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'invitations', component: InvitationsComponent },
-  { path: 'tutorial', component: TutorialComponent },
   { path: 'comments-details', component: CommentsDetailsComponent },
   { path: 'account-settings', component: AccountSettingsComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'close-events', component: CloseEventsComponent },
   { path: 'show-event/:id_event', component: ShowEventComponent },
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-   {path:'comments-details/:id_event', component: CommentsDetailsComponent},
+  { path: 'comments-details/:id_event', component: CommentsDetailsComponent },
+  { path: 'redirect/:final_path', component: RedirectComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', redirectTo: 'not-found' },
 ]
 
 @NgModule({
@@ -96,12 +100,13 @@ const routes: Routes = [
     AccountSettingsComponent,
     ResetPasswordComponent,
     ProfileComponent,
-    TutorialComponent,
     InvitationsComponent,
     HeaderComponent,
     CloseEventsComponent,
     ShowEventComponent,
-    CommentsDetailsComponent
+    CommentsDetailsComponent,
+    NotFoundComponent,
+    RedirectComponent
   ],
   imports: [
     BrowserModule,
@@ -144,15 +149,17 @@ const routes: Routes = [
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' }),
     HttpClientModule,
     AngularFontAwesomeModule,
   ],
+  exports: [RouterModule],
   providers: [EventsService,
     AuthenticateService,
     UsersService,
     EmailValidatorService,
-    EventdateService],
+    EventdateService,
+    {provide: APP_BASE_HREF, useValue : '/' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
