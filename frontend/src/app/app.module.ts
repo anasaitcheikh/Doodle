@@ -64,7 +64,8 @@ import { CloseEventsComponent } from './close-events/close-events.component';
 import { ShowEventComponent } from './show-event/show-event.component';
 import { CreateCloseEventComponent } from './create-close-event/create-close-event.component';
 import { EmailValidatorService } from './email-validator.service'
-import { EventdateService } from './eventdate.service'
+import { EventdateService } from './eventdate.service';
+import { RedirectionComponent } from './redirection/redirection.component'
 
 const routes: Routes = [
   { path: 'open-event/:token', component: EventsComponent },
@@ -82,6 +83,7 @@ const routes: Routes = [
   { path: 'show-event/:id_event', component: ShowEventComponent },
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
    {path:'comments-details/:id_event', component: CommentsDetailsComponent},
+  {path:'redirect/:destination', component: RedirectionComponent},
 ]
 
 @NgModule({
@@ -101,7 +103,8 @@ const routes: Routes = [
     HeaderComponent,
     CloseEventsComponent,
     ShowEventComponent,
-    CommentsDetailsComponent
+    CommentsDetailsComponent,
+    RedirectionComponent
   ],
   imports: [
     BrowserModule,

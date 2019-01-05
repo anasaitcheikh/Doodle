@@ -6,12 +6,25 @@
     <input matInput placeholder="Nom et Prenom" value="{{userName}}">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Email" value="{{userEmail}}">
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Mot de Passe" value="{{userPassword}}">
+    <input matInput placeholder="Email" value="{{userEmail}}" [disabled]="true">
   </mat-form-field>
 </div>
-  <div><button type="submit" class="btn btn-primary" style="margin-left: 650px;">Sauvegarder</button></div>
+  <button type="submit" class="btn btn-primary" >
+    <i class="fa fa-key" aria-hidden="true"></i>
+    Changer Mot de Passe
+  </button>
+
+  <div class="container">
+    <mat-form-field>
+      <input type="password" matInput placeholder="Mot de passe actuel">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Nouveau mot de passe">
+    </mat-form-field>
+    <mat-form-field>
+      <input type="password" matInput placeholder="Confirmer">
+    </mat-form-field>
+  </div>
+  <!--div><button type="submit" class="btn btn-primary" style="margin-left: 650px;">Sauvegarder</button></div!-->
 </form>
 </div>

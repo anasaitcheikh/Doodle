@@ -29,4 +29,9 @@
       </button>
     </div>
   </div>
+  <div *ngIf="hasError">
+    <p class="text-center error">
+      {{errorMsg}}
+    </p>
+  </div>
 </div>

@@ -23,6 +23,7 @@ export class InvitationsComponent implements OnInit {
   dataSource = this.guestReunions;
   selection = new SelectionModel(true, []);
   participantToReunion = [];
+  private sub :any;
 
   constructor(private eventService: EventsService) {
      console.log('user email');
@@ -80,7 +81,7 @@ export class InvitationsComponent implements OnInit {
 
     //delete data from database
     this.participantToReunion.forEach(reunion =>{
-       this.eventService.deleteCloseParticipant(reunion.rId, reunion.pId, this.userToken).subscribe(
+       this.sub = this.eventService.deleteCloseParticipant(reunion.rId, reunion.pId, this.userToken).subscribe(
           res =>{
             console.log(res);
 
@@ -89,25 +90,16 @@ export class InvitationsComponent implements OnInit {
             console.log(error);
        })
     })
-    //window.location.reload();
-
-    //delete data from data source in local
-    this.selection.selected.forEach(row=>{
-        const index : number = this.dataSource.indexOf(row);
-        console.log('index');
-        console.log(index);
-        if(index!=-1){
-          console.log(this.dataSource);
-          this.dataSource.splice(index,1);
-          console.log(this.dataSource);
-        }
-    })
 
   }
 
   confirmLeaveReunion(){
     console.log('confirm leave reunion');
     this.leaveReunion();
+  }
+
+  ngOnDestroy(){
+    this.sub.unsubscribe();
   }
 
 }

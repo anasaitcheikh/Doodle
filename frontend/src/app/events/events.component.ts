@@ -54,6 +54,7 @@ export class EventsComponent implements OnInit {
         this.event = this.resJson.data.reunion;
         this.canAddComment = this.resJson.data.reunion.addComment;
         console.log(this.currentParticipant)
+        console.log('event', this.event)
       },
       error => console.log(error)
     )

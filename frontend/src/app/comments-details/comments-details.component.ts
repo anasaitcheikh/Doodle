@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {EventsService} from "../events.service";
 import {Comment} from "../../utils/types";
+import {RedirectionService} from "../redirection.service"
 
 @Component({
   selector: 'app-comments-details',
@@ -17,8 +18,11 @@ export class CommentsDetailsComponent implements OnInit {
    guestReunions = [];
    userToken :string;
    userData = JSON.parse(localStorage.getItem('currentUser')).data;
+   hasError : boolean;
+   errorMsg : string;
 
-  constructor(private route: ActivatedRoute, private eventsService: EventsService) {
+
+  constructor(private route: ActivatedRoute, private eventsService: EventsService, private redirectionService: RedirectionService) {
 
   }
 
@@ -41,6 +45,11 @@ export class CommentsDetailsComponent implements OnInit {
   }
 
   createComment(){
+    if (this.newCommentText.length < 2) {
+      this.hasError = true
+      this.errorMsg = "Le commentaire doit contenir au moins 2 caractères."
+      return
+    }
       const comment: Comment = {
         name: this.userData.user.name,
         email: this.userData.user.email,
@@ -49,17 +58,40 @@ export class CommentsDetailsComponent implements OnInit {
       console.log('new comment');
       console.log(this.newCommentText);
       console.log(this.userToken);
-      this.eventsService.createComment(this.reunionId, comment, this.userToken)
+      this.sub = this.eventsService.createCloseComment(this.reunionId, comment, this.userToken)
         .subscribe(
-          res => console.log('commentAdded', res)
+          res => {
+            console.log('redirect')
+            this.redirectionService.redirectTo(`comments-details/${this.reunionId}`)
+          } ,
+          error => console.log('commentAdded', error)
         )
+
   }
 
   updateComment(commentId, commentText){
+    if (commentText.length < 2) {
+      this.hasError = true
+      this.errorMsg = "Le commentaire doit contenir au moins 2 caractères."
+      return
+    }
+    const comment: Comment = {
+      _id: commentId,
+      text: commentText,
+      name: this.userData.user.name,
+      email: this.userData.user.email
+    }
 
+    this.sub = this.eventsService.updateCloseComment(this.reunionId, commentId, comment, this.userToken)
+      .subscribe(
+        res => console.log('updateComment', res)
+      )
 }
   removeComment(commentId){
-
+    this.sub = this.eventsService.removeCloseComment(this.reunionId, commentId, this.userToken)
+      .subscribe(
+        res => console.log('deleteComment', res)
+      )
 }
 
   ngOnDestroy() {

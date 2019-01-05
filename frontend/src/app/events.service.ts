@@ -125,6 +125,16 @@ export class EventsService {
     return req;
   }
 
+  createCloseComment(idReunion, comment, token){
+    const req = this.http.post(`http://localhost:8080/api/close/reunions/${idReunion}/comments`, {
+      data: {
+        token: token,
+        comment: comment
+      }
+    })
+    return req;
+  }
+
   updateComment(idReunion, idComment, comment, token){
     const req = this.http.put(`http://localhost:8080/api/open/reunions/${idReunion}/comments/${idComment}`, {
       data: {
@@ -135,8 +145,23 @@ export class EventsService {
     return req;
   }
 
+  updateCloseComment(idReunion, idComment, comment, token){
+    const req = this.http.put(`http://localhost:8080/api/close/reunions/${idReunion}/comments/${idComment}`, {
+      data: {
+        token: token,
+        comment: comment
+      }
+    })
+    return req;
+  }
+
   removeComment(idReunion, idComment, token){
     const req = this.http.delete(`http://localhost:8080/api/open/reunions/${idReunion}/comments/${idComment}/${token}`)
+    return req;
+  }
+
+  removeCloseComment(idReunion, idComment, token){
+    const req = this.http.delete(`http://localhost:8080/api/close/reunions/${idReunion}/comments/${idComment}/${token}`)
     return req;
   }
 
