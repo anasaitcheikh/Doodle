@@ -93,7 +93,6 @@ export class CreateCloseEventComponent implements OnInit {
       maxParticipant: this.maxParticipant,
       participant: Array.from(this.participants.values()),
       comment: []
-
     }
 
     this.token = JSON.parse(localStorage.getItem('currentUser')).data.token;

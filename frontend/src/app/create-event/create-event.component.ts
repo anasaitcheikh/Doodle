@@ -4,7 +4,6 @@ import { Date, Event, Participant } from '../../utils/types';
 import { Router } from '@angular/router';
 import { EmailValidatorService } from '../email-validator.service';
 import { EventdateService } from '../eventdate.service';
-
 @Component({
   selector: 'app-create-event',
   templateUrl: './create-event.component.html',
