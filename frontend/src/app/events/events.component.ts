@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { EventsService } from '../events.service';
 import { EmailValidatorService } from '../email-validator.service';
 import { EventdateService } from '../eventdate.service';
@@ -6,7 +6,6 @@ import { Event, Date, Participant, OpenEventResponse, Comment } from '../../util
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import 'rxjs/Rx';
-import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-events',
@@ -14,7 +13,7 @@ import { IfStmt } from '@angular/compiler';
   styleUrls: ['./events.component.css']
 })
 
-export class EventsComponent implements OnInit {
+export class EventsComponent implements OnInit, OnDestroy {
   event: Event
   token
   currentParticipant
@@ -35,15 +34,29 @@ export class EventsComponent implements OnInit {
 
   private canAddComment = false
 
+  private _getEventSubscription
+  private _updateEventSubscription
+  private _deleteEventSubscription
+  private _createDateSubscription
+  private _deleteDateSubscription
+  private _createParticipantSubscription
+  private _updateParticipantSubscription
+  private _deleteParticipantSubscription
+  private _createCommentSubscription
+  private _updateCommentSubscription
+  private _deleteCommentSubscription
+  private _deleteAdminSubscription
+
   constructor(private eventsService: EventsService,
     private emailValidatorService: EmailValidatorService,
     private eventdateService: EventdateService,
     private route: ActivatedRoute,
     private router: Router) {
-
+      console.log('constructor')
   }
 
   async ngOnInit() {
+    console.log('onInit')
     this.token = this.route.snapshot.paramMap.get('token');
 
     this.getEvent().subscribe(
@@ -57,6 +70,10 @@ export class EventsComponent implements OnInit {
       },
       error => console.log(error)
     )
+  }
+
+  ngOnDestroy(): void {
+    console.log('destroy-component')
   }
 
   updateEvent() {
@@ -93,10 +110,11 @@ export class EventsComponent implements OnInit {
       .subscribe(
         res => console.log('updateEvent', res)
       )
+      .unsubscribe()
   }
 
-  deleteEvent() {
-    this.eventsService.deleteOpenEvent(this.resJson.data.reunion._id, this.token)
+  async deleteEvent() {
+    this._deleteEventSubscription = this.eventsService.deleteOpenEvent(this.resJson.data.reunion._id, this.token)
       .subscribe(
         _ => this.router.navigate(['welcome']),
         error => console.log('error', error)
@@ -112,14 +130,24 @@ export class EventsComponent implements OnInit {
     }
     this.eventsService.createDate(this.resJson.data.reunion._id, this.newDate, this.token)
       .subscribe(
-        res => console.log('newDate', res)
+        res => {
+          console.log('res', res);
+          this.newDate = {
+            date: '',
+            hourStart: '',
+            hourEnd: ''
+          }
+          this.router.navigate([`redirect/open-event--${this.token}`])
+        },
+        error => console.log('newDate', error)
       )
   }
 
   deleteDate(idDate) {
     this.eventsService.removeDate(this.resJson.data.reunion._id, idDate, this.token)
       .subscribe(
-        res => console.log('deleteDate', res)
+        res => this.router.navigate([`redirect/open-event--${this.token}`]),
+        error => console.log('deleteDate-error', error)
       )
   }
 
@@ -161,7 +189,14 @@ export class EventsComponent implements OnInit {
     if (this.resJson.data.reunion.maxParticipant > this.resJson.data.reunion.participant.length) {
       this.eventsService.createParticipant(this.resJson.data.reunion._id, this.newParticipant, this.token)
         .subscribe(
-          res => console.log('create participant', res)
+          res => {
+            console.log('create participant', res);
+            this.newParticipant = {
+              name: '',
+              email: ''
+            }
+          },
+          error => console.log('error', error)
         )
     }
     else {
@@ -189,7 +224,8 @@ export class EventsComponent implements OnInit {
       this.token
     )
       .subscribe(
-        res => console.log('mod', res)
+        res => console.log('res', res),
+        error => console.log('error', error)
       )
   }
 
@@ -225,7 +261,11 @@ export class EventsComponent implements OnInit {
 
       this.eventsService.createComment(this.resJson.data.reunion._id, comment, this.token)
         .subscribe(
-          res => console.log('commentAdded', res)
+          res => {
+            console.log('commentAdded', res);
+            this.newCommentText = ''
+          },
+          error => console.log('error', error)
         )
     }
   }
