@@ -1,0 +1,12 @@
+#key{
+
+}
+
+#changePassword{
+  color: blue;
+  margin-left: 2px;
+}
+
+#changePassword:hover{
+   color: mediumslateblue;
+}

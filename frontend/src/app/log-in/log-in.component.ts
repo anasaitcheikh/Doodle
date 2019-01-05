@@ -18,7 +18,7 @@ export class LogInComponent implements OnInit {
     private usersService: UsersService) {
 
   }
-
+  private sub : any;
   passwordError: string;
   signInErrorMsg : string;
   signInError: boolean;
@@ -29,7 +29,7 @@ export class LogInComponent implements OnInit {
 
   login(form) {
     this.loginError = false;
-    this.authenticateService.login(form.email, form.password)
+    this.sub = this.authenticateService.login(form.email, form.password)
       .subscribe(
         data => {
           console.log("login successful!");
@@ -57,7 +57,7 @@ export class LogInComponent implements OnInit {
         password: form.password
       }
       console.log(user)
-      this.usersService.createAccount(user).
+     this.sub = this.usersService.createAccount(user).
         subscribe(res => {
           console.log(res);
           document.getElementById('dialogButton').click();
@@ -73,5 +73,9 @@ export class LogInComponent implements OnInit {
       this.signInErrorMsg = "Les mots de passe ne correspondent pas";
       this.signInError = true;
     }
+  }
+
+  ngOnDestroy(){
+     this.sub.unsubscribe();
   }
 }

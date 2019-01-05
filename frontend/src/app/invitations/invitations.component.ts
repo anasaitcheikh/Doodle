@@ -23,6 +23,7 @@ export class InvitationsComponent implements OnInit {
   dataSource = this.guestReunions;
   selection = new SelectionModel(true, []);
   participantToReunion = [];
+  private sub :any;
 
   constructor(private eventService: EventsService) {
      console.log('user email');
@@ -77,8 +78,10 @@ export class InvitationsComponent implements OnInit {
       }
     );
     console.log(this.participantToReunion);
+
+    //delete data from database
     this.participantToReunion.forEach(reunion =>{
-       this.eventService.deleteCloseParticipant(reunion.rId, reunion.pId, this.userToken).subscribe(
+       this.sub = this.eventService.deleteCloseParticipant(reunion.rId, reunion.pId, this.userToken).subscribe(
           res =>{
             console.log(res);
 
@@ -87,12 +90,16 @@ export class InvitationsComponent implements OnInit {
             console.log(error);
        })
     })
-    window.location.reload();
+
   }
 
   confirmLeaveReunion(){
     console.log('confirm leave reunion');
     this.leaveReunion();
+  }
+
+  ngOnDestroy(){
+    this.sub.unsubscribe();
   }
 
 }
