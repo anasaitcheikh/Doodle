@@ -8,10 +8,10 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/createEvent">Nouvelle réunion ouverte</a>
+          <a class="nav-link" routerLink="/createEvent">Réunion Ouverte</a>
         </li>
         <li *ngIf="userSession != null" class="nav-item">
-            <a class="nav-link" routerLink='/createCloseEvent'>Nouvelle réunion réunion</a>
+            <a class="nav-link" routerLink='/createCloseEvent'>Réunion Fermée</a>
           </li>
         <li *ngIf="userSession != null" class="nav-item">
           <a class="nav-link" routerLink='/close-events'>Mes réunions</a>
