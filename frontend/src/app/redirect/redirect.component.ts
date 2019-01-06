@@ -14,6 +14,7 @@ export class RedirectComponent implements OnInit {
     const finalPath = this.route.snapshot.paramMap.get('final_path')
     console.log('redirectTo', finalPath)
     this.router.navigate([finalPath.replace('--', '/')])
+
   }
 
 }

@@ -18,7 +18,7 @@ export class LogInComponent implements OnInit {
     private usersService: UsersService) {
 
   }
-  private sub : any;
+  private sub = null;
   passwordError: string;
   signInErrorMsg : string;
   signInError: boolean;
@@ -76,6 +76,7 @@ export class LogInComponent implements OnInit {
   }
 
   ngOnDestroy(){
-     this.sub.unsubscribe();
+    if(this.sub ! = undefined && this.sub != null)
+      this.sub.unsubscribe();
   }
 }

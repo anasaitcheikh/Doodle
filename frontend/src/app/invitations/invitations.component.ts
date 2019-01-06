@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';
 import {EventsService} from "../events.service";
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invitations',
@@ -23,9 +23,9 @@ export class InvitationsComponent implements OnInit {
   dataSource = this.guestReunions;
   selection = new SelectionModel(true, []);
   participantToReunion = [];
-  private sub :any;
+  private sub = null;
 
-  constructor(private eventService: EventsService) {
+  constructor(private eventService: EventsService, private router: Router) {
      console.log('user email');
      console.log(this.userEmail);
      console.log('data source');
@@ -85,6 +85,20 @@ export class InvitationsComponent implements OnInit {
           res =>{
             console.log(res);
 
+            //delete data from data source in local
+            this.selection.selected.forEach(row=>{
+              const index : number = this.dataSource.indexOf(row);
+              console.log('index');
+              console.log(index);
+              if(index!=-1){
+                console.log(this.dataSource);
+                this.dataSource.splice(index,1);
+                console.log(this.dataSource);
+              }
+            })
+             this.userData.reunions.guest = this.dataSource;
+             localStorage.setItem('currentUser', JSON.stringify({data: this.userData}));
+            this.router.navigate([`redirect/invitations`]);
            },
          error =>{
             console.log(error);
@@ -99,7 +113,8 @@ export class InvitationsComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    this.sub.unsubscribe();
+    if(this.sub ! = undefined && this.sub != null)
+       this.sub.unsubscribe();
   }
 
 }
