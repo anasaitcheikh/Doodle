@@ -13,12 +13,12 @@
 Pour exécuter le code il faut :
 
 - Installer : *MongoDB 4.0.2* et *NodeJs*.
-- Ouvrir un *Terminal* dans "/bin" qui se trouve dans le dossier d'installation de *MongoDB* et entrer la commande suivante :
+- Ouvrir un *Terminal* dans "/bin" qui se trouve dans le dossier d'installation de *MongoDB* et exécuter la commande suivante :
 
 ```
 mongod --dbpath ../data/db
 ```
-- Ouvrir un *Terminal* dans le dossier "/backend" et entrer la commandes suivantes :
+- Ouvrir un *Terminal* dans le dossier "/backend" et exécuter la commandes suivantes :
 
 ```
 npm install
@@ -27,7 +27,7 @@ puis :
 ```
 npm start
 ```
-- Ouvrir un *Terminal* dans le dossier "/frontend" et entrer les commandes suivantes :
+- Ouvrir un *Terminal* dans le dossier "/frontend" et exécuter les commandes suivantes :
 
 ```
 npm install
