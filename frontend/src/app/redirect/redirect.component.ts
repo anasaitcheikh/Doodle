@@ -12,7 +12,7 @@ export class RedirectComponent implements OnInit {
 
   ngOnInit() {
     const finalPath = this.route.snapshot.paramMap.get('final_path')
-    console.log('redirectTo', finalPath)
+    console.log('path', finalPath)
     this.router.navigate([finalPath.replace('--', '/')])
   }
 

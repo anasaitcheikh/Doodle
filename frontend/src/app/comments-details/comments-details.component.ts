@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {EventsService} from "../events.service";
 import {Comment} from "../../utils/types";
-import {RedirectionService} from "../redirection.service"
 
 @Component({
   selector: 'app-comments-details',
@@ -22,7 +21,7 @@ export class CommentsDetailsComponent implements OnInit {
    errorMsg : string;
 
 
-  constructor(private route: ActivatedRoute, private eventsService: EventsService, private redirectionService: RedirectionService) {
+  constructor(private route: ActivatedRoute, private eventsService: EventsService) {
 
   }
 
@@ -62,7 +61,6 @@ export class CommentsDetailsComponent implements OnInit {
         .subscribe(
           res => {
             console.log('redirect')
-            this.redirectionService.redirectTo(`comments-details/${this.reunionId}`)
           } ,
           error => console.log('commentAdded', error)
         )

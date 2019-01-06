@@ -52,7 +52,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     private eventdateService: EventdateService,
     private route: ActivatedRoute,
     private router: Router) {
-      console.log('constructor')
+    console.log('constructor')
   }
 
   async ngOnInit() {
@@ -79,39 +79,46 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   updateEvent() {
     const currentEvent = JSON.parse(JSON.stringify(this.event))
-    if (currentEvent.title.length < 3) {
-      this.errorMsg = "Le titre de la rencontre doit contenir au moins 3 caractères."
-      return false
+    const check = () => {
+      if (currentEvent.title.length < 3) {
+        this.errorMsg = "Le titre de la rencontre doit contenir au moins 3 caractères."
+        return false
+      }
+
+      if (currentEvent.maxParticipant < 1) {
+        this.errorMsg = "La rencontre doit avoir au minimum un participant."
+        return false
+      }
+
+      if (currentEvent.maxParticipant < this.resJson.data.reunion.participant.length) {
+        this.errorMsg = "Le nombre max de participant doit être supérieur ou égal au nombre de participant."
+        return false
+      }
+
+      if (currentEvent.place.length < 3) {
+        this.errorMsg = "Le lieu de la rencontre doit contenir au moins 3 caractères."
+        return false
+      }
+      return true
     }
 
-    if(currentEvent.maxParticipant < 1){
-      this.errorMsg = "La rencontre doit avoir au minimum un participant."
-      return false
+    if (!check()) {
+      return
     }
 
-    if(currentEvent.maxParticipant < this.resJson.data.reunion.participant.length){
-      this.errorMsg = "Le nombre max de participant doit être supérieur ou égal au nombre de participant."
-      return false
-    }
-
-    if (currentEvent.place.length < 3) {
-      this.errorMsg = "Le lieu de la rencontre doit contenir au moins 3 caractères."
-      return false
-    }
     const event = {
       title: currentEvent.title,
       place: currentEvent.place,
       note: currentEvent.note,
       maxParticipant: currentEvent.maxParticipant,
-      addComment: currentEvent.addComment,
-
+      addComment: currentEvent.addComment
     }
 
     this.eventsService.updateEvent(this.resJson.data.reunion._id, event, this.token)
       .subscribe(
-        res => console.log('updateEvent', res)
+        res => this.router.navigate([`redirect/open-event--${this.token}`]),
+        error => console.log('error', error)
       )
-      .unsubscribe()
   }
 
   async deleteEvent() {
@@ -125,7 +132,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   createDate() {
     this.newDate.date = this.eventdateService.formatDate(this.newDate.date)
     if (!this.eventdateService.isEventDateValid(this.newDate)) {
-      this.errorMsg = "Au moins une des dates n'est pas valide. Vérifez que la date est postérieure à la date actuelle et que l'heure de fin n'est pas antérieure à celle de début"
+      this.errorMsg = "Vérifez que la date est postérieure à la date actuelle et que l'heure de fin n'est pas antérieure à celle de début"
       this.hasError = true
       return
     }
@@ -196,6 +203,7 @@ export class EventsComponent implements OnInit, OnDestroy {
               name: '',
               email: ''
             }
+            this.router.navigate([`redirect/open-event--${this.token}`])
           },
           error => console.log('error', error)
         )
@@ -225,7 +233,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       this.token
     )
       .subscribe(
-        res => console.log('res', res),
+        res => this.router.navigate([`redirect/open-event--${this.token}`]),
         error => console.log('error', error)
       )
   }
@@ -240,6 +248,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           else {
             this.router.navigate(['welcome'])
           }
+          this.router.navigate([`redirect/open-event--${this.token}`])
         },
         error => console.log('errorDeleteParticipant', error)
       )
@@ -265,6 +274,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           res => {
             console.log('commentAdded', res);
             this.newCommentText = ''
+            this.router.navigate([`redirect/open-event--${this.token}`])
           },
           error => console.log('error', error)
         )
@@ -286,19 +296,21 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.eventsService.updateComment(this.resJson.data.reunion._id, idComment, comment, this.token)
       .subscribe(
-        res => console.log('updateComment', res)
+        res => this.router.navigate([`redirect/open-event--${this.token}`]),
+        error => console.log('error', error)
       )
   }
 
   removeComment(idComment) {
     this.eventsService.removeComment(this.resJson.data.reunion._id, idComment, this.token)
       .subscribe(
-        res => console.log('deleteComment', res)
+        res => this.router.navigate([`redirect/open-event--${this.token}`]),
+        error => console.log('error', error)
       )
   }
 
   updateAdmin() {
-    if(this.currentParticipant.name){
+    if (this.currentParticipant.name.length < 3) {
       this.hasError = true
       this.errorMsg = "Le nom de l'admin doit contenir au moins 3 caractères."
       return
@@ -307,7 +319,7 @@ export class EventsComponent implements OnInit, OnDestroy {
       .subscribe(
         res => {
           const token = JSON.parse(JSON.stringify(res)).data.token
-          this.router.navigate([`open-event/${token}`])
+          this.router.navigate([`redirect/open-event--${token}`])
         }
       )
   }
