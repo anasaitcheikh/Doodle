@@ -1,0 +1,56 @@
+<div>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1b3a77;">
+    <a class="navbar-brand" routerLink='/welcome'>Accueil</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/createEvent">Réunion Ouverte</a>
+        </li>
+        <li *ngIf="userSession != null" class="nav-item">
+            <a class="nav-link" routerLink='/createCloseEvent'>Réunion Fermée</a>
+          </li>
+        <li *ngIf="userSession != null" class="nav-item">
+          <a class="nav-link" routerLink='/close-events'>Mes réunions</a>
+        </li>
+        <li *ngIf="userSession != null" class="nav-item">
+          <a class="nav-link" routerLink='/invitations'>Mes invitations</a>
+        </li>
+      </ul>
+
+    </div>
+    <!--span class="navbar-text">Create Account</span!-->
+
+    <div *ngIf="userSession == null">
+      <img src="../assets/icon/man-user.png" alt="user" style="margin-right: 8px; margin-left: 8px">
+      <span class="navbar-text" style="margin-right: 80px;"><a routerLink='/login'>Se connecter</a></span>
+    </div>
+    <div *ngIf="userSession != null" style="margin-right: 100px;">
+      <div class="dropdown show pull-left">
+        <a class=" dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false" style="color: white">
+          {{userSession.name}}
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" routerLink="/account-settings">
+            <img src="../assets/icon/settings.png" alt="user" style="margin-right: 2px;">
+            Paramètres du compte
+          </a>
+          <a class="dropdown-item" routerLink="/tutorial">
+            <img src="../assets/icon/information.png" alt="user" style="margin-right: 2px;">
+            Aide
+          </a>
+          <a class="dropdown-item" href="#" (click)="logout()">
+            <img src="../assets/icon/logout.png" alt="user" style="margin-right: 2px;">
+            Se deconnecter
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- As a heading -->
+</div>
