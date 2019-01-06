@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.center {
+    margin: auto;
+    width: 75%;
+    padding: 10px;
+  }
+
+  .large {
+    width: 100%;
+  }
+
+  .container {
+      margin-top: 50px;
+  }
+
+  .title {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    color: black;
+    font-size: 2em;
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.big-title {
+    text-align: center;
+    font-size: 2em;
+}
+.small-title {
+    text-align: center;
+    font-size: 1em;
+}
+
+.rounded-corners {
+    border-radius: 25px;
+    padding: 20px; 
+    margin-bottom: 10px;
+}
+
+.error {
+    color: #FF4136
+}
+
+.new-comment{
+    background-color:rgb(200, 221, 245);
+}
