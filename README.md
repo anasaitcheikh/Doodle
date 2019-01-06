@@ -18,7 +18,7 @@ Pour exécuter le code il faut :
 ```
 mongod --dbpath ../data/db
 ```
-- Ouvrir un *Terminal* dans le dossier "/backend" et exécuter la commandes suivantes :
+- Ouvrir un *Terminal* dans le dossier "/backend" et exécuter les commandes suivantes :
 
 ```
 npm install
