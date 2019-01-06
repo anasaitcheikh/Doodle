@@ -39,7 +39,7 @@ ng serve -o
 Cette dernière commande va ouvrir automatiquement le navigateur sur l'adresse : `http://localhost:4200/` qui contient une redirection vers la page d’accueil de l'application web (`http://localhost:4200/welcome`). 
 
 # Utilisation 
-On peut créer les réunion en deux modes :
+On peut créer les réunions en deux modes :
 ### Avec authentification :
 Permet un contrôle total sur les réunions.
 ### Sans authentification:
