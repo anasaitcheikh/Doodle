@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {EventsService} from "../events.service";
 import {Comment} from "../../utils/types";
-import {RedirectionService} from "../redirection.service"
 import {Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-comments-details',
@@ -23,9 +23,9 @@ export class CommentsDetailsComponent implements OnInit {
    errorMsg : string;
    currentReunion ;
 
+
   constructor(private route: ActivatedRoute, private eventsService: EventsService,private router: Router) {
   }
-
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.reunionId = params['id_event'];
@@ -69,6 +69,7 @@ export class CommentsDetailsComponent implements OnInit {
            // }
            // localStorage.setItem('currentUser', JSON.stringify({data: this.userData}));
             this.router.navigate([`redirect/comments-details--${this.reunionId}`])
+
           } ,
           error => console.log('commentAdded', error)
         )

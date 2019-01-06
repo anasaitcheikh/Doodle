@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { HttpHeaders } from '@angular/common/http';
 
 
@@ -55,6 +55,11 @@ export class EventsService {
     return req;
   }
 
+  getCloseEvents(cat, token){
+    const req = this.http.get(`http://localhost:8080/api/close/reunions/${token}/cat/${cat}`)
+    return req;
+  }
+
   updateCloseEvent(eventId, event, token) {
     const req = this.http.put(`http://localhost:8080/api/close/reunions/${eventId}`, {
       data: {
@@ -79,6 +84,16 @@ export class EventsService {
 
   createParticipant(idReunion, participant, token){
     const req = this.http.post(`http://localhost:8080/api/open/reunions/${idReunion}/participants`, {
+      data: {
+        token: token,
+        participant: participant
+      }
+    })
+    return req;
+  }
+
+  createCloseParticipant(idReunion, participant, token){
+    const req = this.http.post(`http://localhost:8080/api/close/reunions/${idReunion}/participants`, {
       data: {
         token: token,
         participant: participant
@@ -188,8 +203,24 @@ export class EventsService {
     return req;
   }
 
+  createCloseDate(idReunion, date, token){
+    const req = this.http.post(`http://localhost:8080/api/close/reunions/${idReunion}/dates`, {
+      data: {
+        token: token,
+        date: date
+      }
+    })
+    return req;
+  }
+
   removeDate(idReunion, idDate, token){
     const req = this.http.delete(`http://localhost:8080/api/open/reunions/${idReunion}/dates/${idDate}/${token}`)
     return req;
   }
+
+  removeCloseDate(idReunion, idDate, token){
+    const req = this.http.delete(`http://localhost:8080/api/close/reunions/${idReunion}/dates/${idDate}/${token}`)
+    return req;
+  }
+  
 }

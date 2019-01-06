@@ -1,55 +1,8 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
-import { Event, User, Date } from '../../utils/types';
+import { Event} from '../../utils/types';
 import { Router } from '@angular/router';
-
-
-const ELEMENT_DATA: Event[] = [
-  {
-    reunion: {
-      admin: {
-        email: 'el@mail.com',
-        name: 'hadji'
-      },
-      title: 'test',
-      place: 'Paris',
-      note: 'Note',
-      date: [
-        {
-          date: '2018-12-12',
-          hourStart: '9h',
-          hourEnd: '19h'
-        }
-      ],
-      addComment: true,
-      maxParticipant: 5,
-      participant: [],
-      comment: []
-    }
-  },
-  {
-    reunion: {
-      admin: {
-        email: 'azertyu@mail.com',
-        name: 'hadji'
-      },
-      title: 'test',
-      place: 'Paris',
-      note: 'Note',
-      date: [
-        {
-          date: '2018-12-12',
-          hourStart: '9h',
-          hourEnd: '19h'
-        }
-      ],
-      addComment: true,
-      maxParticipant: 5,
-      participant: [],
-      comment: []
-    }
-  }
-];
+import { EventsService } from '../events.service'
 
 @Component({
   selector: 'app-close-events',
@@ -58,21 +11,25 @@ const ELEMENT_DATA: Event[] = [
 })
 
 export class CloseEventsComponent implements OnInit {
-
-  userData = JSON.parse(localStorage.getItem('currentUser')).data;
-  ownerReunions = this.userData.reunions.owner;
-  displayedColumns: string[] = ['title', 'place', 'numberOfParticipants', 'date']
-  //dataSource = ELEMENT_DATA;
-  dataSource = this.ownerReunions;
+  ownerReunions
+  displayedColumns: string[] = ['title', 'place', 'date', 'numberOfParticipants', 'numberOfComments', 'actions']
+  dataSource
   searchText = '';
   filteredEvents: MatTableDataSource<Event>;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private eventsService: EventsService) { }
 
-  ngOnInit() {
-    this.filteredEvents = new MatTableDataSource(this.dataSource);
-    this.filteredEvents.sort = this.sort;
+  async ngOnInit() {
+    this.getEvent()
+    .subscribe(
+      res => {
+        this.dataSource = JSON.parse(JSON.stringify(res)).data.reunions.owner
+        this.filteredEvents = new MatTableDataSource(this.dataSource);
+        this.filteredEvents.sort = this.sort;
+      },
+      error => console.log('error', error)
+    )
   }
 
   handleSearchEnterPress($event): void {
@@ -83,15 +40,27 @@ export class CloseEventsComponent implements OnInit {
     this.filteredEvents = new MatTableDataSource(
       this.dataSource.filter(
         (line) =>
-        line.reunion.title.toString().toUpperCase().includes(this.searchText.toUpperCase()) ||
-          line.reunion.admin.name.toString().toUpperCase().includes(this.searchText.toUpperCase()) ||
-          line.reunion.admin.email.toUpperCase().toUpperCase().includes(this.searchText.toUpperCase()),
+          line.title.toString().toUpperCase().includes(this.searchText.toUpperCase()) ||
+          line.place.toString().toUpperCase().includes(this.searchText.toUpperCase()),
       ),
     );
     this.filteredEvents.sort = this.sort;
   }
 
-  showEvent(elem){
-    this.router.navigate(['show-event/',elem._id]);
+  showEvent(eventId){
+    this.router.navigate(['show-event/',eventId]);
+  }
+
+  deleteEvent(eventId){
+    console.log('delete')
+    this.eventsService.deleteCloseEvent(eventId, JSON.parse(localStorage.getItem('currentUser')).data.token)
+    .subscribe(
+      res => this.router.navigate(['redirect/close-events']) ,
+      error => console.log('error', error)
+    )
+  }
+
+  getEvent(){
+    return this.eventsService.getCloseEvents('own', JSON.parse(localStorage.getItem('currentUser')).data.token)
   }
 }
