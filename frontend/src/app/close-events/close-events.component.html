@@ -1,0 +1,56 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-5 col-md-5">
+      <mat-form-field class="large">
+        <input matInput type="search" color="primary" [(ngModel)]="searchText" (keyup.enter)="handleSearchEnterPress($event)"
+          (ngModelChange)="filterEvents()">
+        <mat-icon matSuffix color="primary">search</mat-icon>
+        <mat-hint>Cherchez une reunion avec son titre ou le lieu</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+  <br>
+  <table mat-table [dataSource]="filteredEvents" matSort class="mat-elevation-z8 large">
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Titre </th>
+      <td mat-cell *matCellDef="let reunion"> {{reunion.title}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="place">
+      <th mat-header-cell *matHeaderCellDef> Lieu </th>
+      <td mat-cell *matCellDef="let reunion"> {{reunion.place}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Dates </th>
+      <td mat-cell *matCellDef="let reunion"> <span *ngFor="let d of reunion.date">{{d.date | date: 'MMM dd, yyyy'}}
+          <br> </span></td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfParticipants">
+      <th mat-header-cell *matHeaderCellDef> Participants </th>
+      <td mat-cell *matCellDef="let reunion"> {{reunion.participant.length}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfComments">
+      <th mat-header-cell *matHeaderCellDef> Commentaires </th>
+      <td mat-cell *matCellDef="let reunion"> {{reunion.comment.length}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let reunion">
+          <button mat-icon-button color="primary" (click)="showEvent(reunion._id)">
+              <mat-icon aria-label="Example icon-button with a heart icon">visibility</mat-icon>
+            </button>
+        <button mat-icon-button color="primary" (click)="deleteEvent(reunion._id)">
+          <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
