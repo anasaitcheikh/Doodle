@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: database.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: database.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @constant {objet} mongoose - Correspond à l'appel du module {@link https://www.npmjs.com/package/mongoose|mongoose}.
+*/
+const mongoose = require('mongoose')
+
+/**
+ * @constant {string} hostname - Correspond à l'url de la base de données mongodb.
+*/
+const hostname = 'mongodb://localhost/middleware' 
+
+/**
+ * @constant {objet} MongoObjectID  - Correspond au type ObjectID de mongodb.
+*/
+var MongoObjectID = require("mongodb").ObjectID 
+
+/**
+ * @constant {objet} DateReunion  - Correspond au nom de la définition du schéma d'une date de réunion
+ * &lt;p> 
+ *    { &lt;br>
+ *     &amp;nbsp date : { type: Date, default: Date.now },&lt;br>
+ *     &amp;nbsp hourStart : { type : String },&lt;br>
+ *     &amp;nbsp hourEnd : { type : String }&lt;br>
+ *    }
+ * &lt;/p>    
+*/
+const DateReunion = new mongoose.Schema({
+                    date : { type: Date, default: Date.now },
+                    hourStart : { type : String },
+                    hourEnd : { type : String }
+                 })  
+
+/**
+ * @constant {objet} Comment  - Correspond au nom de la définition du schéma d'un commentaire
+ * &lt;p> 
+ *   {&lt;br>
+ *     &amp;nbsp name :  { type : String },&lt;br>
+ *     &amp;nbsp email : { type : String },&lt;br>
+ *     &amp;nbsp text : { type : String },&lt;br>
+ *     &amp;nbsp create_at : { type: Date, default: Date.now },&lt;br>
+ *     &amp;nbsp update_at : { type: Date, default: Date.now }&lt;br>
+ *   }
+ * &lt;/p>    
+*/
+const Comment = new mongoose.Schema({
+                  name :  { type : String },
+                  email : { type : String },
+                  text : { type : String },
+                  create_at : { type: Date, default: Date.now },
+                  update_at : { type: Date, default: Date.now }
+                })
+
+/**
+ * @constant {objet} Participant  - Correspond au nom de la définition du schéma d'un participant
+ * &lt;p> 
+    { &lt;br>
+      &amp;nbsp name :  { type : String }, &lt;br>
+      &amp;nbsp email : { type : String }, &lt;br>
+      &amp;nbsp create_at : { type: Date, default: Date.now }, &lt;br>
+      &amp;nbsp update_at : { type: Date, default: Date.now } &lt;br>
+    }
+ * &lt;/p>    
+*/                
+const Participant = new mongoose.Schema({
+                      name :  { type : String },
+                      email : { type : String },
+                      create_at : { type: Date, default: Date.now },
+                      update_at : { type: Date, default: Date.now }
+                    })
+
+/**
+ * @constant {objet} UserSchema  - Correspond au nom de la définition du schéma d'un utilisateur ayant un compte
+ * &lt;p> 
+    { &lt;br>
+      &amp;nbsp name :  { type : String }, &lt;br>
+      &amp;nbsp email : { type : String }, &lt;br>
+      &amp;nbsp password : { type : String }, &lt;br>
+      &amp;nbsp create_at : { type: Date, default: Date.now }, &lt;br>
+      &amp;nbsp update_at : { type: Date, default: Date.now } &lt;br>
+    }
+ * &lt;/p>    
+*/                      
+const UserSchema = new mongoose.Schema({
+                      name :  { type : String },
+                      email : { type : String },
+                      password : { type : String },
+                      create_at : { type: Date, default: Date.now },
+                      update_at : { type: Date, default: Date.now }
+                    })
+
+
+/**
+ * @constant {objet} ReunionSchema - Correspond au nom de la définition du schéma d'une réunion
+ * &lt;p> 
+    { &lt;br>
+      &amp;nbsp title : { type : String }, &lt;br>
+      &amp;nbsp place : { type : String }, &lt;br>
+      &amp;nbsp note : { type : String }, &lt;br>
+      &amp;nbsp date : [DateReunion], &lt;br>
+      &amp;nbsp addComment : { type : Boolean }, &lt;br>
+      &amp;nbsp maxParticipant : { type: Number, min: 1 }, &lt;br>
+      &amp;nbsp comment : [Comment], &lt;br>
+      &amp;nbsp admin : Participant, &lt;br>
+      &amp;nbsp participant : [Participant], &lt;br>
+      &amp;nbsp create_at : { type: Date, default: Date.now }, &lt;br>
+      &amp;nbsp update_at : { type: Date, default: Date.now } &lt;br>
+    }
+ * &lt;/p>    
+*/ 
+const ReunionSchema = new mongoose.Schema({
+  title : { type : String },
+  place : { type : String },
+  note : { type : String },
+  date : [DateReunion],
+  addComment : { type : Boolean },
+  maxParticipant : { type: Number, min: 1 },
+  comment : [Comment],
+  admin : Participant,
+  participant : [Participant],
+  create_at : { type: Date, default: Date.now },
+  update_at : { type: Date, default: Date.now }
+})
+ 
+
+/**
+ * @var {objet} ReunionModel - Correspond au nom de la définition du model d'une réunion.
+*/
+var ReunionModel = mongoose.model('reunion', ReunionSchema)
+
+/**
+ * @var {objet} UserModel - Correspond au nom de la définition du model d'un utilisateur.
+*/
+var UserModel = mongoose.model('user', UserSchema)
+ 
+
+// On crée d'une instance test d'une réunion du Model 
+var reunion = new ReunionModel()
+
+reunion.title = 'reunion test 2.0'
+reunion.place = 'Skype'
+reunion.note = 'rdv pour la révision'
+reunion.addComment = true
+reunion.maxParticipant = 5
+reunion.date.push({  
+                    date: new Date().now,
+                    hourStart : "8h00",
+                    hourEnd : '10h00'
+                  })
+reunion.comment.push({
+                      name : 'moub name 0',
+                      email : 'moub email 0',
+                      text : 'moub text',
+                      create_at : new Date().now,
+                      update_at : new Date().now
+                    }) 
+reunion.comment.push({
+                      name : 'moub name 1',
+                      email : 'moub email 1',
+                      text : 'moub text',
+                      create_at : new Date().now,
+                      update_at : new Date().now
+                    }) 
+reunion.admin = { 
+                 name :'moub name admin',
+                 email : 'moub email admin',
+                 create_at : new Date().now,
+                 update_at : new Date().now
+                }
+reunion.participant.push({
+                          name : 'moub participant 0',
+                          email : 'moub email 0',
+                          create_at : new Date().now,
+                          update_at : new Date().now
+                        })
+reunion.participant.push({
+                          name : 'moub participant 1',
+                          email : 'moub email 1',
+                          create_at : new Date().now,
+                          update_at : new Date().now
+                        })
+
+
+var user = new UserModel()
+user.name = 'moub user 0'
+user.email = 'moub email user 0'
+user.password = 'moub password user 0'
+user.create_at = new Date().now
+user.update_at = new Date().now
+
+
+module.exports = {
+  ReunionModel:ReunionModel,
+  mongoose : mongoose,
+  hostname : hostname,
+  reunion : new ReunionModel(),
+  user : new UserModel (),
+  UserModel : UserModel,
+}   </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#DateReunion">DateReunion</a></li><li><a href="global.html#hostname">hostname</a></li><li><a href="global.html#MongoObjectID">MongoObjectID</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#Participant">Participant</a></li><li><a href="global.html#ReunionModel">ReunionModel</a></li><li><a href="global.html#ReunionSchema">ReunionSchema</a></li><li><a href="global.html#UserModel">UserModel</a></li><li><a href="global.html#UserSchema">UserSchema</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 06 2019 12:26:27 GMT+0100 (Paris, Madrid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
