@@ -201,8 +201,8 @@ closeController.post('/reunions', (req, res) => {
     reunion.place = reqBodyData.reunion.place
     reunion.note = reqBodyData.reunion.note
     reunion.date = jsDate
-    const participants = reqBodyData.reunion.participants
-    reunion.participant = (participants == undefined) ? {} : participants
+    const participants = reqBodyData.reunion.participant
+    reunion.participant = (participants == undefined) ? [] : participants
     reunion.comment = []
     reunion.addComment = reqBodyData.reunion.addComment
     reunion.maxParticipant = reqBodyData.reunion.maxParticipant
@@ -266,6 +266,34 @@ closeController.post('/reunions', (req, res) => {
     })
 })
 
+
+//create user
+closeController.post('/users', (req, res) => {
+    const user = {
+        name: reqBodyData.user.name,
+        email: reqBodyData.user.email,
+        password: md5(reqBodyData.user.password)
+    }
+
+    dao.findUserByEmail(user.email, (resFind) => {
+        if (resFind != null) {
+            res.status('400').end('Email is already taken')
+        }
+        else {
+            dao.createUser(user, (userAdded) => {
+                if (userAdded == null) {
+                    res.end('500')
+                }
+                else {
+                    sendMail(user.email, `Bienvenue ${user.name}`, 'Vous êtes maintenant parmi nous !')
+
+                    res.status('200').end()
+                }
+            })
+        }
+    })
+})
+
 closeController.get('/reunions/:reunion_id/:token', (req, res) => {
     const token = req.params.token
     try {
@@ -320,6 +348,43 @@ closeController.get('/reunions/:reunion_id/:token', (req, res) => {
         res.status('500').end()
     }
 })
+
+closeController.get('/reunions/:token/cat/:cat', function (req, res, next) {
+    console.log('test', 'here')
+        try{
+            const session = tokenHandler.verifyJWTToken(req.params.token, false)
+            const cat = req.params.cat
+            if(cat == 'own'){
+                dao.findReunionCreateBy(session.sessionData.email, (ownReunions) => {
+                    res.json({
+                        data: {
+                            reunions: {
+                                owner: ownReunions
+                            }
+                        }
+                    })      
+                })
+            }
+            else if(cat == 'guest'){
+                dao.findReunionForGuest(rsession.sessionData.email, (guestedReunions) => {
+                    res.json({
+                        data: {
+                            reunions: {
+                                guest: guestedReunions
+                            },
+                        }
+                    })
+                }) 
+            }
+            else{
+                res.status('400').end()
+            }
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
+        
+    })
 
 //le token de l'autentification est dans le corps
 closeController.put('/reunions/:reunion_id', (req, res) => {
@@ -455,11 +520,11 @@ closeController.post('/reunions/:id_reunion/participants', (req, res) => {
                                                 sendMailToParticipants(emailData)
                                             }
                                             catch (error) {
-                                                res.status('500').end("hoho")
+                                                res.status('500').end()
                                             }
                                         }  
                                     })
-                                    res.status('200').end("Le participant a bien été ajouté a votre reunion")  
+                                    res.status('200').end()
                                 }
                             })
                         }
@@ -834,6 +899,57 @@ closeController.delete('/reunions/:id_reunion/comments/:id_comment/:token', (req
         console.log(error)
         res.status('404').end()
     }
+})
+
+//Dates
+closeController.post('/reunions/:id_reunion/dates', (req, res) =>{
+    if(req.body.data == undefined){
+        res.status('400').end()
+    }
+    else{
+        try{
+            const reqBodyData = req.body.data
+            const session = tokenHandler.verifyJWTToken(reqBodyData.token, false)
+
+            dao.findReunion(req.params.id_reunion, (reunion) => {
+                if ((reunion == null) || (reunion.admin.email != session.sessionData.email)) {
+                    res.status('401').end()
+                }
+                else{
+                    dao.createDate(reunion._id, reqBodyData.date, (resAdd) => {
+                        res.status('200').end()
+                    })
+                }
+            })
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
+    }
+})
+
+closeController.delete('/reunions/:id_reunion/dates/:id_date/:token', (req, res) =>{
+        try{
+            const session = tokenHandler.verifyJWTToken(req.params.token, false)
+            dao.findReunion(req.params.id_reunion, (reunion) => {
+                if ((reunion == null) || (reunion.admin.email != session.sessionData.email)) {
+                    res.status('401').end()
+                }
+                else{
+                    dao.deleteDate(reunion._id, req.params.id_date, (resDelete) => {
+                        if(resDelete== null) {
+                            res.status('404').end()
+                        }
+                        else{
+                            res.status('200').end()
+                        }
+                    })
+                }
+            })
+        }
+        catch(error){
+            res.status('400').end('Bad Token')
+        }
 })
 
 module.exports = closeController
